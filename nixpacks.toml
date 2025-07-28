@@ -36,10 +36,9 @@ cmds = [
     # Build frontend assets
     "npm run build",
 
-    # Laravel optimizations
-    "php artisan config:cache",
-    "php artisan route:cache",
-    "php artisan view:cache",
+    # Laravel optimizations (with error handling)
+    "php artisan config:cache || true",
+    "php artisan view:cache || true",
 
     # Run migrations (only if not in production or with force flag)
     "php artisan migrate --force",
@@ -47,7 +46,6 @@ cmds = [
     # Clear caches after migration
     "php artisan cache:clear",
     "php artisan config:clear",
-    "php artisan route:clear",
     "php artisan view:clear"
 ]
 
