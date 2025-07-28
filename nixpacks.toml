@@ -3,24 +3,24 @@ nixPkgs = ["...", "python311Packages.supervisor", "php82Extensions.redis"]
 
 [phases.build]
 cmds = [
-    "mkdir -p /var/log",
-    "touch /var/log/nginx-access.log /var/log/nginx-error.log",
-    "chown -R www-data:www-data /var/log",
-    "chown -R www-data:www-data /app",
-    "chmod -R 755 /app",
-    "chmod -R 775 /app/storage",
-    "mkdir -p /etc/supervisor/conf.d/",
-    "cp /assets/worker-*.conf /etc/supervisor/conf.d/",
-    "cp /assets/supervisord.conf /etc/supervisord.conf",
-    "chmod +x /assets/start.sh"
+    # Create required directories in one command
+    "mkdir -p /var/log /app/storage/framework/{views,cache,sessions} /app/bootstrap/cache /etc/supervisor/conf.d",
+
+    # Set permissions in a single command
+    "chown -R www-data:www-data /var/log /app/storage /app/bootstrap/cache",
+
+    # Copy and setup config files
+    "cp /assets/{worker-*.conf,supervisord.conf} /etc/supervisor/conf.d/ && chmod +x /assets/start.sh"
 ]
 
 [phases.postbuild]
 cmds = [
+    "php artisan migrate --force",
     "npm run build",
-    "php /app/artisan migrate --force",
-    "php /app/artisan cache:clear",
+    "php artisan view:clear",
+    "php artisan cache:clear",
 ]
+
 dependsOn = ["build"]
 
 [start]
@@ -157,6 +157,8 @@ http {
             fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
             include $!{nginx}/conf/fastcgi_params;
             include $!{nginx}/conf/fastcgi.conf;
+            fastcgi_buffering off;
+            fastcgi_read_timeout 300;
         }
 
         location ~ /\.(?!well-known).* {
