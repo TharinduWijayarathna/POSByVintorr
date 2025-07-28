@@ -15,15 +15,15 @@ class UnitSeeder extends Seeder
     public function run()
     {
         $array = [
-            ["title" => "Kg"],
-            ["title" => "ml"],
-            ["title" => "L"],
-            ["title" => "pieces"],
+            ['title' => 'Kg'],
+            ['title' => 'ml'],
+            ['title' => 'L'],
+            ['title' => 'pieces'],
         ];
 
         foreach ($array as $data) {
-            $row = Unit::where('title',$data['title'])->first();
-            if (!$row) {
+            $row = Unit::where('title', $data['title'])->first();
+            if (! $row) {
                 Unit::create($data);
             }
         }

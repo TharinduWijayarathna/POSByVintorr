@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigInteger('supplier_id')->nullable();
             $table->bigInteger('expense_category_id')->nullable();
             $table->date('date')->nullable();
-            $table->decimal('amount',12,2)->nullable();
+            $table->decimal('amount', 12, 2)->nullable();
             $table->text('remark')->nullable();
             $table->timestamps();
         });

@@ -2,30 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\GetProductResource;
-use App\Models\User;
-use domain\Facades\PosOrderFacade\PosOrderFacade;
-use Inertia\Inertia;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Http\Resources\DataResource;
-use Illuminate\Support\Facades\Auth;
-use Spatie\QueryBuilder\QueryBuilder;
-use domain\Facades\ImageFacade\ImageFacade;
-use domain\Facades\ProductFacade\ProductFacade;
-use App\Http\Requests\Product\UpdateStockRequest;
 use App\Http\Requests\Product\CreateProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
+use App\Http\Requests\Product\UpdateStockRequest;
+use App\Http\Resources\DataResource;
+use App\Http\Resources\GetProductResource;
 use App\Imports\ProductsImport;
-use PDF;
+use App\Models\Product;
+use App\Models\User;
+use domain\Facades\ImageFacade\ImageFacade;
+use domain\Facades\PosOrderFacade\PosOrderFacade;
+use domain\Facades\ProductFacade\ProductFacade;
 use domain\Facades\UserFacade\UserFacade;
-use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductController extends ParentController
 {
-
     public function index()
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
@@ -40,6 +38,7 @@ class ProductController extends ParentController
             if ($id == 2) {
                 // $response = UserFacade::retrieveHost();
                 $response['check_rol'] = $id;
+
                 return Inertia::render('Product/index');
             }
         }
@@ -62,6 +61,7 @@ class ProductController extends ParentController
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $order = PosOrderFacade::getOrCreate();
+
             return ProductFacade::getOrderItem($pos_order_item_id, $order->id);
         }
     }
@@ -81,6 +81,7 @@ class ProductController extends ParentController
                 $image = ImageFacade::convertImageToWebP($request->file('image'));
                 $request->merge(['image_id' => $image->id]);
             }
+
             return ProductFacade::store($request->all());
         }
     }
@@ -118,41 +119,41 @@ class ProductController extends ParentController
 
             $payload = $query->where(function ($query) use ($request) {
                 if (isset($request->search_product_code)) {
-                    $query->where('code', 'like', '%' . $request->search_product_code . '%');
+                    $query->where('code', 'like', '%'.$request->search_product_code.'%');
                 }
                 if (isset($request->search_product_name)) {
-                    $query->where('name', 'like', '%' . $request->search_product_name . '%');
+                    $query->where('name', 'like', '%'.$request->search_product_name.'%');
                 }
                 if (isset($request->search_product_selling_max) && isset($request->search_product_selling_min)) {
-                    $min = floatval(str_replace(",", "", $request->search_product_selling_min));
-                    $max = floatval(str_replace(",", "", $request->search_product_selling_max));
+                    $min = floatval(str_replace(',', '', $request->search_product_selling_min));
+                    $max = floatval(str_replace(',', '', $request->search_product_selling_max));
                     if ($max != 0) {
                         $query->where('selling', '>=', $min)->where('selling', '<=', $max);
                     } else {
                         $query->where('selling', '>=', $min);
                     }
-                } else if (isset($request->search_product_selling_min)) {
-                    $min = floatval(str_replace(",", "", $request->search_product_selling_min));
+                } elseif (isset($request->search_product_selling_min)) {
+                    $min = floatval(str_replace(',', '', $request->search_product_selling_min));
                     $query->where('selling', '>=', $min);
-                } else if (isset($request->search_product_selling_max)) {
-                    $max = floatval(str_replace(",", "", $request->search_product_selling_max));
+                } elseif (isset($request->search_product_selling_max)) {
+                    $max = floatval(str_replace(',', '', $request->search_product_selling_max));
                     if ($max != 0) {
                         $query->where('selling', '<=', $max);
                     }
                 }
                 if (isset($request->search_product_cost_max) && isset($request->search_product_cost_min)) {
-                    $min = floatval(str_replace(",", "", $request->search_product_cost_min));
-                    $max = floatval(str_replace(",", "", $request->search_product_cost_max));
+                    $min = floatval(str_replace(',', '', $request->search_product_cost_min));
+                    $max = floatval(str_replace(',', '', $request->search_product_cost_max));
                     if ($max != 0) {
                         $query->where('cost', '>=', $min)->where('cost', '<=', $max);
                     } else {
                         $query->where('cost', '>=', $min);
                     }
-                } else if (isset($request->search_product_cost_min)) {
-                    $min = floatval(str_replace(",", "", $request->search_product_cost_min));
+                } elseif (isset($request->search_product_cost_min)) {
+                    $min = floatval(str_replace(',', '', $request->search_product_cost_min));
                     $query->where('cost', '>=', $min);
-                } else if (isset($request->search_product_cost_max)) {
-                    $max = floatval(str_replace(",", "", $request->search_product_cost_max));
+                } elseif (isset($request->search_product_cost_max)) {
+                    $max = floatval(str_replace(',', '', $request->search_product_cost_max));
                     if ($max != 0) {
                         $query->where('cost', '<=', $max);
                     }
@@ -180,6 +181,7 @@ class ProductController extends ParentController
             $payload = QueryBuilder::for($query)
                 ->allowedSorts(['id', 'name'])->with('unit')
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -188,6 +190,7 @@ class ProductController extends ParentController
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $payload = ProductFacade::search($request['params']['search']);
+
             return DataResource::collection($payload);
         }
     }
@@ -207,6 +210,7 @@ class ProductController extends ParentController
                     $image = ImageFacade::convertImageToWebP($request->file('image'));
                     $request->merge(['image_id' => $image->id]);
                 }
+
                 return ProductFacade::update($id, $request->all());
             } catch (\Throwable $th) {
                 return response()->json([
@@ -222,6 +226,7 @@ class ProductController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             try {
                 ProductFacade::stockUpdate($id, $request->validated());
+
                 return new DataResource(Product::with('costs')->findOrFail($id));
             } catch (\Throwable $th) {
                 return response()->json([
@@ -242,6 +247,7 @@ class ProductController extends ParentController
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $order = PosOrderFacade::getOrCreate();
+
             return ProductFacade::delete($product_id, $order->id);
         }
     }
@@ -286,41 +292,41 @@ class ProductController extends ParentController
 
             $payload = $query->where(function ($query) use ($request) {
                 if (isset($request->search_product_code)) {
-                    $query->where('code', 'like', '%' . $request->search_product_code . '%');
+                    $query->where('code', 'like', '%'.$request->search_product_code.'%');
                 }
                 if (isset($request->search_product_name)) {
-                    $query->where('name', 'like', '%' . $request->search_product_name . '%');
+                    $query->where('name', 'like', '%'.$request->search_product_name.'%');
                 }
                 if (isset($request->search_product_selling_max) && isset($request->search_product_selling_min)) {
-                    $min = floatval(str_replace(",", "", $request->search_product_selling_min));
-                    $max = floatval(str_replace(",", "", $request->search_product_selling_max));
+                    $min = floatval(str_replace(',', '', $request->search_product_selling_min));
+                    $max = floatval(str_replace(',', '', $request->search_product_selling_max));
                     if ($max != 0) {
                         $query->where('selling', '>=', $min)->where('selling', '<=', $max);
                     } else {
                         $query->where('selling', '>=', $min);
                     }
-                } else if (isset($request->search_product_selling_min)) {
-                    $min = floatval(str_replace(",", "", $request->search_product_selling_min));
+                } elseif (isset($request->search_product_selling_min)) {
+                    $min = floatval(str_replace(',', '', $request->search_product_selling_min));
                     $query->where('selling', '>=', $min);
-                } else if (isset($request->search_product_selling_max)) {
-                    $max = floatval(str_replace(",", "", $request->search_product_selling_max));
+                } elseif (isset($request->search_product_selling_max)) {
+                    $max = floatval(str_replace(',', '', $request->search_product_selling_max));
                     if ($max != 0) {
                         $query->where('selling', '<=', $max);
                     }
                 }
                 if (isset($request->search_product_cost_max) && isset($request->search_product_cost_min)) {
-                    $min = floatval(str_replace(",", "", $request->search_product_cost_min));
-                    $max = floatval(str_replace(",", "", $request->search_product_cost_max));
+                    $min = floatval(str_replace(',', '', $request->search_product_cost_min));
+                    $max = floatval(str_replace(',', '', $request->search_product_cost_max));
                     if ($max != 0) {
                         $query->where('cost', '>=', $min)->where('cost', '<=', $max);
                     } else {
                         $query->where('cost', '>=', $min);
                     }
-                } else if (isset($request->search_product_cost_min)) {
-                    $min = floatval(str_replace(",", "", $request->search_product_cost_min));
+                } elseif (isset($request->search_product_cost_min)) {
+                    $min = floatval(str_replace(',', '', $request->search_product_cost_min));
                     $query->where('cost', '>=', $min);
-                } else if (isset($request->search_product_cost_max)) {
-                    $max = floatval(str_replace(",", "", $request->search_product_cost_max));
+                } elseif (isset($request->search_product_cost_max)) {
+                    $max = floatval(str_replace(',', '', $request->search_product_cost_max));
                     if ($max != 0) {
                         $query->where('cost', '<=', $max);
                     }
@@ -348,6 +354,7 @@ class ProductController extends ParentController
             $payload = QueryBuilder::for($query)
                 ->allowedSorts(['id', 'name'])->with('unit')
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -362,14 +369,14 @@ class ProductController extends ParentController
     /**
      * import
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function import(Request $request)
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $request->validate([
-                'product_file' => 'required|mimes:xlsx'
+                'product_file' => 'required|mimes:xlsx',
             ]);
 
             Excel::import(new ProductsImport, $request->file('product_file'));
@@ -380,7 +387,7 @@ class ProductController extends ParentController
 
             $response = [
                 'message' => $count_description,
-                'errors' => $errors
+                'errors' => $errors,
             ];
 
             return response()->json($response);
@@ -397,6 +404,7 @@ class ProductController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $file = public_path('sample_excel/products.xlsx');
             $headers = ['Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
             // dd($file, $headers);
             return response()->download($file, 'products.xlsx', $headers);
         }
@@ -429,6 +437,7 @@ class ProductController extends ParentController
         } else {
             $products = ProductFacade::list();
         }
+
         return GetProductResource::collection($products);
         // }
     }
@@ -460,7 +469,7 @@ class ProductController extends ParentController
         $response['item'] = $request->all();
         $pdf = PDF::loadView('print.pages.barcode', $response)->setPaper([0, 0, 500, 250], 'portrait');
 
-        return $pdf->stream("Barcode.pdf", array("Attachment" => false));
+        return $pdf->stream('Barcode.pdf', ['Attachment' => false]);
     }
 
     public function getProductByCode(Request $request)

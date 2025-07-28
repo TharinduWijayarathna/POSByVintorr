@@ -24,10 +24,10 @@ class CreatePosReceiptRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' =>  ['required','string','max:255'],
-            'reason' =>  ['required','string'],
-            'remark' =>  ['nullable','string'],
-            'price' =>  ['required','numeric'],
+            'name' => ['required', 'string', 'max:255'],
+            'reason' => ['required', 'string'],
+            'remark' => ['nullable', 'string'],
+            'price' => ['required', 'numeric'],
         ];
     }
 }

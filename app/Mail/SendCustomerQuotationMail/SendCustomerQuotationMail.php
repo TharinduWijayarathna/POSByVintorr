@@ -3,7 +3,6 @@
 namespace App\Mail\SendCustomerQuotationMail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
@@ -16,7 +15,9 @@ class SendCustomerQuotationMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $sendData;
+
     public $pdf;
+
     public $image;
 
     /**
@@ -62,13 +63,13 @@ class SendCustomerQuotationMail extends Mailable
     public function build()
     {
         $mail = $this->subject($this->sendData['subject'])
-                     ->view('Mails.Pages.Quotation.quotation')
-                     ->with('sendData', $this->sendData)
-                     ->attachData($this->pdf, 'Quotation.pdf', [
-                         'mime' => 'application/pdf',
-                     ]);
+            ->view('Mails.Pages.Quotation.quotation')
+            ->with('sendData', $this->sendData)
+            ->attachData($this->pdf, 'Quotation.pdf', [
+                'mime' => 'application/pdf',
+            ]);
 
-        if (!empty($this->sendData['cc'])) {
+        if (! empty($this->sendData['cc'])) {
             $mail->cc($this->sendData['cc']);
         }
 

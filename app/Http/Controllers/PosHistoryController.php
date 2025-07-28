@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Models\PosOrder;
-use Illuminate\Support\Facades\Auth;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\DataResource;
+use App\Models\PosOrder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * PosHistory Controller
  * php version 8
  *
  * @category Controller
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosHistoryController extends ParentController
@@ -34,7 +36,8 @@ class PosHistoryController extends ParentController
             return Inertia::render('History/index');
         } else {
             $response['alert-danger'] = 'You do not have permission to invoice.';
-             return Inertia::render('History/index');
+
+            return Inertia::render('History/index');
         }
     }
 
@@ -42,7 +45,7 @@ class PosHistoryController extends ParentController
      * all
      * Get all orders for the history page. If there is a request, filter will bw worked.
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function all(Request $request)
@@ -54,14 +57,12 @@ class PosHistoryController extends ParentController
         if (isset($request->search_order_from_date) && isset($request->search_order_to_date)) {
             // dd($request->search_order_date);
             $query->whereBetween('created_at', [$request->search_order_from_date, $request->search_order_to_date]);
-        }
-        elseif (isset($request->search_order_from_date)) {
+        } elseif (isset($request->search_order_from_date)) {
             // dd($request->search_order_date);
             $query->whereBetween('created_at', [$request->search_order_from_date, now()->format('Y-m-d')]);
-        }
-        elseif (isset($request->search_order_to_date)) {
+        } elseif (isset($request->search_order_to_date)) {
             // dd($request->search_order_date);
-            $query->whereDate('created_at','<' ,$request->search_order_to_date);
+            $query->whereDate('created_at', '<', $request->search_order_to_date);
         }
         $payload = QueryBuilder::for($query)
             ->allowedSorts(['id'])
@@ -80,6 +81,7 @@ class PosHistoryController extends ParentController
                 })
             )
             ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
     }
 }

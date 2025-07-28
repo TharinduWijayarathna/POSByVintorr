@@ -25,9 +25,10 @@ class UpdateUnitPriceRequest extends FormRequest
             'unit_price' => 'required|numeric|min:1|max:100000000000',
         ];
     }
-    function messages()
+
+    public function messages()
     {
-        return[
+        return [
             'unit_price.required' => 'Unit Price Field Is Required.',
         ];
     }

@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Models\PosCustomer;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class PosCustomerFactory extends Factory
 {

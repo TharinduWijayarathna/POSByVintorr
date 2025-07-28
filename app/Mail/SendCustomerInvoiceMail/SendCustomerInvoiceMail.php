@@ -3,7 +3,6 @@
 namespace App\Mail\SendCustomerInvoiceMail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
@@ -16,7 +15,9 @@ class SendCustomerInvoiceMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $sendData;
+
     public $image;
+
     public $pdf;
     // public $pngUrl;
 
@@ -74,7 +75,7 @@ class SendCustomerInvoiceMail extends Mailable
                 'mime' => 'application/pdf',
             ]);
 
-        if (!empty($this->sendData['cc'])) {
+        if (! empty($this->sendData['cc'])) {
             $mail->cc($this->sendData['cc']);
         }
 

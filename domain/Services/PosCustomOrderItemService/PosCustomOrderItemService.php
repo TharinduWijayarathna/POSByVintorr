@@ -2,19 +2,19 @@
 
 namespace domain\Services\PosCustomOrderItemService;
 
-use App\Models\PosCustomOrderItem;
 use App\Models\PosCustomOrder;
-use domain\Facades\PosCustomOrderItemFacade\PosCustomOrderItemFacade;
+use App\Models\PosCustomOrderItem;
 use domain\Facades\PosCustomOrderFacade\PosCustomOrderFacade;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * PosCustomOrderItemService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosCustomOrderItemService
@@ -26,8 +26,8 @@ class PosCustomOrderItemService
      */
     public function __construct()
     {
-        $this->order_item = new PosCustomOrderItem();
-        $this->order = new PosCustomOrder();
+        $this->order_item = new PosCustomOrderItem;
+        $this->order = new PosCustomOrder;
     }
 
     /**
@@ -38,14 +38,13 @@ class PosCustomOrderItemService
      */
     public function all()
     {
-        return  $this->order_item->all();
+        return $this->order_item->all();
     }
 
     /**
      * Store
      * store data in database
      *
-     * @param  array $data
      * @return void
      */
     public function store(array $data, int $order_id)
@@ -54,6 +53,7 @@ class PosCustomOrderItemService
         $data['order_id'] = $order_id;
         $item = $this->order_item->create($data);
         PosCustomOrderFacade::updateTotal($order_id, $data['total']);
+
         return $item;
     }
 
@@ -61,7 +61,6 @@ class PosCustomOrderItemService
      * Get
      * retrieve relevant data using order_item_id
      *
-     * @param  int  $order_item_id
      * @return void
      */
     public function get(int $order_item_id)
@@ -73,8 +72,7 @@ class PosCustomOrderItemService
      * Update
      * update existing data using order_item_id
      *
-     * @param  array $data
-     * @param  int   $order_item_id
+     * @param  int  $order_item_id
      * @return void
      */
     public function update(array $data, int $customer_item_id)
@@ -83,6 +81,7 @@ class PosCustomOrderItemService
         $customer = $this->order_item->find($customer_item_id);
         $item = $customer->update($this->edit($customer, $data));
         PosCustomOrderFacade::updateTotal($data['order_id'], $data['total']);
+
         return $item;
 
     }
@@ -91,8 +90,6 @@ class PosCustomOrderItemService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosCustomOrderItem $order_item
-     * @param  array $data
      * @return void
      */
     protected function edit(PosCustomOrderItem $order_item, array $data)
@@ -104,7 +101,6 @@ class PosCustomOrderItemService
      * Delete
      * delete specific data using order_item_id
      *
-     * @param  int   $order_item_id
      * @return void
      */
     public function delete(int $order_item_id)
@@ -112,6 +108,7 @@ class PosCustomOrderItemService
         $order = $this->order_item->find($order_item_id);
         $deleted_order = $order->delete();
         PosCustomOrderFacade::updateTotal($order->order_id);
+
         return $deleted_order;
     }
 

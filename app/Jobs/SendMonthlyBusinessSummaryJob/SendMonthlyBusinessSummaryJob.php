@@ -15,13 +15,15 @@ class SendMonthlyBusinessSummaryJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $sendData;
+
     public $email;
+
     public $image;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($sendData,$email, $image)
+    public function __construct($sendData, $email, $image)
     {
         $this->sendData = $sendData;
         $this->email = $email;
@@ -34,6 +36,6 @@ class SendMonthlyBusinessSummaryJob implements ShouldQueue
     public function handle(): void
     {
         Mail::to($this->email)
-        ->send(new SendMonthlyBusinessSummaryMail ($this->sendData, $this->image));
+            ->send(new SendMonthlyBusinessSummaryMail($this->sendData, $this->image));
     }
 }

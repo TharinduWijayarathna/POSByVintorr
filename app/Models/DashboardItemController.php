@@ -13,11 +13,11 @@ class DashboardItemController extends Model
         'DISABLED' => 0,
         'ENABLED' => 1,
     ];
-    
+
     protected $fillable = [
         'status',
         'dashboard_item_id',
-        'name'
+        'name',
     ];
 
     public function dashboardItem()

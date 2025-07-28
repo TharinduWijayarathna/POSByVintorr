@@ -3,7 +3,6 @@
 namespace App\Mail\SendMonthlyBusinessSummaryMail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -15,6 +14,7 @@ class SendMonthlyBusinessSummaryMail extends Mailable
     use Queueable, SerializesModels;
 
     public $sendData;
+
     public $image;
 
     /**

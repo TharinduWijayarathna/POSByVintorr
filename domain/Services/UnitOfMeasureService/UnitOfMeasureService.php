@@ -10,10 +10,9 @@ class UnitOfMeasureService
 
     public function __construct()
     {
-        $this->unit = new Unit();
+        $this->unit = new Unit;
     }
 
- 
     public function all()
     {
         return $this->unit->get();
@@ -24,7 +23,6 @@ class UnitOfMeasureService
         return $this->unit->find($uom_id)->delete();
     }
 
-
     public function get($uom_id)
     {
         return $this->unit->where('id', $uom_id)->first();
@@ -34,13 +32,13 @@ class UnitOfMeasureService
     {
         $data['name'] = ucwords($data['name']);
         $units = $this->unit->where('title', $data['name'])->first();
-        if (!$units) {
+        if (! $units) {
 
             $this->unit->create([
-                'title' => $data['name']
+                'title' => $data['name'],
             ]);
         } else {
-            return "This unit already exists";
+            return 'This unit already exists';
         }
     }
 

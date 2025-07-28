@@ -33,7 +33,7 @@ class PosReceiptController extends ParentController
         if (isset($request->sorting_value)) {
             if ($request->sorting_value == 1) {
                 $query->orderBy('code', 'desc');
-            } else if ($request->sorting_value == 2) {
+            } elseif ($request->sorting_value == 2) {
                 $query->orderBy('date', 'desc');
             } else {
                 $query->orderBy('created_at', 'desc');
@@ -73,6 +73,7 @@ class PosReceiptController extends ParentController
                 })
             )
             ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
     }
 
@@ -126,12 +127,14 @@ class PosReceiptController extends ParentController
                 })
             )
             ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
     }
 
     public function edit(int $order_id)
     {
         $response['order'] = PosOrderFacade::get($order_id);
+
         return Inertia::render('Receipt/edit', $response);
     }
 

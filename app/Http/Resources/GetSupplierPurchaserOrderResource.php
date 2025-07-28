@@ -20,7 +20,7 @@ class GetSupplierPurchaserOrderResource extends JsonResource
             'code' => $this->code,
             'date' => $this->date,
             'currency_name' => $this->currency->code,
-            'formatted_total' => $this->formatted_total, 
+            'formatted_total' => $this->formatted_total,
         ];
     }
 }

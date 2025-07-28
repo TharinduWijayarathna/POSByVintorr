@@ -6,8 +6,8 @@ use App\Http\Requests\Employee\CreateEmployeeRequest;
 use App\Http\Resources\DataResource;
 use App\Http\Resources\GetEmployeePayrollResource;
 use App\Imports\EmployeeImport;
-use App\Models\Supplier;
 use App\Models\Expense;
+use App\Models\Supplier;
 use App\Models\User;
 use domain\Facades\EmployeeFacade\EmployeeFacade;
 use domain\Facades\UserFacade\UserFacade;
@@ -49,9 +49,9 @@ class EmployeeController extends ParentController
             if (isset($request->search_employee_contact)) {
                 $searchContact = $request->search_employee_contact;
                 $query->where(function ($query) use ($searchContact) {
-                    $query->where('contact', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact2', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact3', 'like', '%' . $searchContact . '%');
+                    $query->where('contact', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact2', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact3', 'like', '%'.$searchContact.'%');
                 });
             }
             $payload = QueryBuilder::for($query)
@@ -62,6 +62,7 @@ class EmployeeController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -83,7 +84,7 @@ class EmployeeController extends ParentController
     public function get($employee_id)
     {
         // if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
-            return EmployeeFacade::get($employee_id);
+        return EmployeeFacade::get($employee_id);
         // }
     }
 
@@ -106,6 +107,7 @@ class EmployeeController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             // $response = UserFacade::retrieveHost();
             $response['employee_id'] = $employee_id;
+
             return Inertia::render('Employee/edit')->with($response);
         }
     }
@@ -116,6 +118,7 @@ class EmployeeController extends ParentController
             $query = Expense::orderBy('created_at', 'desc')->where('type', 1)->where('supplier_id', $employee_id);
             $payload = QueryBuilder::for($query)
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -139,9 +142,9 @@ class EmployeeController extends ParentController
             if (isset($request->search_employee_contact)) {
                 $searchContact = $request->search_employee_contact;
                 $query->where(function ($query) use ($searchContact) {
-                    $query->where('contact', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact2', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact3', 'like', '%' . $searchContact . '%');
+                    $query->where('contact', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact2', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact3', 'like', '%'.$searchContact.'%');
                 });
             }
             $payload = QueryBuilder::for($query)
@@ -152,6 +155,7 @@ class EmployeeController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -166,14 +170,14 @@ class EmployeeController extends ParentController
     /**
      * import
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function import(Request $request)
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $request->validate([
-                'employee_file' => 'required|mimes:xlsx'
+                'employee_file' => 'required|mimes:xlsx',
             ]);
 
             Excel::import(new EmployeeImport, $request->file('employee_file'));
@@ -184,7 +188,7 @@ class EmployeeController extends ParentController
 
             $response = [
                 'message' => $count_description,
-                'errors' => $errors
+                'errors' => $errors,
             ];
 
             return response()->json($response);
@@ -201,6 +205,7 @@ class EmployeeController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $file = public_path('sample_excel/employees.xlsx');
             $headers = ['Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
             // dd($file, $headers);
             return response()->download($file, 'employee.xlsx', $headers);
         }
@@ -210,7 +215,6 @@ class EmployeeController extends ParentController
      * AllPayrolls
      * get all employee payrolls using resource
      *
-     * @param $employee_id
      *
      * @return void
      */

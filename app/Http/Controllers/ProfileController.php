@@ -17,7 +17,6 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class ProfileController extends ParentController
 {
-
     public function show()
     {
         // $response = UserFacade::retrieveHost();
@@ -27,6 +26,7 @@ class ProfileController extends ParentController
     public function get(int $user_id)
     {
         $payload = UserFacade::get($user_id);
+
         return new DataResource($payload);
     }
 
@@ -88,6 +88,7 @@ class ProfileController extends ParentController
         $query = Session::where('user_id', auth()->user()->id)->orderByDesc('id');
         $payload = QueryBuilder::for($query)
             ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
     }
 }

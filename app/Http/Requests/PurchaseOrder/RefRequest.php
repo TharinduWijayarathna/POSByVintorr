@@ -22,14 +22,14 @@ class RefRequest extends FormRequest
     public function rules()
     {
         return [
-            'ref' =>  ['nullable', 'string', 'max:120'],
+            'ref' => ['nullable', 'string', 'max:120'],
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
-            'ref.max' => "Project / Ref must be less than 120 characters",
+            'ref.max' => 'Project / Ref must be less than 120 characters',
         ];
     }
 }

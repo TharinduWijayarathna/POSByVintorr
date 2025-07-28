@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Auth;
 class CategoryService
 {
     protected $product_category;
+
     protected $unit;
+
     public function __construct()
     {
-        $this->product_category = new ProductCategory();
-        $this->unit = new Unit();
+        $this->product_category = new ProductCategory;
+        $this->unit = new Unit;
     }
 
     public function all()
@@ -26,11 +28,11 @@ class CategoryService
         $data['created_by'] = Auth::user()->id;
 
         $product_category = $this->product_category->where('name', $data['name'])->first();
-        if (!$product_category) {
+        if (! $product_category) {
 
             $this->product_category->create($data);
-        }else{
-            return "This category already exists";
+        } else {
+            return 'This category already exists';
         }
     }
 
@@ -38,7 +40,7 @@ class CategoryService
     {
         return $this->product_category->findOrFail($id);
     }
-    
+
     public function getLatestCategory()
     {
         return $this->product_category->latest()->first();
@@ -55,7 +57,7 @@ class CategoryService
 
         $category = $this->product_category->findOrFail($id);
 
-            $category->update($data);
+        $category->update($data);
     }
 
     public function delete(int $product_id)

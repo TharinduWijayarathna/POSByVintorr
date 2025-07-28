@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PosOrderItem\CreateInvoiceItemRequest;
+use App\Http\Requests\PosOrderItem\UpdateQtyRequest;
 use App\Http\Requests\Quotation\CreateFooterParameterRequest;
 use App\Http\Requests\Quotation\CreateParameterDescriptionRequest;
 use App\Http\Requests\Quotation\CreateParameterRequest;
 use App\Http\Requests\Quotation\SendCustomerQuotationEmailRequest;
-use App\Models\User;
-use Illuminate\Support\Facades\Storage;
-use PDF;
-use App\Http\Requests\PosOrderItem\CreateInvoiceItemRequest;
-use App\Http\Requests\PosOrderItem\UpdateQtyRequest;
 use App\Http\Requests\Quotation\UpdateFooterParameterRequest;
 use App\Http\Requests\Quotation\UpdateParameterRequest;
 use App\Http\Resources\DataResource;
@@ -18,20 +15,22 @@ use App\Models\BusinessDetail;
 use App\Models\Quotation;
 use App\Models\QuotationItemFooterParameter;
 use App\Models\QuotationItemParameter;
-use domain\Facades\QuotationFacade\QuotationFacade;
+use App\Models\User;
 use domain\Facades\PosOrderFacade\PosOrderFacade;
 use domain\Facades\PosReceiptFacade\PosReceiptFacade;
 use domain\Facades\ProductFacade\ProductFacade;
+use domain\Facades\QuotationFacade\QuotationFacade;
 use domain\Facades\UserFacade\UserFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use PDF;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class QuotationController extends ParentController
 {
-
     public function viewAllInvoices()
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['CASHIER']) {
@@ -51,6 +50,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreateNew();
+
             return redirect()->route('quotation.process', $quotation->id);
         }
     }
@@ -61,9 +61,11 @@ class QuotationController extends ParentController
             $invoice = QuotationFacade::get($quotation_id);
             if ($invoice->status == 1 || $invoice->created_by != Auth::id()) {
                 $response['alert-danger'] = 'Invoice Can\'t be processed.';
+
                 return redirect()->route('cart')->with($response);
             } else {
                 $response['quotation_id'] = $quotation_id;
+
                 return Inertia::render('Quotation/edit', $response);
             }
         }
@@ -76,11 +78,11 @@ class QuotationController extends ParentController
             if (isset($request->sorting_value)) {
                 if ($request->sorting_value == 1) {
                     $query->orderBy('code', 'desc')->orderBy('code', 'desc');
-                } else if ($request->sorting_value == 2) {
+                } elseif ($request->sorting_value == 2) {
                     $query->orderBy('date', 'desc');
-                } else if ($request->sorting_value == 3) {
+                } elseif ($request->sorting_value == 3) {
                     $query->orderBy('total', 'asc');
-                } else if ($request->sorting_value == 4) {
+                } elseif ($request->sorting_value == 4) {
                     $query->orderBy('total', 'desc');
                 } else {
                     $query->orderBy('date', 'desc')->orderBy('code', 'desc');
@@ -107,7 +109,7 @@ class QuotationController extends ParentController
             if (isset($request->select_convert_status)) {
                 if ($request->select_convert_status == 1) {
                     $query->where('convert_status', 1);
-                } else if ($request->select_convert_status == 2) {
+                } elseif ($request->select_convert_status == 2) {
                     $query->where('convert_status', 0);
                 }
             }
@@ -131,6 +133,7 @@ class QuotationController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -142,11 +145,11 @@ class QuotationController extends ParentController
             if (isset($request->sorting_value)) {
                 if ($request->sorting_value == 1) {
                     $query->orderBy('code', 'desc');
-                } else if ($request->sorting_value == 2) {
+                } elseif ($request->sorting_value == 2) {
                     $query->orderBy('date', 'desc')->orderBy('code', 'desc');
-                } else if ($request->sorting_value == 3) {
+                } elseif ($request->sorting_value == 3) {
                     $query->orderBy('total', 'asc');
-                } else if ($request->sorting_value == 4) {
+                } elseif ($request->sorting_value == 4) {
                     $query->orderBy('total', 'desc');
                 } else {
                     $query->orderBy('date', 'desc')->orderBy('code', 'desc');
@@ -190,6 +193,7 @@ class QuotationController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -226,6 +230,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::storeCustomer($quotation->id, $customer_id);
         }
     }
@@ -234,6 +239,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::storeCurrency($quotation->id, $currency_id);
         }
     }
@@ -242,6 +248,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::storeRef($request->all(), $quotation->id);
         }
     }
@@ -257,6 +264,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = QuotationFacade::getOrCreate();
+
             return QuotationFacade::storeNote($invoice->id, $request->all());
         }
     }
@@ -286,6 +294,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $new_price = $request->quantity * $request->selling_price;
+
             return number_format($new_price, 2);
         }
     }
@@ -295,6 +304,7 @@ class QuotationController extends ParentController
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
             $product = ProductFacade::getById($request['product_id']);
+
             return QuotationFacade::selectQuotationProduct($product, $quotation->id, $request->all());
         }
     }
@@ -303,6 +313,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $product = ProductFacade::getById($request['product_id']);
+
             return QuotationFacade::selectQuotationProduct($product, $request['quotation_id'], $request->all());
         }
     }
@@ -311,6 +322,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::getQuotationProduct($quotation);
         }
     }
@@ -326,6 +338,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::getOrderItem($id, $quotation->id);
         }
     }
@@ -342,6 +355,7 @@ class QuotationController extends ParentController
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
             $product = ProductFacade::getById($product_id);
+
             return QuotationFacade::updateQty($request, $product, $quotation->id);
         }
     }
@@ -362,6 +376,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::removeItem($product_id, $quotation->id);
         }
     }
@@ -370,6 +385,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::getTotals($quotation->id);
         }
     }
@@ -385,6 +401,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::getLoyaltyCustomer($quotation->id);
         }
     }
@@ -400,6 +417,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $quotation = QuotationFacade::getOrCreate();
+
             return QuotationFacade::editQuotationCustomer($request->all(), $quotation->id);
         }
     }
@@ -422,6 +440,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $order = QuotationFacade::getOrCreate();
+
             return PosOrderFacade::holdCart($order->id);
         }
     }
@@ -430,6 +449,7 @@ class QuotationController extends ParentController
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['CASHIER']) {
             $quotation = Quotation::where('id', $quotation_id)->withTrashed()->first();
+
             return $quotation;
         }
     }
@@ -439,6 +459,7 @@ class QuotationController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['CASHIER']) {
             // $response = UserFacade::retrieveHost();
             $response['quotation_id'] = $quotation_id;
+
             return Inertia::render('Quotation/edit', $response);
         }
     }
@@ -484,14 +505,15 @@ class QuotationController extends ParentController
             $response['quotation'] = QuotationFacade::get($quotation_id);
             $response['quotation_items'] = QuotationFacade::allItems($quotation_id);
             $response['created_at'] = $response['quotation']['created_at'];
-            $response['print_type'] = "quotation";
+            $response['print_type'] = 'quotation';
             $response['config'] = BusinessDetail::orderBy('id', 'desc')->first();
 
             $response['custom_fields'] = QuotationFacade::parametersGetForPrint($quotation_id);
             $response['footer_fields'] = QuotationFacade::footerParametersGetForPrint($quotation_id);
 
             $pdf = PDF::loadView('print.pages.Quotation.quotation', $response)->setPaper('a4');
-            return $pdf->stream("Payment.pdf", array("Attachment" => false));
+
+            return $pdf->stream('Payment.pdf', ['Attachment' => false]);
         }
     }
 
@@ -507,8 +529,6 @@ class QuotationController extends ParentController
      * StoreFooterParameter
      * store footer parameter
      *
-     * @param CreateFooterParameterRequest $request
-     * @param $quotation_id
      *
      * @return void
      */
@@ -518,17 +538,19 @@ class QuotationController extends ParentController
             $quotation_item_footer_parameters = QuotationItemFooterParameter::where('quotation_id', $quotation_id)->where('name', $request['title'])->first();
             if ($quotation_item_footer_parameters) {
                 $errorMessage = 'The custom title has already been taken.';
+
                 return response()->json([
                     'errors' => [
-                        'title' => [$errorMessage]
+                        'title' => [$errorMessage],
                     ],
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 402);
             }
             if ($quotation_id == null) {
                 $quotation = QuotationFacade::getOrCreate();
                 $quotation_id = $quotation->id;
             }
+
             return QuotationFacade::storeFooterParameter($quotation_id, $request->all());
         }
     }
@@ -536,7 +558,6 @@ class QuotationController extends ParentController
     /**
      * EditFooterParameter
      *
-     * @param $id
      *
      * @return void
      */
@@ -550,7 +571,6 @@ class QuotationController extends ParentController
     /**
      * GetFooterParameters
      *
-     * @param $quotation_id
      *
      * @return void
      */
@@ -561,6 +581,7 @@ class QuotationController extends ParentController
                 $quotation = QuotationFacade::getOrCreate();
                 $quotation_id = $quotation->id;
             }
+
             return QuotationFacade::getFooterParameters($quotation_id);
         }
     }
@@ -568,7 +589,6 @@ class QuotationController extends ParentController
     /**
      * SetFooterDescription
      *
-     * @param Request $request
      *
      * @return void
      */
@@ -582,8 +602,7 @@ class QuotationController extends ParentController
     /**
      * UpdateFooterParameter
      *
-     * @param Request $request
-     *
+     * @param  Request  $request
      * @return void
      */
     public function updateFooterParameter(UpdateFooterParameterRequest $request, $quotation_id = null)
@@ -593,14 +612,16 @@ class QuotationController extends ParentController
             if ($quotation_item_footer_parameters) {
                 if ($quotation_item_footer_parameters->id != $request['id']) {
                     $errorMessage = 'The custom title has already been taken.';
+
                     return response()->json([
                         'errors' => [
-                            'title' => [$errorMessage]
+                            'title' => [$errorMessage],
                         ],
-                        'message' => $errorMessage
+                        'message' => $errorMessage,
                     ], 402);
                 }
             }
+
             return QuotationFacade::updateFooterParameter($request->all());
         }
     }
@@ -608,7 +629,6 @@ class QuotationController extends ParentController
     /**
      * DeleteFooterParameter
      *
-     * @param $field_id
      *
      * @return void
      */
@@ -623,9 +643,7 @@ class QuotationController extends ParentController
     /**
      * StoreParameter
      *
-     * @param Request $request
-     * @param $quotation_id
-     *
+     * @param  Request  $request
      * @return void
      */
     public function storeParameter(CreateParameterRequest $request, $quotation_id = null)
@@ -634,17 +652,19 @@ class QuotationController extends ParentController
             $quotation_item_parameter = QuotationItemParameter::where('quotation_id', $quotation_id)->where('name', $request['title'])->first();
             if ($quotation_item_parameter) {
                 $errorMessage = 'The custom title has already been taken.';
+
                 return response()->json([
                     'errors' => [
-                        'title' => [$errorMessage]
+                        'title' => [$errorMessage],
                     ],
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 402);
             }
             if ($quotation_id == null) {
                 $quotation = QuotationFacade::getOrCreate();
                 $quotation_id = $quotation->id;
             }
+
             return QuotationFacade::storeParameter($quotation_id, $request->all());
         }
     }
@@ -652,7 +672,6 @@ class QuotationController extends ParentController
     /**
      * GetParameters
      *
-     * @param $quotation_id
      *
      * @return void
      */
@@ -663,6 +682,7 @@ class QuotationController extends ParentController
                 $quotation = QuotationFacade::getOrCreate();
                 $quotation_id = $quotation->id;
             }
+
             return QuotationFacade::getParameters($quotation_id);
         }
     }
@@ -670,7 +690,6 @@ class QuotationController extends ParentController
     /**
      * SetDescription
      *
-     * @param CreateParameterDescriptionRequest $request
      *
      * @return void
      */
@@ -684,7 +703,6 @@ class QuotationController extends ParentController
     /**
      * EditParameter
      *
-     * @param $id
      *
      * @return void
      */
@@ -698,8 +716,7 @@ class QuotationController extends ParentController
     /**
      * UpdateParameter
      *
-     * @param Request $request
-     *
+     * @param  Request  $request
      * @return void
      */
     public function updateParameter(UpdateParameterRequest $request, $quotation_id = null)
@@ -709,14 +726,16 @@ class QuotationController extends ParentController
             if ($quotation_item_parameter) {
                 if ($quotation_item_parameter->id != $request['id']) {
                     $errorMessage = 'The custom title has already been taken.';
+
                     return response()->json([
                         'errors' => [
-                            'title' => [$errorMessage]
+                            'title' => [$errorMessage],
                         ],
-                        'message' => $errorMessage
+                        'message' => $errorMessage,
                     ], 402);
                 }
             }
+
             return QuotationFacade::updateParameter($request->all());
         }
     }
@@ -724,7 +743,6 @@ class QuotationController extends ParentController
     /**
      * DeleteParameter
      *
-     * @param $field_id
      *
      * @return void
      */
@@ -738,8 +756,6 @@ class QuotationController extends ParentController
     /**
      * SendCustomerQuotationEmail
      *
-     * @param $quotation_id
-     * @param SendCustomerQuotationEmailRequest $request
      *
      * @return void
      */
@@ -764,11 +780,12 @@ class QuotationController extends ParentController
         $response['footer_fields'] = QuotationFacade::footerParametersGetForPrint($quotation_id);
         $pdf = PDF::loadView('print.pages.Quotation.quotation', $response)->setPaper('a4');
 
-        $pdfPath = 'quotations/' . $quotation_key . '.pdf';
+        $pdfPath = 'quotations/'.$quotation_key.'.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
         $pdfUrl = Storage::url($pdfPath);
 
         $businessDetails = $response['config'];
+
         return Inertia::render('PublicArea/Quotation/view', [
             'pdfUrl' => $pdfUrl,
             'businessDetails' => $businessDetails,

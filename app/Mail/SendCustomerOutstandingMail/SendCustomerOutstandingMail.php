@@ -3,7 +3,6 @@
 namespace App\Mail\SendCustomerOutstandingMail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -16,6 +15,7 @@ class SendCustomerOutstandingMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $sendData;
+
     public $image;
 
     /**
@@ -45,10 +45,10 @@ class SendCustomerOutstandingMail extends Mailable
     public function build()
     {
         $mail = $this->subject($this->sendData['subject'])
-                    ->view('Mails.Pages.CustomerOutstandingReport.customer_outstanding_report')
-                    ->with('sendData', $this->sendData);
+            ->view('Mails.Pages.CustomerOutstandingReport.customer_outstanding_report')
+            ->with('sendData', $this->sendData);
 
-        if(!empty($this->sendData['cc'])){
+        if (! empty($this->sendData['cc'])) {
             $mail->cc($this->sendData['cc']);
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Payroll;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreatePayrollRequest extends FormRequest
@@ -34,7 +33,8 @@ class CreatePayrollRequest extends FormRequest
             'image' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
         ];
     }
-    function messages()
+
+    public function messages()
     {
         return [
             'employee_id.required' => 'Please select an employee',

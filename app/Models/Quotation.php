@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,7 +36,7 @@ class Quotation extends Model
         'customer_address',
         'customer_email',
         'customer_mobile',
-        'quotation_link'
+        'quotation_link',
     ];
 
     protected $appends = [
@@ -48,7 +47,6 @@ class Quotation extends Model
         'formatted_tax_total',
         'currency_name',
     ];
-
 
     /**
      * items
@@ -76,10 +74,10 @@ class Quotation extends Model
         $pending_quotation = $this->latest()->first();
         if ($pending_quotation) {
             $pending_quotation_items = QuotationItem::where('quotation_id', $pending_quotation->id)->get();
-            if ($pending_quotation->customer_id != null || !$pending_quotation_items->isEmpty()) {
+            if ($pending_quotation->customer_id != null || ! $pending_quotation_items->isEmpty()) {
                 $pending_quotation->status = 1;
                 $pending_quotation->save();
-            } else if ($pending_quotation->created_by == Auth::id()) {
+            } elseif ($pending_quotation->created_by == Auth::id()) {
                 return $pending_quotation;
             } else {
                 // no pending invoice
@@ -138,14 +136,15 @@ class Quotation extends Model
             $quotation1->total = $quotation1->sub_total + $quotation1->total_tax - $quotation1->discount;
             $quotation1->save();
         }
+
         return $quotation1;
     }
 
     /**
      * updateTaxes
      *
-     * @param  mixed $quotation_id
-     * @param  mixed $subTotal
+     * @param  mixed  $quotation_id
+     * @param  mixed  $subTotal
      * @return void
      */
     public function updateTaxes($quotation_id, $tax_total)
@@ -155,6 +154,7 @@ class Quotation extends Model
             $quotation->total_tax = $tax_total;
             $quotation->save();
         }
+
         return $quotation;
     }
 

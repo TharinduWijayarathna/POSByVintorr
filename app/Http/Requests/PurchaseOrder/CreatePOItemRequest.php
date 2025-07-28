@@ -24,18 +24,18 @@ class CreatePOItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' =>  ['required'],
-            'quantity' =>  ['required', 'numeric', 'min:1', 'max:10000'],
-            'cost' =>  ['required', 'numeric', 'min:0', 'max:100000000000'],
+            'product_id' => ['required'],
+            'quantity' => ['required', 'numeric', 'min:1', 'max:10000'],
+            'cost' => ['required', 'numeric', 'min:0', 'max:100000000000'],
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
             'product_id.required' => 'Please select a product',
-            'quantity.max' => "Quantity must be less than 10,000",
-            'cost.max' => "Cost must be less than 100,000,000,000",
+            'quantity.max' => 'Quantity must be less than 10,000',
+            'cost.max' => 'Cost must be less than 100,000,000,000',
 
             'quantity.numeric' => 'Quantity must be a number',
             'cost.numeric' => 'Cost must be a number',
@@ -54,8 +54,9 @@ class CreatePOItemRequest extends FormRequest
             $quantity = $this->input('quantity');
             $price = $this->input('cost');
 
-            if (!is_numeric($quantity) || !is_numeric($price)) {
+            if (! is_numeric($quantity) || ! is_numeric($price)) {
                 $validator->errors()->add('product_amount', 'The quantity and price must be numbers.');
+
                 return;
             }
 

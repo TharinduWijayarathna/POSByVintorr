@@ -14,17 +14,22 @@ use Illuminate\Support\Facades\DB;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class BillPaymentService
 {
-
     protected $bill_payment;
+
     protected $pos_order;
+
     protected $business_detail;
+
     protected $transaction;
+
     protected $customer;
 
     /**
@@ -34,14 +39,12 @@ class BillPaymentService
      */
     public function __construct()
     {
-        $this->bill_payment = new BillPayment();
-        $this->pos_order = new PosOrder();
-        $this->business_detail = new BusinessDetail();
-        $this->transaction = new Transaction();
-        $this->customer = new Customer();
+        $this->bill_payment = new BillPayment;
+        $this->pos_order = new PosOrder;
+        $this->business_detail = new BusinessDetail;
+        $this->transaction = new Transaction;
+        $this->customer = new Customer;
     }
-
-
 
     /**
      * Get
@@ -107,7 +110,7 @@ class BillPaymentService
         $result = '';
 
         foreach ($currencyWiseOutstanding as $row) {
-            $result .= $row->currency_name . ' ' . number_format($row->outstanding, 2) . ', ';
+            $result .= $row->currency_name.' '.number_format($row->outstanding, 2).', ';
         }
 
         // Remove the trailing comma and space
@@ -149,7 +152,7 @@ class BillPaymentService
             if ($customer) {
                 $transaction_data['client'] = $customer->name;
             } else {
-                $transaction_data['client'] = "Customer not available";
+                $transaction_data['client'] = 'Customer not available';
             }
         }
         $transaction_data['currency_id'] = $pos_order->currency_id;
@@ -157,10 +160,10 @@ class BillPaymentService
         $transaction_data['sign'] = 0;
         if ($pos_order->type == 1) {
             $transaction_data['type'] = 2;
-            $transaction_data['description'] = "Invoice Payment Delete";
+            $transaction_data['description'] = 'Invoice Payment Delete';
         } elseif ($pos_order->type == 0) {
             $transaction_data['type'] = 1;
-            $transaction_data['description'] = "POS Credit Payment";
+            $transaction_data['description'] = 'POS Credit Payment';
         }
         $this->transaction->create($transaction_data);
 
@@ -170,7 +173,7 @@ class BillPaymentService
     private function generateNewTRCode($prefix)
     {
         $latest_student = $this->transaction->withTrashed()
-            ->where('code', 'LIKE', $prefix . '%')
+            ->where('code', 'LIKE', $prefix.'%')
             ->orderBy('code', 'desc')
             ->first();
 
@@ -181,7 +184,7 @@ class BillPaymentService
             $next_num = 1;
         }
 
-        $code = $prefix . sprintf('%05d', $next_num);
+        $code = $prefix.sprintf('%05d', $next_num);
 
         return $code;
     }

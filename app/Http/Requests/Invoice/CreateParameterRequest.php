@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Invoice;
 
-use App\Models\InvoiceItemParameter;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateParameterRequest extends FormRequest
@@ -27,10 +26,10 @@ class CreateParameterRequest extends FormRequest
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
-            'title.required' => "The custom title is required.",
+            'title.required' => 'The custom title is required.',
         ];
     }
 }

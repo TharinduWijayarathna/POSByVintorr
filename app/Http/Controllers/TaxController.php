@@ -46,13 +46,14 @@ class TaxController extends ParentController
     public function list()
     {
         $taxes = TaxFacade::all();
+
         return GetTaxResource::collection($taxes);
     }
 
     /**
      * store
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function store(CreateTaxRequest $request)
@@ -65,8 +66,8 @@ class TaxController extends ParentController
     /**
      * storeProductTax
      *
-     * @param  mixed $product_id
-     * @param  mixed $request
+     * @param  mixed  $product_id
+     * @param  mixed  $request
      * @return void
      */
     public function storeProductTax(int $product_id, Request $request)
@@ -79,13 +80,14 @@ class TaxController extends ParentController
     /**
      * getProductTax
      *
-     * @param  mixed $product_id
+     * @param  mixed  $product_id
      * @return void
      */
     public function getProductTax(int $product_id)
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN']) {
             $taxes = TaxFacade::getProductTax($product_id);
+
             return GetProductsTaxResource::collection($taxes);
         }
     }
@@ -93,8 +95,8 @@ class TaxController extends ParentController
     /**
      * deleteProductTax
      *
-     * @param  mixed $product_id
-     * @param  mixed $request
+     * @param  mixed  $product_id
+     * @param  mixed  $request
      * @return void
      */
     public function deleteProductTax(int $product_id, Request $request)
@@ -107,7 +109,7 @@ class TaxController extends ParentController
     /**
      * delete
      *
-     * @param  mixed $tax_id
+     * @param  mixed  $tax_id
      * @return void
      */
     public function delete($tax_id)
@@ -120,7 +122,7 @@ class TaxController extends ParentController
     /**
      * get
      *
-     * @param  mixed $tax_id
+     * @param  mixed  $tax_id
      * @return void
      */
     public function get(int $tax_id)
@@ -145,8 +147,8 @@ class TaxController extends ParentController
     /**
      * update
      *
-     * @param  mixed $tax_id
-     * @param  mixed $request
+     * @param  mixed  $tax_id
+     * @param  mixed  $request
      * @return void
      */
     public function update($tax_id, UpdateTaxRequest $request)

@@ -29,7 +29,7 @@ class PurchaseOrderItem extends Model
     /**
      * getAll
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function getAll(int $purchase_order_id)
@@ -50,7 +50,7 @@ class PurchaseOrderItem extends Model
     /**
      * total
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function total(int $purchase_order_id)

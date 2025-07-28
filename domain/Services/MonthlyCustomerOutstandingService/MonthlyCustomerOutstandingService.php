@@ -9,32 +9,34 @@ use App\Models\CustomerOutstandingEmail;
 use App\Models\PosOrder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use PDO;
 
 /**
  * MonthlyCustomerOutstandingService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class MonthlyCustomerOutstandingService
 {
     protected $business_detail;
+
     protected $pos_order;
+
     protected $customers;
+
     protected $customer_outstanding_emails;
-
-
 
     public function __construct()
     {
-        $this->business_detail = new BusinessDetail();
-        $this->pos_order = new PosOrder();
-        $this->customers = new Customer();
-        $this->customer_outstanding_emails = new CustomerOutstandingEmail();
+        $this->business_detail = new BusinessDetail;
+        $this->pos_order = new PosOrder;
+        $this->customers = new Customer;
+        $this->customer_outstanding_emails = new CustomerOutstandingEmail;
     }
 
     public function sendCustomerOutstandingMail()
@@ -67,12 +69,12 @@ class MonthlyCustomerOutstandingService
                     foreach ($customerIds as $id) {
 
                         $credit_bills = $this->pos_order
-                        ->where('status', 1)
-                        ->where('credit_status', 0)
-                        ->where('is_return', 0)
-                        ->where('type', 0)
-                        ->where('customer_id', $id)
-                        ->get();
+                            ->where('status', 1)
+                            ->where('credit_status', 0)
+                            ->where('is_return', 0)
+                            ->where('type', 0)
+                            ->where('customer_id', $id)
+                            ->get();
 
                         $credit_invoices = $this->pos_order
                             ->where('credit_status', 0)
@@ -87,7 +89,6 @@ class MonthlyCustomerOutstandingService
                             })
                             ->get();
 
-
                         $customer = $this->customers->find($id);
 
                         if (isset($customer->email3)) {
@@ -96,7 +97,7 @@ class MonthlyCustomerOutstandingService
                             $default_mail = $customer->email2;
                         } elseif (isset($customer->email)) {
                             $default_mail = $customer->email;
-                        }else{
+                        } else {
                             $default_mail = null;
                         }
 
@@ -111,12 +112,11 @@ class MonthlyCustomerOutstandingService
                         $sendData['invoices'] = $credit_invoices;
                         $sendData['email'] = $default_mail;
                         $sendData['cc'] = $business_details->email;
-                        $sendData['subject'] = "Outstanding Report Up To " . Carbon::now()->format('Y-m-d');
-                        $contact_person = " " . $customer['name'];
-                        $sendData['message'] = "<p>Hi" . $contact_person .
-                            ",</p><p>I hope you’re doing well! Please see the outstanding payment report below.</p><p>
-                                Don’t hesitate to reach out if you have any questions.</p><p>Kind regards!</p>";
-
+                        $sendData['subject'] = 'Outstanding Report Up To '.Carbon::now()->format('Y-m-d');
+                        $contact_person = ' '.$customer['name'];
+                        $sendData['message'] = '<p>Hi'.$contact_person.
+                            ',</p><p>I hope you’re doing well! Please see the outstanding payment report below.</p><p>
+                                Don’t hesitate to reach out if you have any questions.</p><p>Kind regards!</p>';
 
                         SendCustomerOutstandingMailJob::dispatch($sendData, $sendData['email'], $image);
                         Log::info('Outstanding email send successfully');
@@ -124,7 +124,7 @@ class MonthlyCustomerOutstandingService
                 }
             }
         } catch (\Throwable $th) {
-            Log::info('email not send' . $th);
+            Log::info('email not send'.$th);
         }
     }
 }

@@ -10,15 +10,13 @@ class StockLogService
 
     public function __construct()
     {
-        $this->log = new StockLog();
+        $this->log = new StockLog;
     }
-
-
 
     /**
      * store
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
     public function store($data)
@@ -29,7 +27,7 @@ class StockLogService
     /**
      * show
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function get($id)
@@ -40,23 +38,23 @@ class StockLogService
     /**
      * delete
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function destroy($id)
     {
         $log = $this->log->findOrFail($id);
         $log->delete();
+
         return $log;
     }
 
     /**
      * status
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
-
     public function status($id)
     {
         $log = $this->log->findOrFail($id);
@@ -66,6 +64,7 @@ class StockLogService
             $log->status = 0;
         }
         $log->update();
+
         return $log;
     }
 
@@ -82,24 +81,28 @@ class StockLogService
     public function permanentDelete($id)
     {
         $log = $this->log->withTrashed()->findOrFail($id);
+
         return $log->forceDelete();
     }
+
     public function getLatestStockLog()
     {
         $count = $this->log->count();
         if ($count > 0) {
-            $log = $this->log->latest('id')->first(['id', 'name', 'address', 'contact', 'email',]);
+            $log = $this->log->latest('id')->first(['id', 'name', 'address', 'contact', 'email']);
+
             return $log;
         } else {
         }
     }
+
     public function fillDateWithUpdatedAt()
     {
         $stock_logs = $this->log->where('date', null)->get();
         foreach ($stock_logs as $logs) {
-                $logs->update([
-                    'date' => $logs->created_at,
-                ]);
+            $logs->update([
+                'date' => $logs->created_at,
+            ]);
         }
     }
 }

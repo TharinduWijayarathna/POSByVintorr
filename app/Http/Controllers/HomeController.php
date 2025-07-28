@@ -4,22 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Dashboard\CreateTargetsRequest;
 use App\Models\BusinessDetail;
-use Carbon\Carbon;
-use Inertia\Inertia;
 use App\Models\PosOrder;
 use App\Models\User;
+use Carbon\Carbon;
 use domain\Facades\BillPaymentFacade\BillPaymentFacade;
 use domain\Facades\ConfigurationFacade\ConfigurationFacade;
 use domain\Facades\DashboardFacade\DashboardFacade;
-use Illuminate\Http\Request;
 use domain\Facades\PosOrderFacade\PosOrderFacade;
-use domain\Facades\UserFacade\UserFacade;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class HomeController extends ParentController
 {
     /**
      * The dashboard of the system
+     *
      * @return \Inertia\Response
      */
     public function index()
@@ -27,7 +27,7 @@ class HomeController extends ParentController
 
         $business_details = ConfigurationFacade::getDetails();
 
-        if (!$business_details) {
+        if (! $business_details) {
             BusinessDetail::create([
                 'currency_id' => 149,
             ]);
@@ -54,7 +54,7 @@ class HomeController extends ParentController
         $response['month_dates'] = $monthDates;
 
         // Create an array to store the dates
-        $dates = array();
+        $dates = [];
 
         // Generate the dates and add them to the array
         while ($start_date < $end_date) {
@@ -80,15 +80,15 @@ class HomeController extends ParentController
         $response['twelve_months'] = $getTwelveMonthsArray;
 
         $today_sales = PosOrder::whereDate('date', $date)->orderBy('total')->get();
-        //assign prices ascending order to a array
+        // assign prices ascending order to a array
         foreach ($today_sales as $key => $today_sale) {
             $today_sales_price[] = $today_sale->total;
         }
 
         // To get hours
         foreach ($hours as $key => $hour) {
-            $startTime = str_pad($hour, 2, '0', STR_PAD_LEFT) . ':00';
-            $datetime[] =  $startTime;
+            $startTime = str_pad($hour, 2, '0', STR_PAD_LEFT).':00';
+            $datetime[] = $startTime;
         }
 
         $response['total_sales'] = $today_sales_price ?? 0;
@@ -100,11 +100,11 @@ class HomeController extends ParentController
         $currentYear = Carbon::now()->year;
         $currentMonth = Carbon::now()->month;
         $day = Carbon::now()->day;
-        $response['today_sales_amount'] = PosOrder::where('status', 1)->whereDate('updated_at', $currentYear . '-' . $currentMonth . '-' . $day)->sum('total');
+        $response['today_sales_amount'] = PosOrder::where('status', 1)->whereDate('updated_at', $currentYear.'-'.$currentMonth.'-'.$day)->sum('total');
         // This Month Sales
         $response['month_sales_amount'] = PosOrder::where('status', 1)->whereYear('updated_at', $currentYear)->whereMonth('updated_at', $currentMonth)->sum('total');
         // Today Invoice Count
-        $response['today_invoice_count'] = PosOrder::where('status', 1)->where('total', '>', 0)->whereDate('updated_at', $currentYear . '-' . $currentMonth . '-' . $day)->count();
+        $response['today_invoice_count'] = PosOrder::where('status', 1)->where('total', '>', 0)->whereDate('updated_at', $currentYear.'-'.$currentMonth.'-'.$day)->count();
         // This Month Invoice Count
         $response['month_invoice_count'] = PosOrder::where('status', 1)->where('total', '>', 0)->whereYear('updated_at', $currentYear)->whereMonth('updated_at', $currentMonth)->count();
 
@@ -123,7 +123,7 @@ class HomeController extends ParentController
         $response['currency_wise_outstanding'] = BillPaymentFacade::getCurrencyWiseOutstanding();
         // $response['total_invoice_outstanding'] = BillPaymentFacade::getInvoiceTotalOutstanding();
 
-        //Top Selling Products
+        // Top Selling Products
         $thirtyDaysAgo = now()->subDays(30)->toDateString();
         $today = now()->toDateString();
 
@@ -133,14 +133,14 @@ class HomeController extends ParentController
 
         $orderIds = $query->pluck('id');
 
-        if(Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']){
+        if (Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $queryItems = PosOrderFacade::getPopularProductsInspector($orderIds);
-        }else{
+        } else {
             $queryItems = PosOrderFacade::getPopularProducts($orderIds);
         }
 
         $response['featured_products'] = $queryItems;
-        //End Top Selling Products
+        // End Top Selling Products
 
         $response['monthly_expense_percentage'] = DashboardFacade::ExpensesPropsChartData();
 
@@ -151,7 +151,7 @@ class HomeController extends ParentController
 
     /**
      * Dashboard target amount save
-     * @param \App\Http\Requests\Dashboard\CreateTargetsRequest $request
+     *
      * @return void
      */
     public function targetStore(CreateTargetsRequest $request)
@@ -174,7 +174,7 @@ class HomeController extends ParentController
 
     /**
      * Summary of Sales
-     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
     public function getSales(Request $request)
@@ -184,7 +184,7 @@ class HomeController extends ParentController
 
     /**
      * Summary of Incomes
-     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
     public function getIncomes(Request $request)
@@ -194,7 +194,7 @@ class HomeController extends ParentController
 
     /**
      * Summary of Expenses
-     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
     public function getExpenses(Request $request)
@@ -204,7 +204,7 @@ class HomeController extends ParentController
 
     /**
      * Dashboard expenses chart
-     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
     public function ExpensesChartData(Request $request)
@@ -214,7 +214,8 @@ class HomeController extends ParentController
 
     /**
      * Summary of Transaction Balance
-     * @param mixed $currency_id
+     *
+     * @param  mixed  $currency_id
      * @return array
      */
     public function getTransactionBalance($currency_id)
@@ -224,6 +225,7 @@ class HomeController extends ParentController
 
     /**
      * dashboard permissions
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getDashboardController()
@@ -233,7 +235,7 @@ class HomeController extends ParentController
 
     /**
      * Update permissions
-     * @param \Illuminate\Http\Request $request
+     *
      * @return void
      */
     public function updateDashboardController(Request $request)
@@ -243,7 +245,8 @@ class HomeController extends ParentController
 
     /**
      * Summary of Total Tax Amount
-     * @param mixed $currency_id
+     *
+     * @param  mixed  $currency_id
      * @return float[]
      */
     public function getTotalTaxAmount($currency_id)

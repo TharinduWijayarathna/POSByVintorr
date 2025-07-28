@@ -11,13 +11,14 @@ use Illuminate\Support\Str;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class DatabaseService
 {
-
     /**
      * backupExport
      *
@@ -28,17 +29,17 @@ class DatabaseService
         $dbName = env('DB_DATABASE');
 
         // Define the backup path
-        $backupPath = storage_path( 'app/SparkPos');
+        $backupPath = storage_path('app/SparkPos');
 
         $firstWord = Str::before($dbName, '_');
 
         // Create the backup directory if it doesn't exist
-        if (!file_exists($backupPath)) {
+        if (! file_exists($backupPath)) {
             mkdir($backupPath, 0755, true);
         }
 
         // Create the backup file name with the current timestamp
-        $backupFile = $backupPath . '/' . $dbName . '_backup_' . date('Y-m-d_H-i-s') . '.sql';
+        $backupFile = $backupPath.'/'.$dbName.'_backup_'.date('Y-m-d_H-i-s').'.sql';
 
         // Generate the command to dump the database
         $command = sprintf(
@@ -55,17 +56,17 @@ class DatabaseService
         $result = null;
         exec($command, $output, $result);
 
-        $disk_path = config('filesystems.disks.do.backup_path'). '/' . date('Y-m-d') . '/' . $firstWord . '/' . $dbName;
+        $disk_path = config('filesystems.disks.do.backup_path').'/'.date('Y-m-d').'/'.$firstWord.'/'.$dbName;
 
         if ($result === 0) {
 
             $directory = 'SparkPos';
             $files = Storage::files($directory);
 
-            if (!empty($files)) {
+            if (! empty($files)) {
                 $temporaryFile = $files[0]; // Assuming you want the first file
                 $fileName = basename($temporaryFile);
-                $filePath = storage_path('app/' . $temporaryFile);
+                $filePath = storage_path('app/'.$temporaryFile);
                 Log::info($filePath);
                 Log::info($fileName);
                 // Storage::disk('do')->putFile($disk_path, $filePath, 'public');
@@ -80,5 +81,4 @@ class DatabaseService
 
         return $result;
     }
-
 }

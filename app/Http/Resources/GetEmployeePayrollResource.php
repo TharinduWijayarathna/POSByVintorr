@@ -19,7 +19,7 @@ class GetEmployeePayrollResource extends JsonResource
             'code' => $this->code,
             'date' => $this->date,
             'currency_name' => $this->currency->code,
-            'formatted_amount' => $this->formatted_amount, 
+            'formatted_amount' => $this->formatted_amount,
         ];
     }
 }

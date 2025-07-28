@@ -10,6 +10,6 @@ class CustomerOutstandingEmail extends Model
     use HasFactory;
 
     protected $fillable = [
-        'value'
+        'value',
     ];
 }

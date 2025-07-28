@@ -24,10 +24,10 @@ class CreatePosAdvanceReceiptRequest extends FormRequest
     public function rules()
     {
         return [
-            'order_id' =>  ['nullable','numeric'],
-            'date' =>  ['nullable','date'],
-            'amount' =>  ['required','numeric'],
-            'remark' =>  ['nullable','string'],
+            'order_id' => ['nullable', 'numeric'],
+            'date' => ['nullable', 'date'],
+            'amount' => ['required', 'numeric'],
+            'remark' => ['nullable', 'string'],
         ];
     }
 }

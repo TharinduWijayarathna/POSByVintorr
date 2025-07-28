@@ -41,13 +41,14 @@ class PosPayment extends Model
         $cashier = Cashier::where('id', $id)->first();
         $cashier_ids = Cashier::where('location_id', $cashier->location_id)->pluck('id')->toArray();
         $date = Carbon::now();
+
         return $this->whereIn('cashier_id', $cashier_ids)->whereDate('created_at', $date)->count();
     }
 
     /**
      * getInvoicesByLocationAndTime
      *
-     * @param  array $hours
+     * @param  array  $hours
      * @return void
      */
     public function getInvoicesByLocationAndTime($hours)
@@ -58,10 +59,11 @@ class PosPayment extends Model
         $full_date = Carbon::now();
         $date = $full_date->toDateString();
         foreach ($hours as $key => $hour) {
-            $startTime = $date . ' ' . $hour . ':00:00';
-            $endTime = $date . ' ' . $hour . ':59:59';
+            $startTime = $date.' '.$hour.':00:00';
+            $endTime = $date.' '.$hour.':59:59';
             $data[] = $this->whereIn('cashier_id', $cashier_ids)->where('created_at', '>=', $startTime)->where('created_at', '<=', $endTime)->count();
         }
+
         return $data;
     }
 
@@ -78,6 +80,7 @@ class PosPayment extends Model
         for ($i = 1; $i <= 12; $i++) {
             $data[] = $this->whereIn('cashier_id', $cashier_ids)->whereMonth('created_at', $i)->count();
         }
+
         return $data;
     }
 }

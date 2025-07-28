@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 /*
  * TransactionLog
  * php version 8
@@ -63,6 +64,7 @@ class TransactionLog extends Model
     protected $appends = [
         'code',
     ];
+
     public function invoice()
     {
         return $this->hasOne(Invoice::class, 'id', 'invoice_id');
@@ -70,8 +72,8 @@ class TransactionLog extends Model
 
     public function getCodeAttribute()
     {
-        $this->transaction=new TransactionLog();
+        $this->transaction = new TransactionLog;
 
-        return $this->invoice?$this->invoice->code:'';
+        return $this->invoice ? $this->invoice->code : '';
     }
 }

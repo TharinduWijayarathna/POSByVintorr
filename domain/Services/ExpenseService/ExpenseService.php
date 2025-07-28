@@ -9,7 +9,6 @@ use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\PosOrderItem;
 use App\Models\Product;
-
 use App\Models\ProductCost;
 use App\Models\Stock;
 use App\Models\StockLog;
@@ -21,46 +20,54 @@ use DateTime;
 use domain\Facades\ExpenseFacade\ExpenseFacade;
 use domain\Facades\StockLogFacade\StockLogFacade;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use PDF;
 
 class ExpenseService
 {
     protected $product;
+
     protected $expense;
+
     protected $cost;
+
     protected $order_item;
+
     protected $supplier;
+
     protected $transaction;
+
     protected $stock;
+
     protected $stock_log;
+
     protected $expense_category;
+
     private $transaction_balance;
+
     private $currency;
+
     private $business_details;
 
     public function __construct()
     {
-        $this->product = new Product();
-        $this->expense = new Expense();
-        $this->cost = new ProductCost();
-        $this->order_item = new PosOrderItem();
-        $this->supplier = new Supplier();
-        $this->transaction = new Transaction();
-        $this->stock = new Stock();
-        $this->stock_log = new StockLog();
-        $this->expense_category = new ExpenseCategory();
-        $this->transaction_balance = new TransactionBalance();
-        $this->currency = new Currency();
-        $this->business_details = new BusinessDetail();
+        $this->product = new Product;
+        $this->expense = new Expense;
+        $this->cost = new ProductCost;
+        $this->order_item = new PosOrderItem;
+        $this->supplier = new Supplier;
+        $this->transaction = new Transaction;
+        $this->stock = new Stock;
+        $this->stock_log = new StockLog;
+        $this->expense_category = new ExpenseCategory;
+        $this->transaction_balance = new TransactionBalance;
+        $this->currency = new Currency;
+        $this->business_details = new BusinessDetail;
     }
-
 
     /**
      * store
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
     public function store(array $data)
@@ -76,12 +83,12 @@ class ExpenseService
 
         $count = $this->expense->withTrashed()->count();
 
-        $code = 'EX' . sprintf('%05d', $count + 1);
+        $code = 'EX'.sprintf('%05d', $count + 1);
         $check = $this->expense->withTrashed()->where('code', $code)->first();
 
         while ($check) {
             $count++;
-            $code = 'EX' . sprintf('%05d', $count);
+            $code = 'EX'.sprintf('%05d', $count);
             $check = $this->expense->withTrashed()->where('code', $code)->first();
         }
 
@@ -91,14 +98,14 @@ class ExpenseService
         $created_expense->created_at = $data['created_at'];
         $created_expense->save();
 
-        //transaction log
+        // transaction log
         $transaction_count = $this->transaction->count();
-        $tr_code = 'TR' . sprintf('%05d', $transaction_count + 1);
+        $tr_code = 'TR'.sprintf('%05d', $transaction_count + 1);
         $check_tr = $this->transaction->getCode($tr_code);
 
         while ($check_tr) {
             $transaction_count++;
-            $tr_code = 'TR' . sprintf('%05d', $transaction_count);
+            $tr_code = 'TR'.sprintf('%05d', $transaction_count);
             $check_tr = $this->transaction->getCode($tr_code);
         }
 
@@ -113,13 +120,13 @@ class ExpenseService
             if ($supplier) {
                 $transaction_data['client'] = $supplier->name;
             } else {
-                $transaction_data['client'] = "Supplier not available";
+                $transaction_data['client'] = 'Supplier not available';
             }
         }
         $transaction_data['currency_id'] = $created_expense->currency_id;
         $transaction_data['amount'] = $created_expense->amount;
         $transaction_data['sign'] = 0;
-        $transaction_data['description'] = "Expense";
+        $transaction_data['description'] = 'Expense';
         if (isset($data['remark'])) {
             $transaction_data['remark'] = $created_expense->remark;
         }
@@ -140,7 +147,7 @@ class ExpenseService
             $balance_data['amount'] = -$created_expense->amount;
             $this->transaction_balance->create($balance_data);
         }
-        //end transaction log
+        // end transaction log
 
         return $created_expense->id;
     }
@@ -148,7 +155,7 @@ class ExpenseService
     public function getNewCode()
     {
         $count = Product::where('status', 0)->withTrashed()->count();
-        //Uniqu product code generator
+        // Uniqu product code generator
         $code = sprintf('%05d', $count + 1);
         $check = Product::withTrashed()->where('code', $code)->first();
         while ($check) {
@@ -168,7 +175,7 @@ class ExpenseService
     /**
      * show
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function show($id)
@@ -199,11 +206,10 @@ class ExpenseService
     /**
      * update
      *
-     * @param  mixed $id
-     * @param  mixed $data
+     * @param  mixed  $id
+     * @param  mixed  $data
      * @return void
      */
-
     public function update($id, $data)
     {
         $dateString = $data['date'];
@@ -215,7 +221,7 @@ class ExpenseService
         }
         $expense = $this->expense->findOrFail($id);
 
-        //transaction log
+        // transaction log
         $created_transaction = $this->transaction->where('reference_code', $expense->code)->where('payment_code', $expense->code)->first();
         if ($created_transaction) {
             if (isset($data['supplier_id'])) {
@@ -224,7 +230,7 @@ class ExpenseService
                 if ($supplier) {
                     $created_transaction->client = $supplier->name;
                 } else {
-                    $created_transaction->client = "Supplier not available";
+                    $created_transaction->client = 'Supplier not available';
                 }
             }
 
@@ -262,8 +268,9 @@ class ExpenseService
         $expense->update($data);
         $expense->created_at = $expense->date;
         $expense->save();
+
         return $expense;
-        //end transaction log
+        // end transaction log
     }
 
     public function stockUpdate($id, $data)
@@ -290,12 +297,12 @@ class ExpenseService
      * Delete
      * delete specific data using pos_customer_id
      *
-     * @param  int   $pos_customer_id
+     * @param  int  $pos_customer_id
      * @return void
      */
     public function delete(int $expense_id)
     {
-        //transaction log
+        // transaction log
         $expense = $this->expense->find($expense_id);
         $transaction = $this->transaction->where('reference_code', $expense->code)->first();
 
@@ -312,6 +319,7 @@ class ExpenseService
         }
 
         $transaction->delete();
+
         return $expense->delete();
     }
 
@@ -339,19 +347,21 @@ class ExpenseService
     /**
      * destroy
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function destroy($id)
     {
         $product = $this->product->findOrFail($id);
         $product->costs()->delete();
+
         return $product->delete();
     }
 
     public function deleteCost($id)
     {
         $cost = $this->cost->findOrFail($id);
+
         return $cost->delete();
     }
 
@@ -363,7 +373,7 @@ class ExpenseService
     /**
      * status
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function status($id)
@@ -375,6 +385,7 @@ class ExpenseService
             $product->status = 0;
         }
         $product->update();
+
         return $product;
     }
 
@@ -391,13 +402,16 @@ class ExpenseService
     public function permanentDelete($id)
     {
         $product = $this->product->withTrashed()->findOrFail($id);
+
         return $product->forceDelete();
     }
+
     public function getLatestProduct()
     {
         $count = $this->product->count();
         if ($count > 0) {
             $product = $this->product->latest('id')->first(['id', 'name', 'selling', 'introduction']);
+
             return $product;
         } else {
         }
@@ -417,12 +431,14 @@ class ExpenseService
     public function getById($product_id)
     {
         $product = $this->product->getById($product_id);
+
         return $product;
     }
 
     public function getCount()
     {
         $count = $this->product->where('stock_quantity', '>', 0)->count();
+
         return $count;
     }
 
@@ -430,11 +446,11 @@ class ExpenseService
     {
 
         $expense_category = $this->expense_category->where('name', $data['name'])->first();
-        if (!$expense_category) {
+        if (! $expense_category) {
 
             return $this->expense_category->create($data);
         } else {
-            return "This category already exists";
+            return 'This category already exists';
         }
     }
 
@@ -446,6 +462,7 @@ class ExpenseService
     public function updateCategory($id, $data)
     {
         $category = $this->expense_category->findOrFail($id);
+
         return $category->update($data);
     }
 
@@ -458,6 +475,7 @@ class ExpenseService
     {
         $details = $this->expense->find($id);
         $details->image_id = null;
+
         return $details->save();
     }
 
@@ -559,7 +577,6 @@ class ExpenseService
         return $percentage;
     }
 
-
     public function restoreExpense(int $expense_id)
     {
         $deleted_expense = $this->expense->withTrashed()->find($expense_id);
@@ -580,6 +597,7 @@ class ExpenseService
         $deleted_transaction->deleted_at = null;
         $deleted_transaction->save();
         $deleted_expense->deleted_at = null;
+
         return $deleted_expense->save();
     }
 
@@ -587,6 +605,7 @@ class ExpenseService
     {
         $expense = $this->expense->find($expense_id);
         $expense->supplier_id = null;
+
         return $expense->save();
     }
 
@@ -595,7 +614,7 @@ class ExpenseService
         try {
             $response['expense'] = ExpenseFacade::get($expense_id);
             $response['created_at'] = $response['expense']['created_at'];
-            $response['print_type'] = "expense";
+            $response['print_type'] = 'expense';
             $response['config'] = $this->business_details->orderBy('id', 'desc')->first();
             $pdf = PDF::loadView('print.pages.Expense.expense', $response)->setPaper('a4');
 
@@ -617,13 +636,15 @@ class ExpenseService
             ];
 
             SendSupplierExpenseMailJob::dispatch($sendData, $default_mail, $filePath, $image);
+
             return response()->json(['message' => 'Email sent successfully']);
         } catch (\Throwable $th) {
             return $th;
         }
     }
 
-    public function getPayrollByCurrency($currency_id, $monthly_id){
+    public function getPayrollByCurrency($currency_id, $monthly_id)
+    {
         $query = $this->expense->where('type', 1);
 
         if ($currency_id) {
@@ -648,7 +669,7 @@ class ExpenseService
     public function calculateTotals($expenses)
     {
         $totals = [
-            'total' => 0
+            'total' => 0,
         ];
 
         foreach ($expenses as $expense) {

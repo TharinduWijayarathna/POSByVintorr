@@ -26,41 +26,41 @@ class StockController extends ParentController
 
         $payload = $query->where(function ($query) use ($request) {
             if (isset($request->search_product_code)) {
-                $query->where('code', 'like', '%' . $request->search_product_code . '%');
+                $query->where('code', 'like', '%'.$request->search_product_code.'%');
             }
             if (isset($request->search_product_name)) {
-                $query->where('name', 'like', '%' . $request->search_product_name . '%');
+                $query->where('name', 'like', '%'.$request->search_product_name.'%');
             }
             if (isset($request->search_product_selling_max) && isset($request->search_product_selling_min)) {
-                $min = floatval(str_replace(",", "", $request->search_product_selling_min));
-                $max = floatval(str_replace(",", "", $request->search_product_selling_max));
+                $min = floatval(str_replace(',', '', $request->search_product_selling_min));
+                $max = floatval(str_replace(',', '', $request->search_product_selling_max));
                 if ($max != 0) {
                     $query->where('selling', '>=', $min)->where('selling', '<=', $max);
-                }else{
+                } else {
                     $query->where('selling', '>=', $min);
                 }
-            }else if (isset($request->search_product_selling_min)) {
-                $min = floatval(str_replace(",", "", $request->search_product_selling_min));
+            } elseif (isset($request->search_product_selling_min)) {
+                $min = floatval(str_replace(',', '', $request->search_product_selling_min));
                 $query->where('selling', '>=', $min);
-            }else if (isset($request->search_product_selling_max)) {
-                $max = floatval(str_replace(",", "", $request->search_product_selling_max));
+            } elseif (isset($request->search_product_selling_max)) {
+                $max = floatval(str_replace(',', '', $request->search_product_selling_max));
                 if ($max != 0) {
                     $query->where('selling', '<=', $max);
                 }
             }
             if (isset($request->search_product_cost_max) && isset($request->search_product_cost_min)) {
-                $min = floatval(str_replace(",", "", $request->search_product_cost_min));
-                $max = floatval(str_replace(",", "", $request->search_product_cost_max));
+                $min = floatval(str_replace(',', '', $request->search_product_cost_min));
+                $max = floatval(str_replace(',', '', $request->search_product_cost_max));
                 if ($max != 0) {
                     $query->where('cost', '>=', $min)->where('cost', '<=', $max);
-                }else{
+                } else {
                     $query->where('cost', '>=', $min);
                 }
-            }else if (isset($request->search_product_cost_min)) {
-                $min = floatval(str_replace(",", "", $request->search_product_cost_min));
+            } elseif (isset($request->search_product_cost_min)) {
+                $min = floatval(str_replace(',', '', $request->search_product_cost_min));
                 $query->where('cost', '>=', $min);
-            }else if (isset($request->search_product_cost_max)) {
-                $max = floatval(str_replace(",", "", $request->search_product_cost_max));
+            } elseif (isset($request->search_product_cost_max)) {
+                $max = floatval(str_replace(',', '', $request->search_product_cost_max));
                 if ($max != 0) {
                     $query->where('cost', '<=', $max);
                 }
@@ -68,7 +68,8 @@ class StockController extends ParentController
         });
         $payload = QueryBuilder::for($query)
             ->allowedSorts(['id', 'name'])->with('unit')
-        ->paginate(request('per_page', config('basic.pagination_per_page')));
+            ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
     }
 
@@ -81,6 +82,7 @@ class StockController extends ParentController
     {
         try {
             ProductFacade::update($id, $request->validated());
+
             return new DataResource(Product::with('costs')->findOrFail($id));
         } catch (\Throwable $th) {
             return response()->json([
@@ -90,46 +92,47 @@ class StockController extends ParentController
         }
     }
 
-    public function stockExport(Request $request, ProductStockExport $productExport){
+    public function stockExport(Request $request, ProductStockExport $productExport)
+    {
         $query = Product::where('status', 0)->orderBy('created_at', 'desc');
 
         $payload = $query->where(function ($query) use ($request) {
             if (isset($request->search_product_code)) {
-                $query->where('code', 'like', '%' . $request->search_product_code . '%');
+                $query->where('code', 'like', '%'.$request->search_product_code.'%');
             }
             if (isset($request->search_product_name)) {
-                $query->where('name', 'like', '%' . $request->search_product_name . '%');
+                $query->where('name', 'like', '%'.$request->search_product_name.'%');
             }
             if (isset($request->search_product_selling_max) && isset($request->search_product_selling_min)) {
-                $min = floatval(str_replace(",", "", $request->search_product_selling_min));
-                $max = floatval(str_replace(",", "", $request->search_product_selling_max));
+                $min = floatval(str_replace(',', '', $request->search_product_selling_min));
+                $max = floatval(str_replace(',', '', $request->search_product_selling_max));
                 if ($max != 0) {
                     $query->where('selling', '>=', $min)->where('selling', '<=', $max);
-                }else{
+                } else {
                     $query->where('selling', '>=', $min);
                 }
-            }else if (isset($request->search_product_selling_min)) {
-                $min = floatval(str_replace(",", "", $request->search_product_selling_min));
+            } elseif (isset($request->search_product_selling_min)) {
+                $min = floatval(str_replace(',', '', $request->search_product_selling_min));
                 $query->where('selling', '>=', $min);
-            }else if (isset($request->search_product_selling_max)) {
-                $max = floatval(str_replace(",", "", $request->search_product_selling_max));
+            } elseif (isset($request->search_product_selling_max)) {
+                $max = floatval(str_replace(',', '', $request->search_product_selling_max));
                 if ($max != 0) {
                     $query->where('selling', '<=', $max);
                 }
             }
             if (isset($request->search_product_cost_max) && isset($request->search_product_cost_min)) {
-                $min = floatval(str_replace(",", "", $request->search_product_cost_min));
-                $max = floatval(str_replace(",", "", $request->search_product_cost_max));
+                $min = floatval(str_replace(',', '', $request->search_product_cost_min));
+                $max = floatval(str_replace(',', '', $request->search_product_cost_max));
                 if ($max != 0) {
                     $query->where('cost', '>=', $min)->where('cost', '<=', $max);
-                }else{
+                } else {
                     $query->where('cost', '>=', $min);
                 }
-            }else if (isset($request->search_product_cost_min)) {
-                $min = floatval(str_replace(",", "", $request->search_product_cost_min));
+            } elseif (isset($request->search_product_cost_min)) {
+                $min = floatval(str_replace(',', '', $request->search_product_cost_min));
                 $query->where('cost', '>=', $min);
-            }else if (isset($request->search_product_cost_max)) {
-                $max = floatval(str_replace(",", "", $request->search_product_cost_max));
+            } elseif (isset($request->search_product_cost_max)) {
+                $max = floatval(str_replace(',', '', $request->search_product_cost_max));
                 if ($max != 0) {
                     $query->where('cost', '<=', $max);
                 }
@@ -142,15 +145,14 @@ class StockController extends ParentController
         $skip = $per_page * ($page - 1);
 
         // create unique name for file
-        $name = 'productsReport_' . Auth::id() . time() . '.xlsx';
+        $name = 'productsReport_'.Auth::id().time().'.xlsx';
 
-        Excel::store($productExport->export($payload), config('filesystems.disks.do.folder') . '/products/' . $name, 'do', \Maatwebsite\Excel\Excel::XLSX, [
+        Excel::store($productExport->export($payload), config('filesystems.disks.do.folder').'/products/'.$name, 'do', \Maatwebsite\Excel\Excel::XLSX, [
             'visibility' => 'public',
         ]);
 
         return response()->json([
-            'url' => config('filesystems.disks.do.public_url') . '/' . config('filesystems.disks.do.folder') . '/products/' . $name,
+            'url' => config('filesystems.disks.do.public_url').'/'.config('filesystems.disks.do.folder').'/products/'.$name,
         ]);
     }
-
 }

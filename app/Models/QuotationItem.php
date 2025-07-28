@@ -36,7 +36,6 @@ class QuotationItem extends Model
      * getAll
      * Get all order items according to the given id
      *
-     * @param  int  $quotation_id
      * @return void
      */
     public function getAll(int $quotation_id)
@@ -52,7 +51,7 @@ class QuotationItem extends Model
     /**
      * totalTax
      *
-     * @param  mixed $quotation_id
+     * @param  mixed  $quotation_id
      * @return void
      */
     public function totalTax(int $quotation_id)

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DataResource;
-use App\Models\User;
 use App\Models\PosOrder;
+use App\Models\User;
 use domain\Facades\PosOrderFacade\PosOrderFacade;
 use domain\Facades\UserFacade\UserFacade;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -46,6 +46,7 @@ class HoldCartController extends ParentController
             )
             // ->allowedSorts(['code'])
             ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
     }
 
@@ -75,7 +76,7 @@ class HoldCartController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             return PosOrderFacade::deleteOrder($order_id);
         } else {
-            throw new Exception("Access denied", 1);
+            throw new Exception('Access denied', 1);
         }
     }
 }

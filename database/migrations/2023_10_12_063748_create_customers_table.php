@@ -23,8 +23,8 @@ return new class extends Migration
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('updated_by')->nullable();
             $table->string('company')->nullable();
-            $table->decimal('customer_credit',15,2)->default(0)->nullable();
-            $table->decimal('customer_outstanding',12,2)->default(0)->nullable();
+            $table->decimal('customer_credit', 15, 2)->default(0)->nullable();
+            $table->decimal('customer_outstanding', 12, 2)->default(0)->nullable();
             $table->string('account_no')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('branch_name')->nullable();

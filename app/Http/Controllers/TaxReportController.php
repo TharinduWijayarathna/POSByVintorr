@@ -10,9 +10,9 @@ use domain\Facades\UserFacade\UserFacade;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
-use PDF;
 
 class TaxReportController extends Controller
 {
@@ -54,7 +54,7 @@ class TaxReportController extends Controller
             $query->whereDate('date', '<=', $request->search_order_to_date);
         }
 
-        if ($request->search_order_currency != "0") {
+        if ($request->search_order_currency != '0') {
             $query->where('currency_id', $request->search_order_currency);
         }
 
@@ -68,15 +68,14 @@ class TaxReportController extends Controller
             )->paginate(request('per_page', config('basic.pagination_per_page')));
 
         return DataResource::collection($payload)->additional([
-            'total_tax_sum' => $total_tax_sum
+            'total_tax_sum' => $total_tax_sum,
         ]);
     }
-
 
     /**
      * print
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function print(Request $request)
@@ -89,7 +88,6 @@ class TaxReportController extends Controller
         $code = $request->input('code');
         $order_type = $request->input('search_order_type') == 1 ? 'POS'
             : ($request->input('search_order_type') == 2 ? 'Invoice' : null);
-
 
         // Get the business details
         $config = BusinessDetail::orderBy('id', 'desc')->first();
@@ -114,13 +112,14 @@ class TaxReportController extends Controller
 
         // Generate the PDF
         $pdf = PDF::loadView('print.pages.Reports.TaxReport.report', $data);
-        return $pdf->stream("TaxReport.pdf", ["Attachment" => false]);
+
+        return $pdf->stream('TaxReport.pdf', ['Attachment' => false]);
     }
 
     /**
      * export
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function export(Request $request)
@@ -152,22 +151,21 @@ class TaxReportController extends Controller
         ];
 
         // Generate the Excel and store it in the storage then return the path
-        $fileName = 'TaxReport-' . date('Y-m-d') . '-' . time() . '.xlsx';
-        $filePath = 'exports/Reports/' . $fileName;
-        $order_export = new TaxReportExport();
+        $fileName = 'TaxReport-'.date('Y-m-d').'-'.time().'.xlsx';
+        $filePath = 'exports/Reports/'.$fileName;
+        $order_export = new TaxReportExport;
         Excel::store($order_export->export($data), $filePath, 'public');
 
         // Generate the URL to the stored file
-        $path = asset('storage/' . $filePath);
+        $path = asset('storage/'.$filePath);
 
         return response()->json(['path' => $path]);
     }
 
-
     /**
      * buildOrderQuery
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     private function buildOrderQuery($request)
@@ -192,11 +190,11 @@ class TaxReportController extends Controller
             $query->whereDate('date', '<=', $request->search_order_to_date);
         }
 
-        if ($request->search_order_currency != "0") {
+        if ($request->search_order_currency != '0') {
             $query->where('currency_id', $request->search_order_currency);
         }
 
-        if($request->code){
+        if ($request->code) {
             $query->where('code', 'like', "%{$request->code}%");
         }
 

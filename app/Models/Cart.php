@@ -18,7 +18,7 @@ class Cart extends Model
 
     protected $fillable = [
         'key',
-        'status'
+        'status',
     ];
 
     public function checkKey(string $key)

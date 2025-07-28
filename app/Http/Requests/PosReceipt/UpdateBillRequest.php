@@ -26,7 +26,8 @@ class UpdateBillRequest extends FormRequest
             'remark' => ['nullable', 'string', 'max:120'],
         ];
     }
-    function messages()
+
+    public function messages()
     {
         return [
             'accepted_amount.required' => ' The paid amount is required',

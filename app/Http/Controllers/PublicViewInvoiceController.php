@@ -8,10 +8,9 @@ use domain\Facades\BillPaymentFacade\BillPaymentFacade;
 use domain\Facades\InvoiceFacade\InvoiceFacade;
 use domain\Facades\PosOrderFacade\PosOrderFacade;
 use domain\Facades\PosOrderItemFacade\PosOrderItemFacade;
-use PDF;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use PDF;
 
 class PublicViewInvoiceController extends Controller
 {
@@ -22,7 +21,7 @@ class PublicViewInvoiceController extends Controller
         $response['order'] = PosOrderFacade::get($invoice_id);
         $response['order_items'] = PosOrderItemFacade::all($invoice_id);
         $response['created_at'] = $response['order']['created_at'];
-        $response['print_type'] = "invoice";
+        $response['print_type'] = 'invoice';
         $response['bill'] = BillPaymentFacade::get($invoice_id);
         $response['config'] = BusinessDetail::latest()->first();
 
@@ -34,11 +33,12 @@ class PublicViewInvoiceController extends Controller
             $pdf = PDF::loadView('print.pages.Invoice.invoice', $response)->setPaper('a4');
         }
 
-        $pdfPath = 'invoices/' . $invoice_key . '.pdf';
+        $pdfPath = 'invoices/'.$invoice_key.'.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
         $pdfUrl = Storage::url($pdfPath);
 
         $businessDetails = $response['config'];
+
         return Inertia::render('PublicArea/Invoice/view', [
             'pdfUrl' => $pdfUrl, 'businessDetails' => $businessDetails,
         ]);

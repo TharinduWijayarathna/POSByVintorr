@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 /*
  * Invoice
  * php version 8
@@ -113,7 +113,6 @@ class Invoice extends Model
         return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id')->withTrashed();
     }
 
-
     public function costs()
     {
         return $this->hasMany(InvoiceCost::class, 'invoice_id', 'id');
@@ -128,6 +127,7 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoicePayment::class, 'invoice_id', 'id');
     }
+
     public function income()
     {
         return $this->hasMany(Income::class, 'invoice_id', 'id');
@@ -137,6 +137,7 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceItemTax::class, 'invoice_id', 'id');
     }
+
     public function parameters()
     {
         return $this->hasMany(InvoiceItemParameter::class, 'invoice_id', 'id');
@@ -146,6 +147,7 @@ class Invoice extends Model
     {
         return $this->hasMany(Customer::class, 'customer_id', 'id');
     }
+
     public function transaction()
     {
         return $this->hasMany(TransactionLog::class, 'invoice_id', 'id');
@@ -158,7 +160,7 @@ class Invoice extends Model
 
     public function refundConfirm()
     {
-        return $this->hasMany(ReceiptRefund::class, 'invoice_id', 'id')->where('confirm_status',1);
+        return $this->hasMany(ReceiptRefund::class, 'invoice_id', 'id')->where('confirm_status', 1);
     }
 
     public function getInTotalAttribute()
@@ -169,24 +171,28 @@ class Invoice extends Model
     public function getInSubTotalAttribute()
     {
         $invoice_discount = $this->discount;
-        $discount = $this->items->sum('discount') + number_format((float)$invoice_discount, 2, '.', '');
+        $discount = $this->items->sum('discount') + number_format((float) $invoice_discount, 2, '.', '');
         $total = $this->items->sum('total');
         $total_tax = 0;
         foreach ($this->taxes as $tax) {
             $rate = $tax->rate;
             $total_tax += ($total - $discount) * $rate / 100;
         }
-        return number_format((float)($total - $discount) + $total_tax, 2, '.', '');
+
+        return number_format((float) ($total - $discount) + $total_tax, 2, '.', '');
     }
 
     public function getInDiscountAttribute()
     {
         $discount = $this->items->sum('discount');
+
         return $discount;
     }
+
     public function getTotalDiscountAttribute()
     {
         $discount = $this->discount;
+
         return $discount;
     }
 
@@ -194,6 +200,7 @@ class Invoice extends Model
     {
         return $this->costs->sum('amount');
     }
+
     public function getPaidAmountAttribute()
     {
         return $this->payments->sum('paid_amount');
@@ -201,45 +208,50 @@ class Invoice extends Model
 
     public function getTotalReceiptAttribute()
     {
-        $paid_amount = $this->receipt->where('confirm_status',1)->sum('paid_amount');
-        return number_format((float)$paid_amount, 2, '.', '');
+        $paid_amount = $this->receipt->where('confirm_status', 1)->sum('paid_amount');
+
+        return number_format((float) $paid_amount, 2, '.', '');
     }
 
     public function getInvoiceReceiptAttribute()
     {
         $paid_amount = $this->receipt->sum('paid_amount');
-        return number_format((float)$paid_amount, 2, '.', '');
+
+        return number_format((float) $paid_amount, 2, '.', '');
     }
 
     public function getTotalRefundAttribute()
     {
-        $refund_amount = $this->refund->where('confirm_status',1)->sum('refund_amount');
-        return number_format((float)$refund_amount, 2, '.', '');
+        $refund_amount = $this->refund->where('confirm_status', 1)->sum('refund_amount');
+
+        return number_format((float) $refund_amount, 2, '.', '');
     }
 
     public function getNewTotalReceiptAttribute()
     {
-        $paid_amount = $this->receipt->where('confirm_status',1)->sum('paid_amount');
-        $refund_amount = $this->refund->where('confirm_status',1)->sum('refund_amount');
+        $paid_amount = $this->receipt->where('confirm_status', 1)->sum('paid_amount');
+        $refund_amount = $this->refund->where('confirm_status', 1)->sum('refund_amount');
         $new_total = $paid_amount - $refund_amount;
-        return number_format((float)$new_total, 2, '.', '');
+
+        return number_format((float) $new_total, 2, '.', '');
     }
 
     public function getTotalDueAttribute()
     {
         $total = $this->total;
-        $paid_amount = $this->receipt->where('confirm_status',1)->sum('paid_amount');
+        $paid_amount = $this->receipt->where('confirm_status', 1)->sum('paid_amount');
         // $refund_amount = $this->refund->where('confirm_status',1)->sum('refund_amount');
-        $due = $total - $paid_amount ;
-        return number_format((float)$due, 2, '.', '');
+        $due = $total - $paid_amount;
+
+        return number_format((float) $due, 2, '.', '');
     }
 
     public function getTotalCreditAttribute()
     {
         $credit = $this->total_receipt - $this->in_total;
-        return number_format((float)$credit, 2, '.', '');
-    }
 
+        return number_format((float) $credit, 2, '.', '');
+    }
 
     public function getPaymentStatusAttribute()
     {
@@ -248,25 +260,26 @@ class Invoice extends Model
 
     public function getRestoreTotalAttribute()
     {
-        //$items=$this->items->withTrashed()->get();
+        // $items=$this->items->withTrashed()->get();
         return $this->items->sum('total');
-       // return $this->restore_items->sum('total');
-        //return $items->sum('total');
+        // return $this->restore_items->sum('total');
+        // return $items->sum('total');
     }
 
     public function getRestorePaidAttribute()
     {
         return $this->receipt->sum('paid_amount');
-        //return $this->restore_receipt->sum('paid_amount');
+        // return $this->restore_receipt->sum('paid_amount');
     }
-
 
     public function getTotalDaysAttribute()
     {
         $date = $this->due_date;
         $diff = now()->diffInDays(Carbon::parse($date));
+
         return $diff;
     }
+
     public function getCashSalesAttribute()
     {
         $cash = $this->receipt->where('status', 0)->where('pay_method', 3)->sum('paid_amount');
@@ -276,9 +289,9 @@ class Invoice extends Model
 
     public function Intotal()
     {
-        //$items=$this->items->withTrashed()->get();
+        // $items=$this->items->withTrashed()->get();
         $invoice_discount = $this->discount;
-        $discount = $this->items->sum('discount') + number_format((float)$invoice_discount, 2, '.', '');
+        $discount = $this->items->sum('discount') + number_format((float) $invoice_discount, 2, '.', '');
         $total = $this->items->sum('total');
         $total_taxt = 0;
         foreach ($this->taxes as $taxt) {
@@ -286,10 +299,11 @@ class Invoice extends Model
             $rate = $taxt->rate;
             $total_taxt += ($total - $discount) * $rate / 100;
         }
-        //number_format((double)($total-$discount) + $total_taxt, 2, '.', '');
+        // number_format((double)($total-$discount) + $total_taxt, 2, '.', '');
         $in_total = ($total - $discount) + $total_taxt;
+
         return $in_total;
-        //return $items->sum('total');
+        // return $items->sum('total');
     }
 
     public function search($query)
@@ -297,10 +311,10 @@ class Invoice extends Model
         $payload = $this->where('tenant_id', Auth::user()->tenant_id);
 
         $payload = $payload->where(function ($payload) use ($query) {
-            $payload = $payload->where('code', 'like', '%' . $query . '%')
-            ->orWhere('customer_name', 'like', '%' . $query . '%')
-            ->orWhere('customer_company', 'like', '%' . $query . '%')
-            ->orWhere('pay_status', 'like', '%' . $query . '%');
+            $payload = $payload->where('code', 'like', '%'.$query.'%')
+                ->orWhere('customer_name', 'like', '%'.$query.'%')
+                ->orWhere('customer_company', 'like', '%'.$query.'%')
+                ->orWhere('pay_status', 'like', '%'.$query.'%');
         });
 
         return $payload->limit(10)->get();
@@ -308,18 +322,18 @@ class Invoice extends Model
 
     public function getSalesChartData()
     {
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 1)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 2)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 3)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 4)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 5)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 6)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 7)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 8)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 9)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 10)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 11)->sum('total');
-        $data[] = $this->where('tenant_id',Auth::user()->tenant_id)->where('status',1)->whereYear('date', Carbon::today())->whereMonth('date', 12)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 1)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 2)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 3)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 4)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 5)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 6)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 7)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 8)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 9)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 10)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 11)->sum('total');
+        $data[] = $this->where('tenant_id', Auth::user()->tenant_id)->where('status', 1)->whereYear('date', Carbon::today())->whereMonth('date', 12)->sum('total');
 
         return $data;
     }
@@ -331,17 +345,17 @@ class Invoice extends Model
 
     public function getTempDueAmountFormattedAttribute()
     {
-        return number_format((float)$this->temp_due_amount, 2, '.', '');
+        return number_format((float) $this->temp_due_amount, 2, '.', '');
     }
 
     public function getTempPaidAmountFormattedAttribute()
     {
-        return number_format((float)$this->temp_paid_amount, 2, '.', '');
+        return number_format((float) $this->temp_paid_amount, 2, '.', '');
     }
 
     public function getPaidAmountFormattedAttribute()
     {
-        return number_format((float)$this->paid_amount, 2, '.', '');
+        return number_format((float) $this->paid_amount, 2, '.', '');
     }
 
     public function getOtherDiscountFormattedAttribute()
@@ -353,5 +367,4 @@ class Invoice extends Model
     {
         return number_format(floatval($this->discount), 2);
     }
-
 }

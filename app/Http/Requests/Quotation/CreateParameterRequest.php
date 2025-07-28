@@ -26,10 +26,10 @@ class CreateParameterRequest extends FormRequest
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
-            'title.required' => "The custom title is required",
+            'title.required' => 'The custom title is required',
         ];
     }
 }

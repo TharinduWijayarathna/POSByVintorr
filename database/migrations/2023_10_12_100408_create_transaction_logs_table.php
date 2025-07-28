@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('voucher_id')->nullable();
             $table->string('voucher_no')->nullable();
             $table->string('title')->nullable();
-            $table->decimal('amount',12,2)->default(0);
+            $table->decimal('amount', 12, 2)->default(0);
             $table->bigInteger('method')->nullable();
             $table->date('date')->nullable();
             $table->string('cheque_no')->nullable();

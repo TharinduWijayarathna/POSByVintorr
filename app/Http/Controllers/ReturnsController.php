@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReturnItems\AddItemsRequest;
 use App\Http\Requests\ReturnItems\AddReturnRequest;
 use App\Http\Resources\DataResource;
-use App\Models\User;
 use App\Models\PosOrder;
+use App\Models\User;
 use domain\Facades\PosOrderFacade\PosOrderFacade;
 use domain\Facades\PosOrderItemFacade\PosOrderItemFacade;
-use domain\Facades\ProductFacade\ProductFacade;
 use domain\Facades\ReturnFacade\ReturnFacade;
 use domain\Facades\UserFacade\UserFacade;
 use Exception;
@@ -21,7 +20,6 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class ReturnsController extends ParentController
 {
-
     public function view()
     {
         // $response = UserFacade::retrieveHost();
@@ -31,6 +29,7 @@ class ReturnsController extends ParentController
     public function index()
     {
         $order = ReturnFacade::getOrCreate();
+
         return redirect()->route('cart.return.process', $order->id);
     }
 
@@ -39,10 +38,11 @@ class ReturnsController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             // $response = UserFacade::retrieveHost();
             $response['order_id'] = $order_id;
+
             return Inertia::render('Returns/edit', $response);
 
         } else {
-            throw new Exception("Access denied", 1);
+            throw new Exception('Access denied', 1);
         }
     }
 
@@ -76,6 +76,7 @@ class ReturnsController extends ParentController
                 })
             )
             ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
     }
 
@@ -109,6 +110,7 @@ class ReturnsController extends ParentController
                 })
             )
             ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
     }
 
@@ -118,17 +120,19 @@ class ReturnsController extends ParentController
             $order = PosOrderFacade::get($order_id);
             if ($order->status == 1 || $order->created_by != Auth::id()) {
                 $response['alert-danger'] = 'Order Can\'t be processed.';
+
                 return redirect()->route('cart')->with($response);
             } else {
                 $user_id = Auth::id();
                 ReturnFacade::removePosOrderItems($order_id);
                 ReturnFacade::resetReturnDraft($order_id, $user_id);
+
                 // $response = UserFacade::retrieveHost();
                 return Inertia::render('Returns/index');
             }
 
         } else {
-            throw new Exception("Access denied", 1);
+            throw new Exception('Access denied', 1);
         }
     }
 
@@ -158,6 +162,7 @@ class ReturnsController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             if ($order_id == null) {
                 $order = ReturnFacade::getOrCreate();
+
                 return ReturnFacade::addItems($request->all(), $order->id);
             } else {
                 return ReturnFacade::addItems($request->all(), $order_id);
@@ -169,9 +174,11 @@ class ReturnsController extends ParentController
     {
         if ($order_id == null) {
             $order = ReturnFacade::getOrCreate();
+
             return ReturnFacade::getReturnProduct($order);
         } else {
             $order = PosOrder::withTrashed()->find($order_id);
+
             return ReturnFacade::getReturnProduct($order);
         }
     }
@@ -181,7 +188,7 @@ class ReturnsController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             return ReturnFacade::deleteItem($id);
         } else {
-            throw new Exception("Access denied", 1);
+            throw new Exception('Access denied', 1);
         }
     }
 
@@ -189,6 +196,7 @@ class ReturnsController extends ParentController
     {
         if ($order_id == null) {
             $order = ReturnFacade::getOrCreate();
+
             return ReturnFacade::getTotals($order->id);
         } else {
             return ReturnFacade::getTotals($order_id);
@@ -200,13 +208,14 @@ class ReturnsController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             if ($order_id == null) {
                 $order = ReturnFacade::getOrCreate();
+
                 return ReturnFacade::customerUpdate($request->id, $order->id);
             } else {
                 return ReturnFacade::customerUpdate($request->id, $order_id);
             }
 
         } else {
-            throw new Exception("Access denied", 1);
+            throw new Exception('Access denied', 1);
         }
     }
 

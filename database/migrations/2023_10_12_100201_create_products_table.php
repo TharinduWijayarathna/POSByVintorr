@@ -19,12 +19,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('type')->nullable();
             $table->bigInteger('unit')->nullable();
-            $table->decimal('cost',12,2)->nullable();
-            $table->decimal('selling',12,2)->nullable();
+            $table->decimal('cost', 12, 2)->nullable();
+            $table->decimal('selling', 12, 2)->nullable();
             $table->boolean('status')->default(false);
             $table->text('introduction')->nullable();
-            $table->decimal('cost',12,2)->default(0)->change();
-            $table->decimal('selling',12,2)->default(0)->change();
+            $table->decimal('cost', 12, 2)->default(0)->change();
+            $table->decimal('selling', 12, 2)->default(0)->change();
             $table->decimal('stock_quantity', 15, 2)->nullable();
             $table->integer('product_type')->default(1);
             $table->bigInteger('image_id')->nullable();

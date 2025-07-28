@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserFeedback\SendUserFeedback;
-use App\Models\User;
-use Inertia\Inertia;
-use Illuminate\Http\Request;
-use App\Http\Resources\DataResource;
-use Illuminate\Support\Facades\Auth;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
-use domain\Facades\UserFacade\UserFacade;
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
+use App\Http\Resources\DataResource;
+use App\Models\User;
+use domain\Facades\UserFacade\UserFacade;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends ParentController
 {
@@ -46,7 +46,7 @@ class UserController extends ParentController
             if (isset($request->search_status)) {
                 if ($request->search_status == 2) {
                     $query->where('deleted_at', '!=', null);
-                } else if ($request->search_status == 1) {
+                } elseif ($request->search_status == 1) {
                     $query->where('deleted_at', null);
                 }
             }
@@ -58,6 +58,7 @@ class UserController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -75,7 +76,6 @@ class UserController extends ParentController
     /**
      * store
      *
-     * @param  CreateUserRequest $request
      * @return void
      */
     public function store(CreateUserRequest $request)
@@ -88,7 +88,6 @@ class UserController extends ParentController
     /**
      * delete
      *
-     * @param  int $user_id
      * @return void
      */
     public function delete(int $user_id)
@@ -96,12 +95,12 @@ class UserController extends ParentController
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN']) {
             if (Auth::user()->user_role_id == 1) {
                 if (Auth::user()->id == $user_id) {
-                    return "The admin who is logged into the system cannot delete his account.";
+                    return 'The admin who is logged into the system cannot delete his account.';
                 } else {
                     return UserFacade::delete($user_id);
                 }
             } else {
-                return "You do not have permission to delete users.";
+                return 'You do not have permission to delete users.';
             }
         }
     }
@@ -109,7 +108,6 @@ class UserController extends ParentController
     /**
      * restore
      *
-     * @param  int $user_id
      * @return void
      */
     public function restore(int $user_id)
@@ -119,6 +117,7 @@ class UserController extends ParentController
                 return UserFacade::restore($user_id);
             } else {
                 $response['alert-danger'] = 'You do not have permission to restore users.';
+
                 return redirect()->route('dashboard')->with($response);
             }
         }
@@ -127,8 +126,6 @@ class UserController extends ParentController
     /**
      * update
      *
-     * @param  UpdateUserRequest $request
-     * @param  int $user_id
      * @return void
      */
     public function update(UpdateUserRequest $request, int $user_id)
@@ -137,7 +134,7 @@ class UserController extends ParentController
             if (Auth::user()->user_role_id == 1) {
                 return UserFacade::update($request->all(), $user_id);
             } else {
-                return "You do not have permission to restore users.";
+                return 'You do not have permission to restore users.';
             }
         }
     }
@@ -145,13 +142,13 @@ class UserController extends ParentController
     /**
      * get
      *
-     * @param  int $user_id
      * @return void
      */
     public function get(int $user_id)
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN']) {
             $payload = UserFacade::get($user_id);
+
             return new DataResource($payload);
         }
     }
@@ -165,6 +162,7 @@ class UserController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN']) {
             $payload = UserFacade::get($user_id);
+
             return new DataResource($payload);
         }
     }
@@ -178,6 +176,7 @@ class UserController extends ParentController
     public function sendUserFeedback(SendUserFeedback $request)
     {
         $user_id = Auth::user()->id;
+
         return UserFacade::sendUserFeedback($user_id, $request->all());
     }
 }

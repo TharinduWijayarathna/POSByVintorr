@@ -10,7 +10,7 @@ class PosCashierDailyRecordController extends ParentController
      * store
      * Store customer details
      *
-     * @param  decimal $amount
+     * @param  decimal  $amount
      * @return void
      */
     public function store(float $start_amount)
@@ -21,14 +21,13 @@ class PosCashierDailyRecordController extends ParentController
     /**
      * update
      *
-     * @param  decimal $end_amount
+     * @param  decimal  $end_amount
      * @return void
      */
     public function update(float $end_amount)
     {
         return PosCashierDailyRecordFacade::update($end_amount);
     }
-
 
     /**
      * get

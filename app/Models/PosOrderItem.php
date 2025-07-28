@@ -70,12 +70,10 @@ class PosOrderItem extends Model
         return $this->product ? $this->product->code : 'N/A';
     }
 
-
     /**
      * getAll
      * Get all order items according to the given id
      *
-     * @param  int  $order_id
      * @return void
      */
     public function getAll(int $order_id)
@@ -87,7 +85,6 @@ class PosOrderItem extends Model
      * total
      * Get all order items total sum according to the given id
      *
-     * @param  int $order_id
      * @return void
      */
     public function subTotal(int $order_id)
@@ -98,7 +95,7 @@ class PosOrderItem extends Model
     /**
      * totalTax
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function totalTax(int $order_id)
@@ -110,7 +107,7 @@ class PosOrderItem extends Model
     /**
      * getReturnItem
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function getReturnItem(int $order_id)
@@ -121,7 +118,7 @@ class PosOrderItem extends Model
     /**
      * getWithoutReturnItems
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function getWithoutReturnItems(int $order_id)

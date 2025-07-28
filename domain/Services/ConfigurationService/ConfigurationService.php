@@ -46,34 +46,37 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-
 class ConfigurationService
 {
     protected $business_detail;
+
     protected $pos_order;
+
     protected $customer_outstanding_email;
+
     protected $business_summary_email;
+
     protected $account_reset;
 
     public function __construct()
     {
-        $this->business_detail = new BusinessDetail();
-        $this->pos_order = new PosOrder();
-        $this->customer_outstanding_email = new CustomerOutstandingEmail();
-        $this->account_reset = new AccountResetInfo();
-        $this->business_summary_email = new MonthlyBusinessSummaryEmail();
+        $this->business_detail = new BusinessDetail;
+        $this->pos_order = new PosOrder;
+        $this->customer_outstanding_email = new CustomerOutstandingEmail;
+        $this->account_reset = new AccountResetInfo;
+        $this->business_summary_email = new MonthlyBusinessSummaryEmail;
     }
-
 
     /**
      * store
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
     public function store(array $data)
     {
         $data['created_by'] = Auth::user()->id;
+
         return $this->business_detail->create($data);
     }
 
@@ -129,6 +132,7 @@ class ConfigurationService
         } else {
             $details->status = 0;
         }
+
         return $details->save();
     }
 
@@ -136,6 +140,7 @@ class ConfigurationService
     {
         $details = $this->business_detail->first();
         $details->status = 0;
+
         return $details->save();
     }
 
@@ -143,6 +148,7 @@ class ConfigurationService
     {
         $details = $this->business_detail->first();
         $details->weekly_target = $weekly_target;
+
         return $details->save();
     }
 
@@ -150,6 +156,7 @@ class ConfigurationService
     {
         $details = $this->business_detail->first();
         $details->monthly_target = $monthly_target;
+
         return $details->save();
     }
 
@@ -157,30 +164,35 @@ class ConfigurationService
     {
         $details = $this->business_detail->first();
         $details->yearly_target = $yearly_target;
+
         return $details->save();
     }
 
     public function getBaseCurrency()
     {
         $details = $this->business_detail->first();
+
         return $details->currency_name;
     }
 
     public function getWeeklyTarget()
     {
         $details = $this->business_detail->first();
+
         return $details->weekly_target;
     }
 
     public function getMonthlyTarget()
     {
         $details = $this->business_detail->first();
+
         return $details->monthly_target;
     }
 
     public function getYearlyTarget()
     {
         $details = $this->business_detail->first();
+
         return $details->yearly_target;
     }
 
@@ -279,6 +291,7 @@ class ConfigurationService
             $previous_value->update([
                 'value' => $val,
             ]);
+
             return $previous_value;
         } else {
             return $this->customer_outstanding_email->create([
@@ -295,6 +308,7 @@ class ConfigurationService
             $previous_value->update([
                 'value' => $val,
             ]);
+
             return $previous_value;
         } else {
             return $this->business_summary_email->create([
@@ -306,12 +320,14 @@ class ConfigurationService
     public function getDateValue()
     {
         $value = $this->customer_outstanding_email->first();
+
         return $value;
     }
 
     public function getMonthlyBusinessEmailDateValue()
     {
         $value = $this->business_summary_email->first();
+
         return $value;
     }
 
@@ -333,7 +349,7 @@ class ConfigurationService
                 'is_send' => 1,
             ];
 
-            //Account reset Requested mail
+            // Account reset Requested mail
             Log::info($email);
 
             $this->account_reset->create($data);
@@ -355,7 +371,7 @@ class ConfigurationService
         $latestToken->save();
 
         try {
-            if (!$latestToken) {
+            if (! $latestToken) {
                 return response()->json(['error' => 'No reset token found.'], 400);
             }
 
@@ -413,6 +429,4 @@ class ConfigurationService
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
-
-
 }

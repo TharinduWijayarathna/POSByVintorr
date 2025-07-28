@@ -3,7 +3,6 @@
 namespace App\Exports\Reports;
 
 use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
@@ -13,7 +12,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class TransactionReportExport implements FromView, WithColumnWidths, WithColumnFormatting, WithEvents
+class TransactionReportExport implements FromView, WithColumnFormatting, WithColumnWidths, WithEvents
 {
     protected $data;
 
@@ -25,8 +24,10 @@ class TransactionReportExport implements FromView, WithColumnWidths, WithColumnF
     public function export($data)
     {
         $this->data = $data;
+
         return $this;
     }
+
     public function columnWidths(): array
     {
         return [

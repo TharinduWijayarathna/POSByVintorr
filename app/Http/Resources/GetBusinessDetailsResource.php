@@ -50,7 +50,7 @@ class GetBusinessDetailsResource extends JsonResource
             'currency_id' => $this->currency_id,
             'currency_name' => $this->currency_name,
             'bill_logo_url' => $this->bill_logo_url,
-            'invoice_logo_url' => $this->invoice_logo_url
+            'invoice_logo_url' => $this->invoice_logo_url,
         ];
     }
 }

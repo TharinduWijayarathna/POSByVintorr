@@ -22,7 +22,7 @@ class CreateParameterDescriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => ['nullable','string','max:120'],
+            'description' => ['nullable', 'string', 'max:120'],
         ];
     }
 }

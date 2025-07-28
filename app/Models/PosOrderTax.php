@@ -12,14 +12,14 @@ class PosOrderTax extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        "order_id",
-        "tax_id",
-        "tax_amount",
-        "rate",
+        'order_id',
+        'tax_id',
+        'tax_amount',
+        'rate',
     ];
 
     protected $appends = [
-        'tax_name', //tax name
+        'tax_name', // tax name
     ];
 
     public function tax()

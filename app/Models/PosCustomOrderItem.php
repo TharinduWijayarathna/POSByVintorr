@@ -52,8 +52,6 @@ class PosCustomOrderItem extends Model
         return $this->hasOne(Material::class, 'id', 'product_id');
     }
 
-
-
     public function getTotal($id)
     {
         return $this->where('order_id', $id)->sum('total');

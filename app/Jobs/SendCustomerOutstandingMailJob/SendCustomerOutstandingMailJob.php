@@ -15,7 +15,9 @@ class SendCustomerOutstandingMailJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $sendData;
+
     public $email;
+
     public $image;
 
     /**
@@ -31,10 +33,10 @@ class SendCustomerOutstandingMailJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle():void
+    public function handle(): void
     {
         Mail::to($this->email)
-        ->send(new SendCustomerOutstandingMail ($this->sendData, $this->image));
+            ->send(new SendCustomerOutstandingMail($this->sendData, $this->image));
 
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Payment extends Model
 {
@@ -38,6 +38,7 @@ class Payment extends Model
     {
         return $this->hasMany(InvoicePayment::class, 'invoice_id', 'invoice_id');
     }
+
     public function receipt()
     {
         return $this->hasOne(Receipt::class, 'id', 'receipt_id');

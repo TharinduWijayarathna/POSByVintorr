@@ -24,17 +24,17 @@ class CreatePosCustomOrderIssueRequest extends FormRequest
     public function rules()
     {
         return [
-            'order_item_id' =>  ['required','numeric'],
-            'order_id' =>  ['required','numeric'],
-            'quantity' =>  ['required','numeric', 'min:0'],
-            'product_name' =>  ['required','string'],
+            'order_item_id' => ['required', 'numeric'],
+            'order_id' => ['required', 'numeric'],
+            'quantity' => ['required', 'numeric', 'min:0'],
+            'product_name' => ['required', 'string'],
         ];
     }
 
     public function messages()
     {
         return [
-            'order_item_id.required' => "Product is required."
+            'order_item_id.required' => 'Product is required.',
         ];
     }
 }

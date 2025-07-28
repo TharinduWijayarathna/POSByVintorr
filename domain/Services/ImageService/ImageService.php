@@ -3,22 +3,24 @@
 namespace domain\Services\ImageService;
 
 use App\Models\Image;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * ImageService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
-
 class ImageService
 {
     protected $image;
+
     /**
      * __construct
      *
@@ -26,15 +28,15 @@ class ImageService
      */
     public function __construct()
     {
-        $this->image = new Image();
+        $this->image = new Image;
     }
 
     /**
      * Convert Image to WebP format and store it
      *
      * @param  mixed  $image
-     * @param  int    $quality
-     * @return Image
+     * @param  int  $quality
+     *
      * @throws \Exception
      */
     public function convertImageToWebP($image, $quality = 80): Image
@@ -42,10 +44,10 @@ class ImageService
         if (isset($image)) {
             // Store the original image temporarily
             $originalPath = $image->store('tmp');
-            $sourcePath = storage_path('app/' . $originalPath);
+            $sourcePath = storage_path('app/'.$originalPath);
 
             // Define the path for the WebP image
-            $webpPath = storage_path('app/public/webp/') . uniqid() . '.webp';
+            $webpPath = storage_path('app/public/webp/').uniqid().'.webp';
 
             $info = getimagesize($sourcePath);
             $isConverted = false;
@@ -63,7 +65,7 @@ class ImageService
 
             // Ensure the directory exists
             $destinationDirectory = dirname($webpPath);
-            if (!file_exists($destinationDirectory)) {
+            if (! file_exists($destinationDirectory)) {
                 mkdir($destinationDirectory, 0755, true);
             }
 
@@ -97,8 +99,7 @@ class ImageService
      * Store
      * Store image data
      *
-     * @param  mixed $image
-     * @return Image
+     * @param  mixed  $image
      */
     public function store($image): Image
     {
@@ -107,7 +108,7 @@ class ImageService
             $filePath = Storage::disk('public')->put('images', $image);
 
             // Generate the full URL path including the domain
-            $data['name'] = asset('storage/' . $filePath);
+            $data['name'] = asset('storage/'.$filePath);
 
             return $this->image->create($data);
         }
@@ -115,18 +116,17 @@ class ImageService
         throw new \Exception('No image provided');
     }
 
-
     /**
      * Delete
      * delete image data
      *
-     * @param  mixed $image
+     * @param  mixed  $image
      * @return void
      */
     public function delete($image)
     {
         if (isset($image)) {
-            Storage::disk('public')->delete('images/' . $image->name);
+            Storage::disk('public')->delete('images/'.$image->name);
             $image->delete();
         }
     }

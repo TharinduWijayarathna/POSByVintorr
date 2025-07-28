@@ -22,15 +22,14 @@ class SendCustomerQuotationEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'to' => ['required','email', 'max:255'],
+            'to' => ['required', 'email', 'max:255'],
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
-            'to.required' => "The receiver mail address is required",
+            'to.required' => 'The receiver mail address is required',
         ];
     }
 }
-

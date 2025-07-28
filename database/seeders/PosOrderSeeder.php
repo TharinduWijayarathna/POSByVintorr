@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\PosOrder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PosOrderSeeder extends Seeder

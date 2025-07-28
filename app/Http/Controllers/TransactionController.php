@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Exports\Reports\TransactionReportExport;
 use App\Http\Requests\Transaction\CreateTransactionRequest;
 use App\Http\Resources\DataResource;
-use App\Models\User;
 use App\Models\Transaction;
+use App\Models\User;
 use domain\Facades\TransactionFacade\TransactionFacade;
 use domain\Facades\UserFacade\UserFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class TransactionController extends ParentController
@@ -61,6 +60,7 @@ class TransactionController extends ParentController
             $payload = QueryBuilder::for($query)
                 ->allowedSorts(['code'])
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -96,7 +96,7 @@ class TransactionController extends ParentController
     /**
      * export
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function export(Request $request)
@@ -110,7 +110,6 @@ class TransactionController extends ParentController
         $code = $request->input('code');
         $client = $request->input('client');
         // $totals = [];
-
 
         // Build the order query
         $transactions = $this->buildTransactionQuery($request);
@@ -134,13 +133,13 @@ class TransactionController extends ParentController
         ];
 
         // Generate the Excel and store it in the storage then return the path
-        $fileName = 'TransactionReport-' . date('Y-m-d') . '-' . time() . '.xlsx';
-        $filePath = 'exports/Reports/' . $fileName;
-        $transaction_export = new TransactionReportExport();
+        $fileName = 'TransactionReport-'.date('Y-m-d').'-'.time().'.xlsx';
+        $filePath = 'exports/Reports/'.$fileName;
+        $transaction_export = new TransactionReportExport;
         Excel::store($transaction_export->export($data), $filePath, 'public');
 
         // Generate the URL to the stored file
-        $path = asset('storage/' . $filePath);
+        $path = asset('storage/'.$filePath);
 
         return response()->json(['path' => $path]);
     }

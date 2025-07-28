@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Invoice;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateParameterRequest extends FormRequest
 {
@@ -27,10 +26,10 @@ class UpdateParameterRequest extends FormRequest
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
-            'title.required' => "The custom title is required.",
+            'title.required' => 'The custom title is required.',
         ];
     }
 }

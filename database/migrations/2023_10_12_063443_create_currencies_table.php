@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
-            $table ->string('name')->nullable();
-            $table ->string('code')->nullable();
-            $table ->string('symbol')->nullable();
+            $table->string('name')->nullable();
+            $table->string('code')->nullable();
+            $table->string('symbol')->nullable();
             $table->timestamps();
         });
     }

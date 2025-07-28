@@ -2,9 +2,6 @@
 
 namespace domain\Services\PosOrderService;
 
-use App\Models\Transaction;
-use App\Models\TransactionBalance;
-use Illuminate\Support\Facades\DB;
 use App\Models\BillPayment;
 use App\Models\BusinessDetail;
 use App\Models\Currency;
@@ -14,33 +11,45 @@ use App\Models\PosOrderItem;
 use App\Models\Product;
 use App\Models\ProductTax;
 use App\Models\StockLog;
+use App\Models\Transaction;
+use App\Models\TransactionBalance;
 use Carbon\Carbon;
 use DateTime;
-use Illuminate\Support\Facades\Auth;
 use domain\Facades\StockFacade\StockFacade;
 use domain\Facades\StockLogFacade\StockLogFacade;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * PosOrderService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosOrderService
 {
     private $product;
-    private $pos_order;
-    private $pos_order_item;
-    private $bill_payment;
-    private $transaction;
-    private $customer;
-    private $transaction_balance;
-    private $currency;
-    private $product_tax;
 
+    private $pos_order;
+
+    private $pos_order_item;
+
+    private $bill_payment;
+
+    private $transaction;
+
+    private $customer;
+
+    private $transaction_balance;
+
+    private $currency;
+
+    private $product_tax;
 
     /**
      * __construct
@@ -49,15 +58,15 @@ class PosOrderService
      */
     public function __construct()
     {
-        $this->product = new Product();
-        $this->pos_order = new PosOrder();
-        $this->pos_order_item = new PosOrderItem();
-        $this->bill_payment = new BillPayment();
-        $this->transaction = new Transaction();
-        $this->customer = new Customer();
-        $this->transaction_balance = new TransactionBalance();
-        $this->currency = new Currency();
-        $this->product_tax = new ProductTax();
+        $this->product = new Product;
+        $this->pos_order = new PosOrder;
+        $this->pos_order_item = new PosOrderItem;
+        $this->bill_payment = new BillPayment;
+        $this->transaction = new Transaction;
+        $this->customer = new Customer;
+        $this->transaction_balance = new TransactionBalance;
+        $this->currency = new Currency;
+        $this->product_tax = new ProductTax;
     }
 
     /**
@@ -74,18 +83,19 @@ class PosOrderService
     public function create()
     {
         $data['created_by'] = Auth::id();
-        $count = $this->pos_order->where('code', 'like', "C%")->count();
+        $count = $this->pos_order->where('code', 'like', 'C%')->count();
 
-        $code = 'C' . sprintf('%05d', $count + 1);
+        $code = 'C'.sprintf('%05d', $count + 1);
         $check = $this->pos_order->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'C' . sprintf('%05d',  $count);
+            $code = 'C'.sprintf('%05d', $count);
             $check = $this->pos_order->getCode($code);
         }
 
         $data['code'] = $code;
+
         return $this->pos_order->create($data);
     }
 
@@ -112,7 +122,7 @@ class PosOrderService
     public function selectProduct($product_data, $order_data)
     {
         $order_item = $this->pos_order_item->where('product_id', $product_data['id'])->where('order_id', $order_data['id'])->first();
-        if (!empty($order_item)) {
+        if (! empty($order_item)) {
             if ($order_item->quantity < 10000) {
                 $order_item->quantity += 1;
                 $order_item->sub_total = $order_item->quantity * $order_item['unit_price'];
@@ -121,13 +131,14 @@ class PosOrderService
                 $order_item->save();
             } else {
                 $errorMessage = 'Quantity cannot exceed 10,000';
+
                 return response()->json([
                     'errors' => [
-                        'quantity' => [$errorMessage]
+                        'quantity' => [$errorMessage],
                     ],
                     'quantity' => [$errorMessage],
                     0 => $errorMessage,
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 400);
             }
         } else {
@@ -197,7 +208,7 @@ class PosOrderService
             $stock_log_data['balance'] = $product->stock_quantity ?? 0;
             $stock_log_data['cost'] = $product->cost ?? 0;
             $stock_log_data['selling_price'] = $request_data['selling_price'] ?? 0;
-            $stock_log_data['reason'] = "Added to invoice";
+            $stock_log_data['reason'] = 'Added to invoice';
             $stock_log_data['type'] = StockLog::TYPE['minus'];
             $user = Auth::user();
             $stock_log_data['created_by'] = $user->id;
@@ -211,9 +222,9 @@ class PosOrderService
     /**
      * calculateTotalTax
      *
-     * @param  mixed $quantity
-     * @param  mixed $unit_price
-     * @param  mixed $product_id
+     * @param  mixed  $quantity
+     * @param  mixed  $unit_price
+     * @param  mixed  $product_id
      * @return void
      */
     public function calculateTotalTax($quantity, $unit_price, $product_id)
@@ -228,7 +239,6 @@ class PosOrderService
 
         return $total_tax;
     }
-
 
     public function getOrderProduct($order_data)
     {
@@ -256,23 +266,22 @@ class PosOrderService
     /**
      * getTotals
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function getTotals($order_id)
     {
         $this->recalculateTaxes($order_id);
 
-
         $subTotal = $this->pos_order_item->subTotal($order_id);
+
         return $this->pos_order->updateTotals($order_id, $subTotal);
     }
-
 
     /**
      * recalculateTaxes
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function recalculateTaxes($order_id)
@@ -281,7 +290,6 @@ class PosOrderService
 
         return $this->pos_order->updateTaxes($order_id, $tax_total);
     }
-
 
     public function checkInvoiceStatus($order_id)
     {
@@ -324,13 +332,14 @@ class PosOrderService
                 $order->save();
             } else {
                 $errorMessage = 'Quantity cannot exceed 10,000';
+
                 return response()->json([
                     'errors' => [
-                        'quantity' => [$errorMessage]
+                        'quantity' => [$errorMessage],
                     ],
                     'quantity' => [$errorMessage],
                     0 => $errorMessage,
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 400);
             }
         }
@@ -365,11 +374,11 @@ class PosOrderService
                     $stock_log_data['cost'] = $product->cost ?? 0;
                     $stock_log_data['selling_price'] = $product->selling ?? 0;
                     if ($quantity < 0) {
-                        $stock_log_data['reason'] = "Edited the qty in invoice";
+                        $stock_log_data['reason'] = 'Edited the qty in invoice';
                         $stock_log_data['type'] = StockLog::TYPE['plus'];
                         $stock_log_data['transaction_type_id'] = StockLog::TRANSACTION_TYPE_ID['stock_in'];
                     } else {
-                        $stock_log_data['reason'] = "Edited the qty in invoice";
+                        $stock_log_data['reason'] = 'Edited the qty in invoice';
                         $stock_log_data['type'] = StockLog::TYPE['minus'];
                         $stock_log_data['transaction_type_id'] = StockLog::TRANSACTION_TYPE_ID['stock_out'];
                     }
@@ -427,7 +436,7 @@ class PosOrderService
                 $stock_log_data['balance'] = $product->stock_quantity ?? 0;
                 $stock_log_data['cost'] = $product->cost ?? 0;
                 $stock_log_data['selling_price'] = $product->selling ?? 0;
-                $stock_log_data['reason'] = "Removed from invoice";
+                $stock_log_data['reason'] = 'Removed from invoice';
                 $stock_log_data['type'] = StockLog::TYPE['plus'];
                 $user = Auth::user();
                 $stock_log_data['created_by'] = $user->id;
@@ -459,6 +468,7 @@ class PosOrderService
             $order['customer_mobile'] = $customer->contact;
         }
         $order->save();
+
         return $order;
     }
 
@@ -475,6 +485,7 @@ class PosOrderService
             $order->customer_mobile = null;
             $order->save();
         }
+
         return $order;
     }
 
@@ -490,6 +501,7 @@ class PosOrderService
             $business_details = BusinessDetail::first();
             $currency_id = $business_details->currency_id;
             $order->currency_id = $currency_id;
+
             return $order->save();
         }
     }
@@ -555,16 +567,16 @@ class PosOrderService
             $updated_order->save();
         }
 
-        //payment bill
+        // payment bill
         $request['created_by'] = Auth::id();
         $count = $this->bill_payment->count();
 
-        $code = 'B' . sprintf('%05d', $count + 1);
+        $code = 'B'.sprintf('%05d', $count + 1);
         $check = $this->bill_payment->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'B' . sprintf('%05d',  $count);
+            $code = 'B'.sprintf('%05d', $count);
             $check = $this->bill_payment->getCode($code);
         }
 
@@ -572,16 +584,16 @@ class PosOrderService
         $request['date'] = $today;
 
         $created_bill = $this->bill_payment->create($request);
-        //end payment bill
+        // end payment bill
 
-        //transaction log
+        // transaction log
         $transaction_count = $this->transaction->count();
-        $tr_code = 'TR' . sprintf('%05d', $transaction_count + 1);
+        $tr_code = 'TR'.sprintf('%05d', $transaction_count + 1);
         $check_tr = $this->transaction->getCode($tr_code);
 
         while ($check_tr) {
             $transaction_count++;
-            $tr_code = 'TR' . sprintf('%05d',  $transaction_count);
+            $tr_code = 'TR'.sprintf('%05d', $transaction_count);
             $check_tr = $this->transaction->getCode($tr_code);
         }
 
@@ -595,12 +607,12 @@ class PosOrderService
             if ($customer) {
                 $transaction_data['client'] = $customer->name;
             } else {
-                $transaction_data['client'] = "Customer not available";
+                $transaction_data['client'] = 'Customer not available';
             }
         }
         $transaction_data['currency_id'] = $updated_order->currency_id;
         $transaction_data['amount'] = $updated_order->customer_paid;
-        $transaction_data['description'] = "POS Payment";
+        $transaction_data['description'] = 'POS Payment';
         $this->transaction->create($transaction_data);
 
         $transaction_balance = $this->transaction_balance->where('currency_id', $transaction_data['currency_id'])->first();
@@ -615,7 +627,7 @@ class PosOrderService
             $this->transaction_balance->create($balance_data);
         }
 
-        //end transaction log
+        // end transaction log
 
         StockFacade::productDecrease($request['order_id']);
     }
@@ -630,14 +642,14 @@ class PosOrderService
                 $order->customer_paid = $order->total;
                 $order->credit_status = 1;
 
-                //transaction log
+                // transaction log
                 $transaction_count = $this->transaction->count();
-                $tr_code = 'TR' . sprintf('%05d', $transaction_count + 1);
+                $tr_code = 'TR'.sprintf('%05d', $transaction_count + 1);
                 $check_tr = $this->transaction->getCode($tr_code);
 
                 while ($check_tr) {
                     $transaction_count++;
-                    $tr_code = 'TR' . sprintf('%05d', $transaction_count);
+                    $tr_code = 'TR'.sprintf('%05d', $transaction_count);
                     $check_tr = $this->transaction->getCode($tr_code);
                 }
 
@@ -650,7 +662,7 @@ class PosOrderService
                 $transaction_data['currency_id'] = $order->currency_id;
                 $transaction_data['amount'] = $order->balance;
                 $transaction_data['sign'] = 0;
-                $transaction_data['description'] = "Add Discount";
+                $transaction_data['description'] = 'Add Discount';
                 $this->transaction->create($transaction_data);
 
                 $transaction_balance = $this->transaction_balance->where('currency_id', $order->currency_id)->first();
@@ -674,6 +686,7 @@ class PosOrderService
                 $order->discount_type = 1;
             }
             $order->save();
+
             return $order;
         }
     }
@@ -691,7 +704,7 @@ class PosOrderService
     public function reActive($order_id)
     {
 
-        $previousOrder = $this->pos_order->where('created_by', Auth::user()->id)->where('status', 0)->where('type', 0)->where('code', 'not like', "R%")->first();
+        $previousOrder = $this->pos_order->where('created_by', Auth::user()->id)->where('status', 0)->where('type', 0)->where('code', 'not like', 'R%')->first();
 
         if ($previousOrder != null) {
             if ($previousOrder->sub_total > 0) {
@@ -715,6 +728,7 @@ class PosOrderService
             }
             $order->status = 0;
             $order->save();
+
             return $order;
         }
     }
@@ -727,7 +741,7 @@ class PosOrderService
     public function reActiveInvoice($order_id)
     {
 
-        $previousOrder = $this->pos_order->where('created_by', Auth::user()->id)->where('status', 0)->where('type', 1)->where('code', 'not like', "R%")->first();
+        $previousOrder = $this->pos_order->where('created_by', Auth::user()->id)->where('status', 0)->where('type', 1)->where('code', 'not like', 'R%')->first();
 
         if ($previousOrder->sub_total > 0) {
             $previousOrder->status = 2;
@@ -749,6 +763,7 @@ class PosOrderService
             }
             $order->status = 0;
             $order->save();
+
             return $order;
         }
     }
@@ -760,7 +775,7 @@ class PosOrderService
 
     public function returnUpdate(int $order_id)
     {
-        $orderItem =  $this->get($order_id);
+        $orderItem = $this->get($order_id);
         if ($orderItem) {
             $orderItem->is_return = 1;
             $orderItem->save();

@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Facade;
  * php version 8
  *
  * @category Facade
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class CartFacade extends Facade

@@ -15,8 +15,11 @@ class SendCustomerQuotationMailJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $sendData;
+
     public $email;
+
     public $filePath;
+
     public $image;
 
     /**

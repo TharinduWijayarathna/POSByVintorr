@@ -11,17 +11,19 @@ use Illuminate\Support\Facades\Auth;
 class TaxService
 {
     protected $tax;
-    protected $product_tax;
-    protected $pos_order_tax;
-    protected $pos_order;
 
+    protected $product_tax;
+
+    protected $pos_order_tax;
+
+    protected $pos_order;
 
     public function __construct()
     {
-        $this->tax = new Tax();
-        $this->product_tax = new ProductTax();
-        $this->pos_order_tax = new PosOrderTax();
-        $this->pos_order = new PosOrder();
+        $this->tax = new Tax;
+        $this->product_tax = new ProductTax;
+        $this->pos_order_tax = new PosOrderTax;
+        $this->pos_order = new PosOrder;
     }
 
     /**
@@ -31,14 +33,13 @@ class TaxService
      */
     public function all()
     {
-        return $this->tax->get();;
+        return $this->tax->get();
     }
-
 
     /**
      * get
      *
-     * @param  mixed $tax_id
+     * @param  mixed  $tax_id
      * @return void
      */
     public function get(int $tax_id)
@@ -49,7 +50,7 @@ class TaxService
     /**
      * getProductTax
      *
-     * @param  mixed $product_id
+     * @param  mixed  $product_id
      * @return void
      */
     public function getProductTax(int $product_id)
@@ -57,12 +58,11 @@ class TaxService
         return $this->product_tax->where('product_id', $product_id)->get();
     }
 
-
     /**
      * deleteProductTax
      *
-     * @param  mixed $product_id
-     * @param  mixed $data
+     * @param  mixed  $product_id
+     * @param  mixed  $data
      * @return void
      */
     public function deleteProductTax(int $product_id, array $data)
@@ -77,7 +77,7 @@ class TaxService
     /**
      * delete
      *
-     * @param  mixed $tax_id
+     * @param  mixed  $tax_id
      * @return void
      */
     public function delete(int $tax_id)
@@ -88,7 +88,7 @@ class TaxService
     /**
      * store
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
     public function store(array $data)
@@ -100,19 +100,18 @@ class TaxService
 
         $existing_tax = $this->tax->where('name', $data['name'])->first();
 
-        if (!$existing_tax) {
+        if (! $existing_tax) {
             $this->tax->create($data);
         } else {
-            return "This tax already exists";
+            return 'This tax already exists';
         }
     }
-
 
     /**
      * storeProductTax
      *
-     * @param  mixed $product_id
-     * @param  mixed $data
+     * @param  mixed  $product_id
+     * @param  mixed  $data
      * @return void
      */
     public function storeProductTax(int $product_id, array $data)
@@ -132,8 +131,8 @@ class TaxService
     /**
      * update
      *
-     * @param  mixed $id
-     * @param  mixed $data
+     * @param  mixed  $id
+     * @param  mixed  $data
      * @return void
      */
     public function update($id, $data)
@@ -148,19 +147,17 @@ class TaxService
         return $tax->update($this->edit($tax, $data));
     }
 
-
     /**
      * edit
      *
-     * @param  mixed $tax
-     * @param  mixed $data
+     * @param  mixed  $tax
+     * @param  mixed  $data
      * @return void
      */
     protected function edit(Tax $tax, array $data)
     {
         return array_merge($tax->toArray(), $data);
     }
-
 
     /**
      * getLatestTax
@@ -171,7 +168,6 @@ class TaxService
     {
         return $this->tax->latest()->first();
     }
-
 
     public function addTaxes(array $taxes, $order_id)
     {
@@ -200,6 +196,7 @@ class TaxService
             $tax_amount = ($tax->rate * ($order->sub_total - $order->discount)) / 100;
             $tax->tax_value = $tax_amount;
         }
+
         return $taxes;
     }
 

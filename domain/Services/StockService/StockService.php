@@ -2,10 +2,10 @@
 
 namespace domain\Services\StockService;
 
-use App\Models\Stock;
 use App\Models\PosOrder;
 use App\Models\PosOrderItem;
 use App\Models\Product;
+use App\Models\Stock;
 use App\Models\StockLog;
 use Carbon\Carbon;
 use domain\Facades\StockLogFacade\StockLogFacade;
@@ -15,16 +15,20 @@ use Illuminate\Support\Facades\Auth;
  * StockService
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
-
 class StockService
 {
     protected $stock;
+
     protected $pos_order;
+
     protected $pos_order_item;
+
     protected $product;
 
     /**
@@ -34,10 +38,10 @@ class StockService
      */
     public function __construct()
     {
-        $this->stock = new Stock();
-        $this->pos_order = new PosOrder();
-        $this->pos_order_item = new PosOrderItem();
-        $this->product = new Product();
+        $this->stock = new Stock;
+        $this->pos_order = new PosOrder;
+        $this->pos_order_item = new PosOrderItem;
+        $this->product = new Product;
     }
 
     /**
@@ -55,7 +59,6 @@ class StockService
      * Store
      * store data in database
      *
-     * @param  array $data
      *
      * @return void
      */
@@ -63,15 +66,16 @@ class StockService
     {
         $count = $this->stock->count();
 
-        $code = 'S' . sprintf('%05d',  $count + 1);
+        $code = 'S'.sprintf('%05d', $count + 1);
         $check = $this->stock->where('barcode', $code)->first();
         while ($check) {
             $count++;
-            $code = 'S' . sprintf('%05d',  $count);
+            $code = 'S'.sprintf('%05d', $count);
             $check = $this->stock->where('barcode', $code)->first();
         }
 
         $data['barcode'] = $code;
+
         return $this->stock->create($data);
     }
 
@@ -79,7 +83,6 @@ class StockService
      * Get
      * retrieve relevant data using stock_id
      *
-     * @param  int $stock_id
      * @return void
      */
     public function get(int $stock_id)
@@ -91,9 +94,8 @@ class StockService
      * Update
      * update existing data using stock_id
      *
-     * @param  array   $data
-     * @param  int     $stock_id
-     *
+     * @param  array  $data
+     * @param  int  $stock_id
      * @return void
      */
     public function update($item, $qc, $stock, $material)
@@ -116,8 +118,6 @@ class StockService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  Stock $stock
-     * @param  array $data
      * @return void
      */
     protected function edit(Stock $stock, array $data)
@@ -129,7 +129,6 @@ class StockService
      * Delete
      * delete specific data using stock_id
      *
-     * @param  int  $stock_id
      * @return void
      */
     public function delete(int $stock_id)
@@ -140,7 +139,7 @@ class StockService
     /**
      * getStock
      *
-     * @param  int $sku
+     * @param  int  $sku
      * @return void
      */
     public function getStock($barcode)
@@ -151,7 +150,7 @@ class StockService
     /**
      * getList
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
     public function getList($data)
@@ -162,7 +161,7 @@ class StockService
     /**
      * getByFilter
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
     public function getByFilter($data)
@@ -174,9 +173,7 @@ class StockService
      * approveExistedQC - update Existing QC in the stock or
      * approve Reverse QC already existing in the stock
      *
-     * @param  Stock $stock
      * @param  QC Item GRN$item
-     *
      * @return void
      */
     public function approveExistingQC(Stock $stock)
@@ -187,7 +184,6 @@ class StockService
     /**
      * rejectExistingQC - reject QC that already existing in the stock
      *
-     * @param  Stock $stock
      * @return void
      */
     public function rejectExistingQC(Stock $stock)
@@ -198,7 +194,7 @@ class StockService
     /**
      * reverseExistingQC - when want to reverse QC already in the stock
      *
-     * @param  mixed $stock
+     * @param  mixed  $stock
      * @return void
      */
     public function reverseExistingQC(Stock $stock)
@@ -216,7 +212,6 @@ class StockService
     {
         return $this->stock->getList();
     }
-
 
     public function getAllByMaterial(int $material_id)
     {
@@ -241,14 +236,13 @@ class StockService
     public function skuForGi($barcode, int $warehouse_id)
     {
         return $this->stock->getSkuForGi($barcode, $warehouse_id);
-        //return $this->stock->getMaterialForStockFromBarcode($barcode);
+        // return $this->stock->getMaterialForStockFromBarcode($barcode);
     }
 
     public function getForDataForExport($search_data)
     {
         return $this->stock->getForDataForExport($search_data);
     }
-
 
     /**
      * getByBarcode
@@ -260,7 +254,7 @@ class StockService
     public function getByBarcode($barcode)
     {
         return $this->stock->getByBarcode($barcode);
-        //return $this->stock->getMaterialForStockFromBarcode($barcode);
+        // return $this->stock->getMaterialForStockFromBarcode($barcode);
     }
 
     public function getAllByMaterialForGi(int $material_id, int $warehouse_id)
@@ -288,7 +282,7 @@ class StockService
                 $stock_log_data['balance'] = $product->stock_quantity ?? 0;
                 $stock_log_data['cost'] = $product->cost ?? 0;
                 $stock_log_data['selling_price'] = $item->unit_price ?? 0;
-                $stock_log_data['reason'] = "Added to bill";
+                $stock_log_data['reason'] = 'Added to bill';
                 $stock_log_data['type'] = StockLog::TYPE['minus'];
                 $user = Auth::user();
                 $stock_log_data['created_by'] = $user->id;

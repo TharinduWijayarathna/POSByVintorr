@@ -11,24 +11,29 @@ use App\Models\PurchaseOrderItemFooterParameter;
 use App\Models\PurchaseOrderItemParameter;
 use App\Models\PurchaseOrderParameter;
 use App\Models\Supplier;
-use PDF;
 use Carbon\Carbon;
 use domain\Facades\PurchaseOrderFacade\PurchaseOrderFacade;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use PDF;
 
 class PurchaseOrderService
 {
-
     private $purchase_order;
-    private $supplier;
-    private $purchase_order_item;
-    private $business_details;
-    private $purchase_order_parameter;
-    private $purchase_order_item_parameter;
-    private $purchase_order_footer_parameter;
-    private $purchase_order_item_footer_parameter;
 
+    private $supplier;
+
+    private $purchase_order_item;
+
+    private $business_details;
+
+    private $purchase_order_parameter;
+
+    private $purchase_order_item_parameter;
+
+    private $purchase_order_footer_parameter;
+
+    private $purchase_order_item_footer_parameter;
 
     /**
      * __construct
@@ -37,20 +42,20 @@ class PurchaseOrderService
      */
     public function __construct()
     {
-        $this->purchase_order = new PurchaseOrder();
-        $this->purchase_order_item = new PurchaseOrderItem();
-        $this->supplier = new Supplier();
-        $this->business_details = new BusinessDetail();
-        $this->purchase_order_parameter = new PurchaseOrderParameter();
-        $this->purchase_order_item_parameter = new PurchaseOrderItemParameter();
-        $this->purchase_order_footer_parameter = new PurchaseOrderFooterParameter();
-        $this->purchase_order_item_footer_parameter = new PurchaseOrderItemFooterParameter();
+        $this->purchase_order = new PurchaseOrder;
+        $this->purchase_order_item = new PurchaseOrderItem;
+        $this->supplier = new Supplier;
+        $this->business_details = new BusinessDetail;
+        $this->purchase_order_parameter = new PurchaseOrderParameter;
+        $this->purchase_order_item_parameter = new PurchaseOrderItemParameter;
+        $this->purchase_order_footer_parameter = new PurchaseOrderFooterParameter;
+        $this->purchase_order_item_footer_parameter = new PurchaseOrderItemFooterParameter;
     }
 
     /**
      * get
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function get(int $purchase_order_id)
@@ -67,14 +72,14 @@ class PurchaseOrderService
     {
         $data['created_by'] = Auth::id();
         $data['date'] = Carbon::today();
-        $count = $this->purchase_order->where('code', 'like', "PO%")->withTrashed()->count();
+        $count = $this->purchase_order->where('code', 'like', 'PO%')->withTrashed()->count();
 
-        $code = 'PO' . sprintf('%05d', $count + 1);
+        $code = 'PO'.sprintf('%05d', $count + 1);
         $check = $this->purchase_order->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'PO' . sprintf('%05d', $count);
+            $code = 'PO'.sprintf('%05d', $count);
             $check = $this->purchase_order->getCode($code);
         }
 
@@ -84,6 +89,7 @@ class PurchaseOrderService
         if ($business_details->currency_id != null) {
             $data['currency_id'] = $business_details->currency_id;
         }
+
         return $this->purchase_order->create($data);
     }
 
@@ -104,6 +110,7 @@ class PurchaseOrderService
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);
+
             return $order;
         } else {
             return $this->create();
@@ -142,6 +149,7 @@ class PurchaseOrderService
                 'note' => null,
                 'currency_id' => $business_detail->currency_id,
             ]);
+
             return $order;
         } else {
             return $this->create();
@@ -151,8 +159,8 @@ class PurchaseOrderService
     /**
      * storePODate
      *
-     * @param  mixed $purchase_order_id
-     * @param  mixed $data
+     * @param  mixed  $purchase_order_id
+     * @param  mixed  $data
      * @return void
      */
     public function storePODate(int $purchase_order_id, $data)
@@ -161,14 +169,15 @@ class PurchaseOrderService
         $date = Carbon::parse($dateString);
         $purchase_order = $this->purchase_order->find($purchase_order_id);
         $purchase_order->date = $date;
+
         return $purchase_order->save();
     }
 
     /**
      * storeSupplier
      *
-     * @param  mixed $purchase_order_id
-     * @param  mixed $pos_supplier_id
+     * @param  mixed  $purchase_order_id
+     * @param  mixed  $pos_supplier_id
      * @return void
      */
     public function storeSupplier(int $purchase_order_id, int $pos_supplier_id)
@@ -182,6 +191,7 @@ class PurchaseOrderService
             $purchase_order->supplier_address = $supplier->address;
             $purchase_order->supplier_email = $supplier->email;
             $purchase_order->supplier_mobile = $supplier->contact;
+
             return $purchase_order->save();
         }
     }
@@ -189,62 +199,66 @@ class PurchaseOrderService
     /**
      * getPurchaseOrderSupplier
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function getPurchaseOrderSupplier($purchase_order_id)
     {
         $purchase_order = $this->purchase_order->withTrashed()->find($purchase_order_id);
+
         return $this->supplier->find($purchase_order->supplier_id);
     }
 
     /**
      * storeCurrency
      *
-     * @param  mixed $purchase_order_id
-     * @param  mixed $currency_id
+     * @param  mixed  $purchase_order_id
+     * @param  mixed  $currency_id
      * @return void
      */
     public function storeCurrency(int $purchase_order_id, int $currency_id)
     {
         $purchase_order = $this->purchase_order->find($purchase_order_id);
         $purchase_order->currency_id = $currency_id;
+
         return $purchase_order->save();
     }
 
     /**
      * storeRef
      *
-     * @param  mixed $data
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $data
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function storeRef($data, int $purchase_order_id)
     {
         $purchase_order = $this->purchase_order->find($purchase_order_id);
         $purchase_order->ref_no = $data['ref'];
+
         return $purchase_order->save();
     }
 
     /**
      * storeNote
      *
-     * @param  mixed $purchase_order_id
-     * @param  mixed $data
+     * @param  mixed  $purchase_order_id
+     * @param  mixed  $data
      * @return void
      */
     public function storeNote(int $purchase_order_id, $data)
     {
         $purchase_order = $this->purchase_order->find($purchase_order_id);
         $purchase_order->note = $data['note'];
+
         return $purchase_order->save();
     }
 
     /**
      * editPurchaseOrderSupplier
      *
-     * @param  mixed $data
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $data
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function editPurchaseOrderSupplier($data, int $purchase_order_id)
@@ -253,13 +267,14 @@ class PurchaseOrderService
         $purchase_order->supplier_mobile = $data['supplier_mobile'];
         $purchase_order->supplier_email = $data['supplier_email'];
         $purchase_order->supplier_address = $data['supplier_address'];
+
         return $purchase_order->save();
     }
 
     /**
      * removeSupplierId
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function removeSupplierId($purchase_order_id)
@@ -273,13 +288,14 @@ class PurchaseOrderService
             $purchase_order->supplier_mobile = null;
             $purchase_order->save();
         }
+
         return $purchase_order;
     }
 
     /**
      * getRelatedPurchaseOrder
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function getRelatedPurchaseOrder(int $purchase_order_id)
@@ -290,7 +306,7 @@ class PurchaseOrderService
     /**
      * getForDelete
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function getForDelete(int $purchase_order_id)
@@ -301,7 +317,7 @@ class PurchaseOrderService
     /**
      * delete
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function delete(int $purchase_order_id)
@@ -309,28 +325,30 @@ class PurchaseOrderService
         $purchase_order = $this->purchase_order->find($purchase_order_id);
         $purchase_order->status = 1;
         $purchase_order->save();
+
         return $purchase_order->delete();
     }
 
     /**
      * restorePurchaseOrder
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function restorePurchaseOrder(int $purchase_order_id)
     {
         $deleted_purchase_order = $this->purchase_order->withTrashed()->find($purchase_order_id);
         $deleted_purchase_order->deleted_at = null;
+
         return $deleted_purchase_order->save();
     }
 
     /**
      * selectPurchaseOrderProduct
      *
-     * @param  mixed $product_data
-     * @param  mixed $purchase_order_id
-     * @param  mixed $request_data
+     * @param  mixed  $product_data
+     * @param  mixed  $purchase_order_id
+     * @param  mixed  $request_data
      * @return void
      */
     public function selectPurchaseOrderProduct($product_data, $purchase_order_id, $request_data)
@@ -357,7 +375,7 @@ class PurchaseOrderService
     /**
      * getPurchaseOrderProduct
      *
-     * @param  mixed $purchase_order_data
+     * @param  mixed  $purchase_order_data
      * @return void
      */
     public function getPurchaseOrderProduct($purchase_order_data)
@@ -368,20 +386,21 @@ class PurchaseOrderService
     /**
      * getTotals
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function getTotals($purchase_order_id)
     {
         $total = $this->purchase_order_item->total($purchase_order_id);
+
         return $this->purchase_order->updateTotals($purchase_order_id, $total);
     }
 
     /**
      * removeItem
      *
-     * @param  mixed $product_id
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $product_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function removeItem($order_item_id, int $purchase_order_id)
@@ -392,8 +411,8 @@ class PurchaseOrderService
     /**
      * getOrderItem
      *
-     * @param  mixed $id
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function getOrderItem($id, $purchase_order_id)
@@ -404,9 +423,9 @@ class PurchaseOrderService
     /**
      * updateQty
      *
-     * @param  mixed $data
-     * @param  mixed $product_data
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $data
+     * @param  mixed  $product_data
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function updateQty($data, $order_item_id, int $purchase_order_id)
@@ -424,7 +443,7 @@ class PurchaseOrderService
     /**
      * getPurchaseOrderItems
      *
-     * @param  mixed $purchase_order_id
+     * @param  mixed  $purchase_order_id
      * @return void
      */
     public function getPurchaseOrderItems($purchase_order_id)
@@ -436,8 +455,6 @@ class PurchaseOrderService
      * StoreFooterParameter
      * create new footer parameter
      *
-     * @param int $purchase_order_id
-     * @param $data
      *
      * @return void
      */
@@ -451,14 +468,13 @@ class PurchaseOrderService
             'parameter_id' => $created_footer_parameter->id,
             'order' => $ip_count + 1,
         ]);
-        return;
+
     }
 
     /**
      * EditFooterParameter
      * edit footer parameter name using purchase_order id
      *
-     * @param $id
      *
      * @return void
      */
@@ -471,7 +487,6 @@ class PurchaseOrderService
      * GetFooterParameters
      * get specific footer parameter using purchase_order_id
      *
-     * @param int $purchase_order_id
      *
      * @return void
      */
@@ -492,6 +507,7 @@ class PurchaseOrderService
                         'order' => $ip_count + 1,
                     ]);
                 }
+
                 return $this->purchase_order_item_footer_parameter->where('purchase_order_id', $purchase_order_id)->orderBy('order', 'asc')->get();
             }
         } else {
@@ -504,7 +520,6 @@ class PurchaseOrderService
      * SetFooterDescription
      * save footer description
      *
-     * @param $data
      *
      * @return void
      */
@@ -519,14 +534,13 @@ class PurchaseOrderService
             $purchase_order_footer_parameter->description = $data['description'];
             $purchase_order_footer_parameter->save();
         }
-        return;
+
     }
 
     /**
      * UpdateFooterParameter
      * update exist footer parameter
      *
-     * @param $data
      *
      * @return void
      */
@@ -547,7 +561,6 @@ class PurchaseOrderService
      * DeleteFooterParameter
      * delete specific footer parameter using id
      *
-     * @param $id
      *
      * @return void
      */
@@ -558,6 +571,7 @@ class PurchaseOrderService
         if ($purchase_order_footer_parameter) {
             $purchase_order_footer_parameter->delete();
         }
+
         return $purchase_order_item_footer_parameter->delete();
     }
 
@@ -566,8 +580,6 @@ class PurchaseOrderService
      * StoreParameter
      * store the parameter details to the database
      *
-     * @param int $purchase_order_id
-     * @param $data
      *
      * @return void
      */
@@ -581,14 +593,13 @@ class PurchaseOrderService
             'parameter_id' => $created_parameter->id,
             'order' => $ip_count + 1,
         ]);
-        return;
+
     }
 
     /**
      * GetParameters
      * get specific parameter details using purchase_order_id
      *
-     * @param int $purchase_order_id
      *
      * @return void
      */
@@ -608,6 +619,7 @@ class PurchaseOrderService
                         'order' => $ip_count + 1,
                     ]);
                 }
+
                 return $this->purchase_order_item_parameter->where('purchase_order_id', $purchase_order_id)->orderBy('order', 'asc')->get();
             }
         } else {
@@ -620,7 +632,6 @@ class PurchaseOrderService
      * SetDescription
      * set the description for the header parameters
      *
-     * @param $data
      *
      * @return void
      */
@@ -628,6 +639,7 @@ class PurchaseOrderService
     {
         $purchase_order_item_parameters = $this->purchase_order_item_parameter->find($data['id']);
         $purchase_order_item_parameters->description = $data['description'];
+
         return $purchase_order_item_parameters->save();
     }
 
@@ -635,7 +647,6 @@ class PurchaseOrderService
      * EditParameter
      * edit the exist parameter using id
      *
-     * @param $id
      *
      * @return void
      */
@@ -648,7 +659,6 @@ class PurchaseOrderService
      * UpdateParameter
      * update exist parameter
      *
-     * @param $data
      *
      * @return void
      */
@@ -669,7 +679,6 @@ class PurchaseOrderService
      * DeleteParameter
      * delete the specific parameter
      *
-     * @param $id
      *
      * @return void
      */
@@ -680,6 +689,7 @@ class PurchaseOrderService
         if ($purchase_order_parameter) {
             $purchase_order_parameter->delete();
         }
+
         return $purchase_order_item_parameter->delete();
     }
 
@@ -687,8 +697,7 @@ class PurchaseOrderService
      * ParametersGetForPrint
      * get header parameter for the print
      *
-     * @param int $purchase_order_id [explicite description]
-     *
+     * @param  int  $purchase_order_id  [explicite description]
      * @return void
      */
     public function parametersGetForPrint(int $purchase_order_id)
@@ -700,7 +709,6 @@ class PurchaseOrderService
      * FooterParametersGetForPrint
      * get footer parameter for the print
      *
-     * @param int $purchase_order_id
      *
      * @return void
      */
@@ -709,12 +717,11 @@ class PurchaseOrderService
         return $this->purchase_order_item_footer_parameter->where('purchase_order_id', $purchase_order_id)->where('description', '!=', 'null')->get();
     }
 
-
     /**
      * sendSupplierPurchaseOrderEmail
      *
-     * @param  mixed $purchaseOrder_id
-     * @param  mixed $data
+     * @param  mixed  $purchaseOrder_id
+     * @param  mixed  $data
      * @return void
      */
     public function sendSupplierPurchaseOrderEmail(int $purchaseOrder_id, array $data)
@@ -722,7 +729,7 @@ class PurchaseOrderService
         try {
             $response['purchase_order'] = PurchaseOrderFacade::get($purchaseOrder_id);
             $response['created_at'] = $response['purchase_order']['created_at'];
-            $response['print_type'] = "po";
+            $response['print_type'] = 'po';
             $response['config'] = $this->business_details->orderBy('id', 'desc')->first();
 
             $response['custom_fields'] = PurchaseOrderFacade::parametersGetForPrint($purchaseOrder_id);
@@ -735,7 +742,7 @@ class PurchaseOrderService
             file_put_contents($filePath, $pdfContent);
 
             $sender_details = $this->business_details->first();
-            if (!$sender_details->email) {
+            if (! $sender_details->email) {
                 return response()->json(['message' => 'Please enter business email']);
             }
 
@@ -751,6 +758,7 @@ class PurchaseOrderService
             ];
 
             SendSupplierPurchaseOrderMailJob::dispatch($sendData, $default_mail, $filePath, $image);
+
             return response()->json(['message' => 'Email sent successfully']);
         } catch (\Throwable $th) {
             return $th;
@@ -760,8 +768,7 @@ class PurchaseOrderService
     /**
      * CreatePurchaseOrderLink
      *
-     * @param int $invoice_id
-     *
+     * @param  int  $invoice_id
      * @return void
      */
     public function createPurchaseOrderLink(int $purchase_order_id)
@@ -769,16 +776,17 @@ class PurchaseOrderService
         $invoice = $this->purchase_order->findOrFail($purchase_order_id);
         $key = str::random(30);
         $invoice->update([
-            'purchase_order_link' => $key
+            'purchase_order_link' => $key,
         ]);
-        $url = url('/purchase-order/view/' . $key);
+        $url = url('/purchase-order/view/'.$key);
+
         return $url;
     }
 
     public function getPublicPurchaseOrder(string $purchase_order_key)
     {
         $purchase_order = $this->purchase_order->where('purchase_order_link', $purchase_order_key)->get();
+
         return $purchase_order[0]->id;
     }
-
 }

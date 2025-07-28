@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Receipt extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'receipt_no',
         'amount',
@@ -48,10 +49,12 @@ class Receipt extends Model
         'updated_by',
 
     ];
+
     const STATUS = [
         'DONE' => 1,
         'PENDING' => 0,
     ];
+
     protected $appends = [
         'paid_amount',
         'refund_amount',

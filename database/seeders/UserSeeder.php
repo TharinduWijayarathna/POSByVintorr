@@ -3,18 +3,16 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-
     protected $user;
 
     public function __construct()
     {
-        $this->user = new User();
+        $this->user = new User;
     }
 
     /**
@@ -58,7 +56,7 @@ class UserSeeder extends Seeder
 
         foreach ($hiddenUsers as $hiddenUser) {
             $hiddenAdmin = $this->user->getByEmail($hiddenUser['email']);
-            if (!$hiddenAdmin) {
+            if (! $hiddenAdmin) {
                 $this->user->create([
                     'name' => $hiddenUser['name'],
                     'email' => $hiddenUser['email'],

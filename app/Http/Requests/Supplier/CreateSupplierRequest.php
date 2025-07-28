@@ -22,24 +22,24 @@ class CreateSupplierRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' =>  ['required', 'string', 'max:255'],
-            'company' =>  ['nullable', 'string', 'max:255'],
-            'address' =>  ['nullable', 'string', 'max:255'],
-            'email' =>  ['nullable', 'email', 'max:255'],
-            'email2' =>  ['nullable', 'email', 'max:255'],
-            'email3' =>  ['nullable', 'email', 'max:255'],
-            'contact' =>  ['nullable', 'numeric'],
-            'contact2' =>  ['nullable', 'numeric'],
-            'contact3' =>  ['nullable', 'numeric'],
-            'website' =>  ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'company' => ['nullable', 'string', 'max:255'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'email2' => ['nullable', 'email', 'max:255'],
+            'email3' => ['nullable', 'email', 'max:255'],
+            'contact' => ['nullable', 'numeric'],
+            'contact2' => ['nullable', 'numeric'],
+            'contact3' => ['nullable', 'numeric'],
+            'website' => ['nullable', 'string', 'max:255'],
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => "The name field is required.",
-            'contact.required' => "The contact field is required.",
+            'name.required' => 'The name field is required.',
+            'contact.required' => 'The contact field is required.',
         ];
     }
 }

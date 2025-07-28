@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Supplier;
-use App\Models\ExpenseCategory;
-use App\Models\ExpenseSubCategory;
-use App\Models\Product;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ProductCost extends Model
 {
@@ -51,18 +47,16 @@ class ProductCost extends Model
 
     public function getExpenseCategoryTitleAttribute()
     {
-        return $this->expenseCategory?$this->expenseCategory->title:'';
+        return $this->expenseCategory ? $this->expenseCategory->title : '';
     }
 
     public function getExpenseSubCategoryTitleAttribute()
     {
-        return $this->expenseSubCategory?$this->expenseSubCategory->title:'';
+        return $this->expenseSubCategory ? $this->expenseSubCategory->title : '';
     }
 
     public function getSupplierNameAttribute()
     {
-        return $this->supplier?$this->supplier->name:'';
+        return $this->supplier ? $this->supplier->name : '';
     }
-
-
 }

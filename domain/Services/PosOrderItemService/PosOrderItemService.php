@@ -2,13 +2,13 @@
 
 namespace domain\Services\PosOrderItemService;
 
-use App\Models\Stock;
 use App\Models\PosOrder;
 use App\Models\PosOrderItem;
+use App\Models\Stock;
+use Carbon\Carbon;
+use domain\Facades\PosOrderFacade\PosOrderFacade;
 use domain\Facades\StockFacade\StockFacade;
 use domain\Facades\StockLogFacade\StockLogFacade;
-use domain\Facades\PosOrderFacade\PosOrderFacade;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -16,15 +16,20 @@ use Illuminate\Support\Facades\Auth;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosOrderItemService
 {
     protected $pos_order_item;
+
     protected $pos_order;
+
     protected $voucher_item;
+
     protected $material;
 
     /**
@@ -34,8 +39,8 @@ class PosOrderItemService
      */
     public function __construct()
     {
-        $this->pos_order_item = new PosOrderItem();
-        $this->pos_order = new PosOrder();
+        $this->pos_order_item = new PosOrderItem;
+        $this->pos_order = new PosOrder;
         // $this->material = new Material();
     }
 
@@ -47,14 +52,14 @@ class PosOrderItemService
      */
     public function all(int $order_id)
     {
-        return  $this->pos_order_item->getAll($order_id);
+        return $this->pos_order_item->getAll($order_id);
     }
 
     /**
      * Store
      * store data in database
      *
-     * @param  array $data
+     * @param  array  $data
      * @return void
      */
     public function store($material_data, array $order)
@@ -81,25 +86,25 @@ class PosOrderItemService
 
         // dd($material_data);
         $user = Auth::user();
-        $stock =  StockFacade::getStockByMaterialId($material_data['id']);
-        if($stock){
+        $stock = StockFacade::getStockByMaterialId($material_data['id']);
+        if ($stock) {
             $stock->qty -= $order['quantity'];
             $stock->save();
 
             StockLogFacade::store([
-                        'material_id' => $material_data['id'],
-                        'sku' => $stock->sku,
-                        'barcode' => $stock->barcode,
-                        'qty' => $order['quantity'],
-                        'remarks' => 'Sell the product',
-                        'type' => 1,
-                        'created_by' => $user->id,
-                        'to_location_id' => $stock->location_id,
-                        'to_bin_id' => $stock->bin_id,
-                        'to_warehouse_id' => $stock->warehouse_id,
-                    ]);
-        }else{
-            $stock =  Stock::create([
+                'material_id' => $material_data['id'],
+                'sku' => $stock->sku,
+                'barcode' => $stock->barcode,
+                'qty' => $order['quantity'],
+                'remarks' => 'Sell the product',
+                'type' => 1,
+                'created_by' => $user->id,
+                'to_location_id' => $stock->location_id,
+                'to_bin_id' => $stock->bin_id,
+                'to_warehouse_id' => $stock->warehouse_id,
+            ]);
+        } else {
+            $stock = Stock::create([
                 'material_id' => $material_data['id'],
                 'name' => $material_data['name'],
                 'barcode' => $material_data['barcode'],
@@ -107,12 +112,12 @@ class PosOrderItemService
                 'qty' => -$order['quantity'],
             ]);
             StockLogFacade::store([
-                        'material_id' => $material_data['id'],
-                        'qty' => $order['quantity'],
-                        'remarks' => 'Sell the product - But not in the stock',
-                        'type' => 1,
-                        'created_by' => $user->id,
-                    ]);
+                'material_id' => $material_data['id'],
+                'qty' => $order['quantity'],
+                'remarks' => 'Sell the product - But not in the stock',
+                'type' => 1,
+                'created_by' => $user->id,
+            ]);
         }
 
         $material = $this->material->find($material_data['id']);
@@ -140,7 +145,7 @@ class PosOrderItemService
 
         $this->pos_order_item->create($request);
 
-        $item =  $this->voucher_item->find($data['id']);
+        $item = $this->voucher_item->find($data['id']);
         $item->status = 2;
         $item->issued_date = Carbon::now();
         $item->issued_invoice_id = $order_id;
@@ -158,7 +163,6 @@ class PosOrderItemService
      * Get
      * retrieve relevant data using pos_order_item_id
      *
-     * @param  int  $pos_order_item_id
      * @return void
      */
     public function get(int $pos_order_item_id)
@@ -170,8 +174,8 @@ class PosOrderItemService
      * Update
      * update existing data using pos_order_item_id
      *
-     * @param  array $data
-     * @param  int   $pos_order_item_id
+     * @param  array  $data
+     * @param  int  $pos_order_item_id
      * @return void
      */
     public function update(int $item_id, int $quantity)
@@ -183,6 +187,7 @@ class PosOrderItemService
         $item->save();
 
         PosOrderFacade::storeTotal($item->order_id);
+
         return $item;
     }
 
@@ -190,8 +195,6 @@ class PosOrderItemService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosOrderItem $pos_order_item
-     * @param  array $data
      * @return void
      */
     protected function edit(PosOrderItem $pos_order_item, array $data)
@@ -203,7 +206,6 @@ class PosOrderItemService
      * Delete
      * delete specific data using pos_order_item_id
      *
-     * @param  int   $pos_order_item_id
      * @return void
      */
     public function delete(int $pos_order_item_id)
@@ -211,30 +213,30 @@ class PosOrderItemService
         $order_item = $this->pos_order_item->find($pos_order_item_id);
 
         if ($order_item->type == 1) {
-            $item =  $this->voucher_item->find($order_item->voucher_id);
+            $item = $this->voucher_item->find($order_item->voucher_id);
             $item->issued_date = null;
             $item->issued_invoice_id = null;
             $item->status = 0;
             $item->save();
         } else {
-            $stock =  StockFacade::getStockByMaterialIdForCal($order_item->fg_id);
+            $stock = StockFacade::getStockByMaterialIdForCal($order_item->fg_id);
             if ($stock) {
                 $stock->qty += $order_item->quantity;
                 $stock->save();
                 StockFacade::updateTotal($stock->material_id);
 
                 StockLogFacade::store([
-                        'material_id' => $order_item->fg_id,
-                        'sku' => $stock->sku,
-                        'barcode' => $stock->barcode,
-                        'qty' =>  $order_item->quantity,
-                        'remarks' => 'Remove product from the cart',
-                        'type' => 1,
-                        'created_by' => Auth::id(),
-                        'to_location_id' => $stock->location_id,
-                        'to_bin_id' => $stock->bin_id,
-                        'to_warehouse_id' => $stock->warehouse_id,
-                    ]);
+                    'material_id' => $order_item->fg_id,
+                    'sku' => $stock->sku,
+                    'barcode' => $stock->barcode,
+                    'qty' => $order_item->quantity,
+                    'remarks' => 'Remove product from the cart',
+                    'type' => 1,
+                    'created_by' => Auth::id(),
+                    'to_location_id' => $stock->location_id,
+                    'to_bin_id' => $stock->bin_id,
+                    'to_warehouse_id' => $stock->warehouse_id,
+                ]);
             }
             $material = $this->material->find($order_item->fg_id);
             $material->selling_qty = $material->selling_qty - $order_item->quantity;
@@ -252,7 +254,6 @@ class PosOrderItemService
      * total
      * Get total of all items according to the order id
      *
-     * @param  int $pos_order_item_id
      * @return void
      */
     public function total(int $pos_order_item_id)
@@ -267,7 +268,7 @@ class PosOrderItemService
             if (isset($data['amount'])) {
                 $discount = $data['amount'];
                 foreach ($sales_orders as $item_id) {
-                    $order_item =  $this->get($item_id);
+                    $order_item = $this->get($item_id);
                     // dd($order_item);
 
                     if ($order_item->type == 0) {
@@ -282,10 +283,10 @@ class PosOrderItemService
             if (isset($data['percentage'])) {
                 $discount = $data['percentage'];
                 foreach ($sales_orders as $item_id) {
-                    $order_item =  $this->get($item_id);
+                    $order_item = $this->get($item_id);
                     if ($order_item->type == 0) {
                         $order_item->discount = $order_item->total * ($discount / 100);
-                        $order_item->sub_total = $order_item->total - ($order_item->total * ($discount / 100));;
+                        $order_item->sub_total = $order_item->total - ($order_item->total * ($discount / 100));
                         $order_item->discount_type = 1;
                         $order_item->discount_remark = $data['discount_remark'];
                         $order_item->save();
@@ -300,12 +301,12 @@ class PosOrderItemService
     public function returnUpdate(array $orderItems)
     {
         foreach ($orderItems as $item) {
-            $orderItem =  $this->get($item['id']);
+            $orderItem = $this->get($item['id']);
             if ($orderItem) {
-                $orderItem->return_quantity  = $orderItem->return_quantity ? ($orderItem->return_quantity +$item['available_qty']) : $item['available_qty'];
+                $orderItem->return_quantity = $orderItem->return_quantity ? ($orderItem->return_quantity + $item['available_qty']) : $item['available_qty'];
                 $orderItem->save();
                 if ($orderItem->return_quantity >= $orderItem->quantity) {
-                    $orderItem->return_status  = 1;
+                    $orderItem->return_status = 1;
                     $orderItem->save();
                 }
             }

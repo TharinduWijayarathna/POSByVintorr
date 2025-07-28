@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon\Carbon;
 
 class PosCustomer extends Model
 {
@@ -30,18 +30,21 @@ class PosCustomer extends Model
     public function getDobAttribute()
     {
         $date = Carbon::parse($this->date_of_birth);
+
         return $date->format('Y-m-d');
     }
 
     public function getDayAttribute()
     {
         $date = Carbon::parse($this->date_of_birth)->toArray();
+
         return $date['day'];
     }
 
     public function getMonthAttribute()
     {
         $date = Carbon::parse($this->date_of_birth)->toArray();
+
         return $date['month'];
     }
 }

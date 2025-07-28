@@ -4,19 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use LaravelAndVueJS\Traits\LaravelPermissionToVueJS;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    use SoftDeletes;
     use HasRoles;
     use LaravelPermissionToVueJS;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -39,17 +39,16 @@ class User extends Authenticatable
     ];
 
     const USER_ROLE_ID = [
-        'ADMIN'=> '1',
-        'CASHIER'=> '2',
-        'AUDIT'=> '3',
-        'INSPECTOR'=> '4',
+        'ADMIN' => '1',
+        'CASHIER' => '2',
+        'AUDIT' => '3',
+        'INSPECTOR' => '4',
     ];
 
     const STATUS = [
-        'VISIBLE'=> '0',
-        'HIDDEN'=> '1'
+        'VISIBLE' => '0',
+        'HIDDEN' => '1',
     ];
-
 
     protected $appends = [
         'role_name',

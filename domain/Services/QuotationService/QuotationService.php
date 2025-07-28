@@ -23,25 +23,39 @@ use Carbon\Carbon;
 use domain\Facades\QuotationFacade\QuotationFacade;
 use domain\Facades\StockLogFacade\StockLogFacade;
 use Illuminate\Support\Facades\Auth;
-use PDF;
 use Illuminate\Support\Str;
+use PDF;
 
 class QuotationService
 {
     private $product;
+
     private $quotation;
+
     private $customer;
+
     private $bill_payment;
+
     private $quotation_item;
+
     private $pos_order;
+
     private $pos_order_items;
+
     private $business_details;
+
     private $quotation_parameter;
+
     private $quotation_item_parameter;
+
     private $quotation_footer_parameter;
+
     private $quotation_item_footer_parameter;
+
     private $invoice_item_parameter;
+
     private $invoice_item_footer_parameter;
+
     private $product_tax;
 
     /**
@@ -51,21 +65,21 @@ class QuotationService
      */
     public function __construct()
     {
-        $this->product = new Product();
-        $this->quotation = new Quotation();
-        $this->quotation_item = new QuotationItem();
-        $this->customer = new Customer();
-        $this->bill_payment = new BillPayment();
-        $this->pos_order = new PosOrder();
-        $this->pos_order_items = new PosOrderItem();
-        $this->business_details = new BusinessDetail();
-        $this->quotation_parameter = new QuotationParameter();
-        $this->quotation_item_parameter = new QuotationItemParameter();
-        $this->quotation_footer_parameter = new QuotationFooterParameter();
-        $this->quotation_item_footer_parameter = new QuotationItemFooterParameter();
-        $this->invoice_item_parameter = new InvoiceItemParameter();
-        $this->invoice_item_footer_parameter = new InvoiceItemFooterParameter();
-        $this->product_tax = new ProductTax();
+        $this->product = new Product;
+        $this->quotation = new Quotation;
+        $this->quotation_item = new QuotationItem;
+        $this->customer = new Customer;
+        $this->bill_payment = new BillPayment;
+        $this->pos_order = new PosOrder;
+        $this->pos_order_items = new PosOrderItem;
+        $this->business_details = new BusinessDetail;
+        $this->quotation_parameter = new QuotationParameter;
+        $this->quotation_item_parameter = new QuotationItemParameter;
+        $this->quotation_footer_parameter = new QuotationFooterParameter;
+        $this->quotation_item_footer_parameter = new QuotationItemFooterParameter;
+        $this->invoice_item_parameter = new InvoiceItemParameter;
+        $this->invoice_item_footer_parameter = new InvoiceItemFooterParameter;
+        $this->product_tax = new ProductTax;
     }
 
     public function get(int $quotation_id)
@@ -76,14 +90,14 @@ class QuotationService
     public function create()
     {
         $data['created_by'] = Auth::id();
-        $count = $this->quotation->where('code', 'like', "Q%")->withTrashed()->count();
+        $count = $this->quotation->where('code', 'like', 'Q%')->withTrashed()->count();
 
-        $code = 'Q' . sprintf('%05d', $count + 1);
+        $code = 'Q'.sprintf('%05d', $count + 1);
         $check = $this->quotation->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'Q' . sprintf('%05d', $count);
+            $code = 'Q'.sprintf('%05d', $count);
             $check = $this->quotation->getCode($code);
         }
 
@@ -94,6 +108,7 @@ class QuotationService
         if ($business_details->currency_id != null) {
             $data['currency_id'] = $business_details->currency_id;
         }
+
         return $this->quotation->create($data);
     }
 
@@ -112,6 +127,7 @@ class QuotationService
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);
+
             return $order;
         } else {
             return $this->create();
@@ -152,6 +168,7 @@ class QuotationService
                 'currency_id' => $business_detail->currency_id,
                 'note' => null,
             ]);
+
             return $order;
         } else {
             return $this->create();
@@ -194,13 +211,13 @@ class QuotationService
         // $quotation->customer_email = $customer->email;
         // $quotation->customer_mobile = $customer->contact;
         // return $quotation->save();
-        if (!$customer) {
+        if (! $customer) {
             // Handle the case where customer is not found
             $customer = (object) [
                 'name' => 'Walking Customer',
                 'address' => '',
                 'email' => '',
-                'contact' => ''
+                'contact' => '',
             ];
         }
 
@@ -210,6 +227,7 @@ class QuotationService
             $quotation->customer_address = $customer->address;
             $quotation->customer_email = $customer->email;
             $quotation->customer_mobile = $customer->contact;
+
             return $quotation->save();
         }
     }
@@ -218,6 +236,7 @@ class QuotationService
     {
         $quotation = $this->quotation->find($quotation_id);
         $quotation->currency_id = $currency_id;
+
         return $quotation->save();
     }
 
@@ -225,6 +244,7 @@ class QuotationService
     {
         $quotation = $this->quotation->find($quotation_id);
         $quotation->ref_no = $data['ref'];
+
         return $quotation->save();
     }
 
@@ -232,12 +252,14 @@ class QuotationService
     {
         $quotation = $this->quotation->find($quotation_id);
         $quotation->note = $data['note'];
+
         return $quotation->save();
     }
 
     public function getLoyaltyCustomer(int $quotation_id)
     {
         $quotation = $this->quotation->withTrashed()->find($quotation_id);
+
         return $this->customer->find($quotation->customer_id);
     }
 
@@ -247,6 +269,7 @@ class QuotationService
         $quotation->customer_mobile = $data['customer_mobile'];
         $quotation->customer_email = $data['customer_email'];
         $quotation->customer_address = $data['customer_address'];
+
         return $quotation->save();
     }
 
@@ -261,6 +284,7 @@ class QuotationService
             $quotation->customer_mobile = null;
             $quotation->save();
         }
+
         return $quotation;
     }
 
@@ -279,6 +303,7 @@ class QuotationService
         $quotation = $this->quotation->find($quotation_id);
         $quotation->status = 1;
         $quotation->save();
+
         return $quotation->delete();
     }
 
@@ -286,6 +311,7 @@ class QuotationService
     {
         $deleted_quotation = $this->quotation->withTrashed()->find($quotation_id);
         $deleted_quotation->deleted_at = null;
+
         return $deleted_quotation->save();
     }
 
@@ -323,13 +349,12 @@ class QuotationService
         $this->quotation_item->create($data);
     }
 
-
     /**
      * calculateTotalTax
      *
-     * @param  mixed $quantity
-     * @param  mixed $unit_price
-     * @param  mixed $product_id
+     * @param  mixed  $quantity
+     * @param  mixed  $unit_price
+     * @param  mixed  $product_id
      * @return void
      */
     public function calculateTotalTax($quantity, $unit_price, $product_id)
@@ -355,13 +380,14 @@ class QuotationService
         $this->recalculateTaxes($quotation_id);
 
         $subTotal = $this->quotation_item->subTotal($quotation_id);
+
         return $this->quotation->updateTotals($quotation_id, $subTotal);
     }
 
     /**
      * recalculateTaxes
      *
-     * @param  mixed $quotation_id
+     * @param  mixed  $quotation_id
      * @return void
      */
     public function recalculateTaxes($quotation_id)
@@ -406,14 +432,14 @@ class QuotationService
         $today = \Carbon\Carbon::now()->toDateString();
         $quotation = $this->quotation->find($quotation_id);
         $data['created_by'] = Auth::id();
-        $count = $this->pos_order->where('code', 'like', "INV%")->withTrashed()->count();
+        $count = $this->pos_order->where('code', 'like', 'INV%')->withTrashed()->count();
 
-        $code = 'INV' . sprintf('%05d', $count + 1);
+        $code = 'INV'.sprintf('%05d', $count + 1);
         $check = $this->pos_order->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'INV' . sprintf('%05d', $count);
+            $code = 'INV'.sprintf('%05d', $count);
             $check = $this->pos_order->getCode($code);
         }
 
@@ -448,7 +474,7 @@ class QuotationService
                 'name' => $quotation_item_parameter->name,
                 'description' => $quotation_item_parameter->description,
                 'parameter_id' => $quotation_item_parameter->parameter_id,
-                'order' => $quotation_item_parameter->order
+                'order' => $quotation_item_parameter->order,
             ];
 
             $this->invoice_item_parameter->create($quotationItemParameters);
@@ -463,7 +489,7 @@ class QuotationService
                 'name' => $quotation_item_footer_parameter->name,
                 'description' => $quotation_item_footer_parameter->description,
                 'parameter_id' => $quotation_item_footer_parameter->parameter_id,
-                'order' => $quotation_item_footer_parameter->order
+                'order' => $quotation_item_footer_parameter->order,
             ];
 
             $this->invoice_item_footer_parameter->create($quotationItemFooterParameters);
@@ -504,7 +530,7 @@ class QuotationService
                 $stock_log_data['balance'] = $product->stock_quantity ?? 0;
                 $stock_log_data['cost'] = $product->cost ?? 0;
                 $stock_log_data['selling_price'] = $product->selling ?? 0;
-                $stock_log_data['reason'] = "Added to invoice";
+                $stock_log_data['reason'] = 'Added to invoice';
                 $stock_log_data['type'] = StockLog::TYPE['minus'];
                 $user = Auth::user();
                 $stock_log_data['created_by'] = $user->id;
@@ -522,6 +548,7 @@ class QuotationService
 
         $quotation->convert_status = 1;
         $quotation->save();
+
         return $posOrderId;
     }
 
@@ -529,8 +556,6 @@ class QuotationService
      * StoreFooterParameter
      * create new footer parameter
      *
-     * @param int $quotation_id
-     * @param $data
      *
      * @return void
      */
@@ -544,14 +569,13 @@ class QuotationService
             'parameter_id' => $created_footer_parameter->id,
             'order' => $ip_count + 1,
         ]);
-        return;
+
     }
 
     /**
      * EditFooterParameter
      * edit footer parameter name using quotation id
      *
-     * @param $id
      *
      * @return void
      */
@@ -564,7 +588,6 @@ class QuotationService
      * GetFooterParameters
      * get specific footer parameter using quotation_id
      *
-     * @param int $quotation_id
      *
      * @return void
      */
@@ -585,6 +608,7 @@ class QuotationService
                         'order' => $ip_count + 1,
                     ]);
                 }
+
                 return $this->quotation_item_footer_parameter->where('quotation_id', $quotation_id)->orderBy('order', 'asc')->get();
             }
         } else {
@@ -597,7 +621,6 @@ class QuotationService
      * SetFooterDescription
      * save footer description
      *
-     * @param $data
      *
      * @return void
      */
@@ -612,14 +635,13 @@ class QuotationService
             $quotation_footer_parameter->description = $data['description'];
             $quotation_footer_parameter->save();
         }
-        return;
+
     }
 
     /**
      * UpdateFooterParameter
      * update exist footer parameter
      *
-     * @param $data
      *
      * @return void
      */
@@ -640,7 +662,6 @@ class QuotationService
      * DeleteFooterParameter
      * delete specific footer parameter using id
      *
-     * @param $id
      *
      * @return void
      */
@@ -651,6 +672,7 @@ class QuotationService
         if ($quotation_footer_parameter) {
             $quotation_footer_parameter->delete();
         }
+
         return $quotation_item_footer_parameter->delete();
     }
 
@@ -659,8 +681,6 @@ class QuotationService
      * StoreParameter
      * store the parameter details to the database
      *
-     * @param int $quotation_id
-     * @param $data
      *
      * @return void
      */
@@ -674,14 +694,13 @@ class QuotationService
             'parameter_id' => $created_parameter->id,
             'order' => $ip_count + 1,
         ]);
-        return;
+
     }
 
     /**
      * GetParameters
      * get specific parameter details using quotation_id
      *
-     * @param int $quotation_id
      *
      * @return void
      */
@@ -701,6 +720,7 @@ class QuotationService
                         'order' => $ip_count + 1,
                     ]);
                 }
+
                 return $this->quotation_item_parameter->where('quotation_id', $quotation_id)->orderBy('order', 'asc')->get();
             }
         } else {
@@ -713,7 +733,6 @@ class QuotationService
      * SetDescription
      * set the description for the header parameters
      *
-     * @param $data
      *
      * @return void
      */
@@ -721,6 +740,7 @@ class QuotationService
     {
         $quotation_item_parameters = $this->quotation_item_parameter->find($data['id']);
         $quotation_item_parameters->description = $data['description'];
+
         return $quotation_item_parameters->save();
     }
 
@@ -728,7 +748,6 @@ class QuotationService
      * EditParameter
      * edit the exist parameter using id
      *
-     * @param $id
      *
      * @return void
      */
@@ -741,7 +760,6 @@ class QuotationService
      * UpdateParameter
      * update exist parameter
      *
-     * @param $data
      *
      * @return void
      */
@@ -762,7 +780,6 @@ class QuotationService
      * DeleteParameter
      * delete the specific parameter
      *
-     * @param $id
      *
      * @return void
      */
@@ -773,6 +790,7 @@ class QuotationService
         if ($quotation_parameter) {
             $quotation_parameter->delete();
         }
+
         return $quotation_item_parameter->delete();
     }
 
@@ -780,8 +798,7 @@ class QuotationService
      * ParametersGetForPrint
      * get header parameter for the print
      *
-     * @param int $quotation_id [explicite description]
-     *
+     * @param  int  $quotation_id  [explicite description]
      * @return void
      */
     public function parametersGetForPrint(int $quotation_id)
@@ -793,7 +810,6 @@ class QuotationService
      * FooterParametersGetForPrint
      * get footer parameter for the print
      *
-     * @param int $quotation_id
      *
      * @return void
      */
@@ -808,7 +824,7 @@ class QuotationService
             $response['quotation'] = QuotationFacade::get($quotation_id);
             $response['quotation_items'] = QuotationFacade::allItems($quotation_id);
             $response['created_at'] = $response['quotation']['created_at'];
-            $response['print_type'] = "quotation";
+            $response['print_type'] = 'quotation';
             $response['config'] = $this->business_details->orderBy('id', 'desc')->first();
 
             $response['custom_fields'] = QuotationFacade::parametersGetForPrint($quotation_id);
@@ -821,7 +837,7 @@ class QuotationService
             file_put_contents($filePath, $pdfContent);
 
             $sender_details = $this->business_details->first();
-            if (!$sender_details->email) {
+            if (! $sender_details->email) {
                 return response()->json(['message' => 'Please enter business email']);
             }
 
@@ -837,6 +853,7 @@ class QuotationService
             ];
 
             SendCustomerQuotationMailJob::dispatch($sendData, $default_mail, $filePath, $image);
+
             return response()->json(['message' => 'Email sent successfully']);
         } catch (\Throwable $th) {
             return $th;
@@ -848,20 +865,22 @@ class QuotationService
         $quotation = $this->quotation->findOrFail($quotation_id);
         $key = str::random(30);
         $quotation->update([
-            'quotation_link' => $key
+            'quotation_link' => $key,
         ]);
-        $url = url('/quotation/view/' . $key);
+        $url = url('/quotation/view/'.$key);
+
         return $url;
     }
 
     public function getPublicQuotation(string $quotation_key)
     {
         $quotation = $this->quotation->where('quotation_link', $quotation_key)->get();
+
         return $quotation[0]->id;
     }
 
     public function allItems(int $quotation_id)
     {
-        return  $this->quotation_item->getAll($quotation_id);
+        return $this->quotation_item->getAll($quotation_id);
     }
 }

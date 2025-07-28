@@ -28,23 +28,26 @@ class UpdateQtyRequest extends FormRequest
             'unit_price' => 'required|numeric|min:0|max:100000000000',
         ];
     }
-    function messages()
+
+    public function messages()
     {
         return [
             'product_name.required' => 'Product name is required',
             'quantity.required' => 'Quantity field is required',
-            'quantity.max' => "Quantity must be less than 10,000",
-            'unit_price.max' => "Unit price must be less than 100,000,000,000",
+            'quantity.max' => 'Quantity must be less than 10,000',
+            'unit_price.max' => 'Unit price must be less than 100,000,000,000',
         ];
     }
+
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
             $quantity = $this->input('quantity');
             $price = $this->input('unit_price');
 
-            if (!is_numeric($quantity) || !is_numeric($price)) {
+            if (! is_numeric($quantity) || ! is_numeric($price)) {
                 $validator->errors()->add('product_amount', 'The quantity and price must be numbers.');
+
                 return;
             }
 

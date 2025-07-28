@@ -12,16 +12,22 @@ use Illuminate\Http\Request;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class ProfitAndLossReportService
 {
     private $posOrderQuery;
+
     private $transactionQuery;
+
     private $returnsQuery;
+
     private $payrollQuery;
+
     private $otherExpensesQuery;
 
     // Constructor to initialize the queries
@@ -37,7 +43,7 @@ class ProfitAndLossReportService
     /**
      * fetchData
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return array
      */
     public function fetchData(Request $request)
@@ -71,7 +77,7 @@ class ProfitAndLossReportService
         $otherExpenses = $this->otherExpensesQuery->sum('amount');
 
         // Calculate the profit
-        $profit =  ($sales_on_cash + $sales_on_credit + $positive_manual_transactions) - (abs($returns) + abs($otherExpenses) + abs($payroll) + abs($negative_manual_transactions));
+        $profit = ($sales_on_cash + $sales_on_credit + $positive_manual_transactions) - (abs($returns) + abs($otherExpenses) + abs($payroll) + abs($negative_manual_transactions));
 
         // Calculate the profit percentage
         $profit_percentage = ($profit / ($sales_on_cash + $sales_on_credit + $positive_manual_transactions)) * 100;
@@ -85,15 +91,15 @@ class ProfitAndLossReportService
             'payroll' => $payroll,
             'otherExpenses' => $otherExpenses,
             'profit' => $profit,
-            'profit_percentage' => $profit_percentage
+            'profit_percentage' => $profit_percentage,
         ];
     }
 
     /**
      * applyFilters
      *
-     * @param  mixed $query
-     * @param  mixed $request
+     * @param  mixed  $query
+     * @param  mixed  $request
      * @return void
      */
     private function applyFilters($query, Request $request)

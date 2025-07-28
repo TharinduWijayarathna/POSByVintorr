@@ -6,27 +6,31 @@ use App\Models\BillPayment;
 use App\Models\Configuration;
 use App\Models\Customer;
 use App\Models\PosCustomer;
-use domain\Facades\PosCustomerFacade\PosCustomerFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Psy\Readline\Hoa\Console;
 
 /**
  * PosCustomerService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosCustomerService
 {
     protected $customer;
+
     protected $pos_customer;
+
     protected $pos_cashier;
+
     protected $bill_payment;
+
     /**
      * __construct
      *
@@ -34,10 +38,10 @@ class PosCustomerService
      */
     public function __construct()
     {
-        $this->customer = new Customer();
-        $this->pos_customer = new PosCustomer();
-        $this->pos_cashier = new Configuration();
-        $this->bill_payment = new BillPayment();
+        $this->customer = new Customer;
+        $this->pos_customer = new PosCustomer;
+        $this->pos_cashier = new Configuration;
+        $this->bill_payment = new BillPayment;
     }
 
     /**
@@ -60,7 +64,6 @@ class PosCustomerService
      * Store
      * store data in database
      *
-     * @param  array $data
      * @return void
      */
     public function store(array $data)
@@ -78,7 +81,7 @@ class PosCustomerService
         $data['created_by'] = Auth::user()->id;
 
         if (isset($data['customer_outstanding'])) {
-            //remove thousand-seperator
+            // remove thousand-seperator
             $data['customer_outstanding'] = (float) str_replace(',', '', $data['customer_outstanding']);
         } else {
             $data['customer_outstanding'] = 0;
@@ -99,7 +102,7 @@ class PosCustomerService
             ->first();
 
         if ($customer != null) {
-            return "This contact number already registered";
+            return 'This contact number already registered';
         } elseif ($customer == null) {
             return $this->customer->create($data);
         }
@@ -109,7 +112,6 @@ class PosCustomerService
      * Get
      * retrieve relevant data using pos_customer_id
      *
-     * @param  int  $pos_customer_id
      * @return void
      */
     public function get(int $pos_customer_id)
@@ -121,13 +123,13 @@ class PosCustomerService
      * Update
      * update existing data using pos_customer_id
      *
-     * @param  array $data
-     * @param  int   $pos_customer_id
+     * @param  int  $pos_customer_id
      * @return void
      */
     public function update(array $data, int $customer_id)
     {
         $customer = $this->customer->find($customer_id);
+
         return $customer->update($this->edit($customer, $data));
     }
 
@@ -135,8 +137,7 @@ class PosCustomerService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosCustomer $pos_customer
-     * @param  array $data
+     * @param  PosCustomer  $pos_customer
      * @return void
      */
     protected function edit(Customer $customer, array $data)
@@ -148,7 +149,7 @@ class PosCustomerService
      * Delete
      * delete specific data using pos_customer_id
      *
-     * @param  int   $pos_customer_id
+     * @param  int  $pos_customer_id
      * @return void
      */
     public function delete(int $customer_id)
@@ -179,6 +180,7 @@ class PosCustomerService
     {
         $deleted_customer = $this->customer->withTrashed()->find($customer_id);
         $deleted_customer->deleted_at = null;
+
         return $deleted_customer->save();
     }
 
@@ -186,9 +188,11 @@ class PosCustomerService
     {
         $query = $request->input('query');
         if ($query) {
-            $customers = $this->customer->orderBy('name', 'asc')->where('name', 'like', '%' . $query . '%');
+            $customers = $this->customer->orderBy('name', 'asc')->where('name', 'like', '%'.$query.'%');
+
             return $customers->get();
         }
+
         return [];  // Return an empty array if no query
     }
 

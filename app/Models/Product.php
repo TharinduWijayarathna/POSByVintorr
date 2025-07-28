@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Unit;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -123,6 +121,7 @@ class Product extends Model
     public function getTotalQtyAttribute()
     {
         $qty = $this->items->sum('quantity');
+
         return $qty;
     }
 
@@ -131,6 +130,7 @@ class Product extends Model
         $qty = $this->items->sum('quantity');
         $price = $this->selling;
         $total = $qty * $price;
+
         return $total;
     }
 
@@ -139,13 +139,12 @@ class Product extends Model
         $payload = $this->where('status', 0);
 
         $payload = $payload->where(function ($payload) use ($query) {
-            $payload->where('name', 'like', '%' . $query . '%')
-                ->orWhere('code', 'like', '%' . $query . '%')
-                ->orWhere('type', 'like', '%' . $query . '%')
-                ->orWhere('introduction', 'like', '%' . $query . '%')
-                ->orWhere('description', 'like', '%' . $query . '%');
+            $payload->where('name', 'like', '%'.$query.'%')
+                ->orWhere('code', 'like', '%'.$query.'%')
+                ->orWhere('type', 'like', '%'.$query.'%')
+                ->orWhere('introduction', 'like', '%'.$query.'%')
+                ->orWhere('description', 'like', '%'.$query.'%');
         });
-
 
         return $payload->limit(10)->get();
     }

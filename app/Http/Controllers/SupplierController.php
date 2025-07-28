@@ -50,9 +50,9 @@ class SupplierController extends ParentController
             if (isset($request->search_supplier_contact)) {
                 $searchContact = $request->search_supplier_contact;
                 $query->where(function ($query) use ($searchContact) {
-                    $query->where('contact', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact2', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact3', 'like', '%' . $searchContact . '%');
+                    $query->where('contact', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact2', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact3', 'like', '%'.$searchContact.'%');
                 });
             }
             $payload = QueryBuilder::for($query)
@@ -63,6 +63,7 @@ class SupplierController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -84,7 +85,7 @@ class SupplierController extends ParentController
     public function get($supplier_id)
     {
         // if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
-            return SupplierFacade::get($supplier_id);
+        return SupplierFacade::get($supplier_id);
         // }
     }
 
@@ -107,6 +108,7 @@ class SupplierController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             // $response = UserFacade::retrieveHost();
             $response['supplier_id'] = $supplier_id;
+
             return Inertia::render('Supplier/edit', $response);
         }
     }
@@ -117,6 +119,7 @@ class SupplierController extends ParentController
             $query = Expense::orderBy('created_at', 'desc')->where('supplier_id', $supplier_id);
             $payload = QueryBuilder::for($query)
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -140,9 +143,9 @@ class SupplierController extends ParentController
             if (isset($request->search_supplier_contact)) {
                 $searchContact = $request->search_supplier_contact;
                 $query->where(function ($query) use ($searchContact) {
-                    $query->where('contact', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact2', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact3', 'like', '%' . $searchContact . '%');
+                    $query->where('contact', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact2', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact3', 'like', '%'.$searchContact.'%');
                 });
             }
             $payload = QueryBuilder::for($query)
@@ -153,6 +156,7 @@ class SupplierController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -167,14 +171,14 @@ class SupplierController extends ParentController
     /**
      * import
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function import(Request $request)
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $request->validate([
-                'supplier_file' => 'required|mimes:xlsx'
+                'supplier_file' => 'required|mimes:xlsx',
             ]);
 
             Excel::import(new SupplierImport, $request->file('supplier_file'));
@@ -185,7 +189,7 @@ class SupplierController extends ParentController
 
             $response = [
                 'message' => $count_description,
-                'errors' => $errors
+                'errors' => $errors,
             ];
 
             return response()->json($response);
@@ -202,6 +206,7 @@ class SupplierController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $file = public_path('sample_excel/suppliers.xlsx');
             $headers = ['Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
             // dd($file, $headers);
             return response()->download($file, 'supplier.xlsx', $headers);
         }
@@ -211,7 +216,6 @@ class SupplierController extends ParentController
      * AllPurchaseOrder
      * get all purchase order
      *
-     * @param $supplier_id
      *
      * @return void
      */
@@ -229,7 +233,6 @@ class SupplierController extends ParentController
     /**
      * GetPayrollSupplier
      *
-     * @param $supplier_id
      *
      * @return void
      */
@@ -243,14 +246,13 @@ class SupplierController extends ParentController
     /**
      * GetExpenseSupplier
      *
-     * @param $supplier_id
      *
      * @return void
      */
     public function getExpenseSupplier($supplier_id)
     {
         // if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
-            return SupplierFacade::getExpenseSupplier($supplier_id);
+        return SupplierFacade::getExpenseSupplier($supplier_id);
         // }
     }
 }

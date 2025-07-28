@@ -6,18 +6,16 @@ use App\Exports\Reports\ProductSalesReportExport;
 use App\Http\Resources\DataResource;
 use App\Models\BusinessDetail;
 use App\Models\PosOrder;
-use App\Models\PosOrderItem;
 use App\Models\Product;
 use App\Models\User;
 use domain\Facades\ProductSalesFacade\ProductSalesFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductSalesReportController extends ParentController
 {
@@ -31,11 +29,10 @@ class ProductSalesReportController extends ParentController
         return Inertia::render('Reports/ProductSales/index');
     }
 
-
     /**
      * all
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function all(Request $request)
@@ -43,7 +40,7 @@ class ProductSalesReportController extends ParentController
         // Check if any filters are set
         $filtersSet = $request->has('product_id') || $request->has('search_product_from_date') || $request->has('search_product_to_date') || $request->has('status');
 
-        if (!$filtersSet) {
+        if (! $filtersSet) {
             // Return an empty collection or an appropriate response if no filters are set
             return DataResource::collection(collect());
         }
@@ -62,7 +59,7 @@ class ProductSalesReportController extends ParentController
         }
 
         //  Apply currency filter if provided
-        if ($request->search_order_currency != "0") {
+        if ($request->search_order_currency != '0') {
             $query->where('currency_id', $request->search_order_currency);
         }
 
@@ -130,7 +127,7 @@ class ProductSalesReportController extends ParentController
         }
 
         //  Apply currency filter if provided
-        if ($request->search_product_currency['id'] != "0") {
+        if ($request->search_product_currency['id'] != '0') {
             $query->where('currency_id', $request->search_product_currency['id']);
         }
 
@@ -186,10 +183,9 @@ class ProductSalesReportController extends ParentController
     /**
      * print
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
-
     public function print(Request $request)
     {
         $product_items = $this->buildProductsQuery($request)->collection->toArray();
@@ -215,14 +211,14 @@ class ProductSalesReportController extends ParentController
 
         // Generate the PDF
         $pdf = PDF::loadView('print.pages.Reports.ProductSalesReport.report', $data);
-        return $pdf->stream("ProductSalesReport.pdf", ["Attachment" => false]);
-    }
 
+        return $pdf->stream('ProductSalesReport.pdf', ['Attachment' => false]);
+    }
 
     /**
      * export
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function export(Request $request)
@@ -253,13 +249,13 @@ class ProductSalesReportController extends ParentController
         ];
 
         // Generate the Excel and store it in the storage then return the path
-        $fileName = 'ProductSalesReport-' . date('Y-m-d') . '-' . time() . '.xlsx';
-        $filePath = 'exports/Reports/' . $fileName;
-        $product_export = new ProductSalesReportExport();
+        $fileName = 'ProductSalesReport-'.date('Y-m-d').'-'.time().'.xlsx';
+        $filePath = 'exports/Reports/'.$fileName;
+        $product_export = new ProductSalesReportExport;
         Excel::store($product_export->export($data), $filePath, 'public');
 
         // Generate the URL to the stored file
-        $path = asset('storage/' . $filePath);
+        $path = asset('storage/'.$filePath);
 
         return response()->json(['path' => $path]);
     }

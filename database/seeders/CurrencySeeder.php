@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Currency;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CurrencySeeder extends Seeder
@@ -179,12 +178,12 @@ class CurrencySeeder extends Seeder
             ['name' => 'Yemeni Rial', 'code' => 'YER', 'symbol' => '﷼'],
             ['name' => 'South African Rand', 'code' => 'ZAR', 'symbol' => 'R'],
             ['name' => 'Zambian Kwacha', 'code' => 'ZMW', 'symbol' => 'ZK'],
-            ['name' => 'Zimbabwean Dollar', 'code' => 'ZWL', 'symbol' => 'Z$']
+            ['name' => 'Zimbabwean Dollar', 'code' => 'ZWL', 'symbol' => 'Z$'],
         ];
 
         foreach ($currencies as $currency) {
             $check = Currency::where('code', $currency['code'])->first();
-            if (!$check) {
+            if (! $check) {
                 Currency::create($currency);
             }
         }

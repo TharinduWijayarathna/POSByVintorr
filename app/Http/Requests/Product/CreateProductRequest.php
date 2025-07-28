@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Product;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateProductRequest extends FormRequest
@@ -39,7 +38,8 @@ class CreateProductRequest extends FormRequest
             'order_no' => ['nullable', 'numeric', 'min:1'],
         ];
     }
-    function messages()
+
+    public function messages()
     {
         return [
             'name.required' => ' The product name is required',
@@ -75,7 +75,7 @@ class CreateProductRequest extends FormRequest
                 if ($quantity * $price > 999999999999) {
                     $validator->errors()->add('product_amount', 'The Line Total seems too large. Please reduce the quantity or the price.');
                 }
-            }else{
+            } else {
                 return;
             }
         });

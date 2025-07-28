@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use domain\Facades\PosOrderItemFacade\PosOrderItemFacade;
 use domain\Facades\GiftVoucherFacade\GiftVoucherFacade;
 use domain\Facades\MaterialFacade\MaterialFacade;
+use domain\Facades\PosOrderItemFacade\PosOrderItemFacade;
+use Illuminate\Http\Request;
 
 /**
  * PosOrderItem Controller
  * php version 8
  *
  * @category Controller
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosOrderItemController extends ParentController
@@ -22,7 +24,6 @@ class PosOrderItemController extends ParentController
      * all
      * Get order items according to the order id
      *
-     * @param  int $order_id
      * @return void
      */
     public function all(int $order_id)
@@ -34,14 +35,12 @@ class PosOrderItemController extends ParentController
      * getMaterial
      * Get material details from "Material" table and store necessary data in Pos order item table
      *
-     * @param  string $barcode
-     * @param  Request $order
      * @return void
      */
     public function getMaterial(string $barcode, Request $order)
     {
-        $material =  MaterialFacade::getByBarcode($barcode);
-        if (!$material == null) {
+        $material = MaterialFacade::getByBarcode($barcode);
+        if (! $material == null) {
             return PosOrderItemFacade::store($material, $order->all());
         }
     }
@@ -50,8 +49,6 @@ class PosOrderItemController extends ParentController
      * update
      * Update quantity and total price of the order item
      *
-     * @param  int $item_id
-     * @param  Request $cart
      * @return void
      */
     public function update(int $item_id, Request $cart)
@@ -63,7 +60,6 @@ class PosOrderItemController extends ParentController
      * delete
      * Delete order item by order item id
      *
-     * @param  int $item_id
      * @return void
      */
     public function delete(int $item_id)
@@ -75,7 +71,6 @@ class PosOrderItemController extends ParentController
      * total
      * get all order item total sum
      *
-     * @param  int $order_id
      * @return void
      */
     public function total(int $order_id)

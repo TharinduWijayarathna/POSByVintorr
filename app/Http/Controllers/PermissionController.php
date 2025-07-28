@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\FormHelper;
+use domain\Facades\PermissionFacade\PermissionFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use domain\Facades\PermissionFacade\PermissionFacade;
 use Spatie\Permission\Models\Role;
-use App\Traits\FormHelper;
 
 class PermissionController extends ParentController
 {
@@ -36,31 +36,33 @@ class PermissionController extends ParentController
     /**
      * rolePermissionsList
      *
-     * @param  int $role_id
+     * @param  int  $role_id
      * @return void
      */
     public function rolePermissionsList($role_id)
     {
         $role = Role::find($role_id);
+
         return $role->getAllPermissions()->pluck('name');
     }
 
     /**
      * updatePermissions
      *
-     * @param  Request $request
-     * @param  int $role_id
+     * @param  int  $role_id
      * @return void
      */
     public function updatePermissions(Request $request, $role_id)
     {
         $user = Auth::user();
-        if ($user->email == "emergentspark@gmail.com") {
+        if ($user->email == 'emergentspark@gmail.com') {
             $role = Role::find($role_id);
             $role->syncPermissions($request->permissions);
+
             return response()->json(['status' => 'success']);
         } else {
             $response['alert-danger'] = 'You do not have permission to update role permissions.';
+
             return redirect()->route('dashboard')->with($response);
         }
     }
@@ -68,7 +70,7 @@ class PermissionController extends ParentController
     /**
      * print
      *
-     * @param  mixed $roleData
+     * @param  mixed  $roleData
      * @return void
      */
     public function print(Request $roleData)
@@ -77,15 +79,16 @@ class PermissionController extends ParentController
         $response['printed_by'] = $role->name;
         $response['role'] = $roleData;
         $role = User::find($roleData->id);
-        $response['tc'] =  $this;
-        $response['role'] =  $role;
-        $response['permissions'] =  PermissionFacade::allList();
+        $response['tc'] = $this;
+        $response['role'] = $role;
+        $response['permissions'] = PermissionFacade::allList();
         // $this->role = User::withTrashed()->find($roleId);
         // $this->permissions = Permission::all();
         // $this->groups = Permission::select('group')->distinct()->get();
         // dd($response['permissions']);
         $response['groups'] = PermissionFacade::groups();
         $pdf = PDF::loadView('print.pages.permission', $response);
+
         return $pdf->stream('Permission.pdf', ['Attachment' => false]);
     }
 

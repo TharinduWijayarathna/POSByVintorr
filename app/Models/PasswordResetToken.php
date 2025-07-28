@@ -19,6 +19,6 @@ class PasswordResetToken extends Model
         'email',
         'token',
         'status',
-        'user_role'
+        'user_role',
     ];
 }

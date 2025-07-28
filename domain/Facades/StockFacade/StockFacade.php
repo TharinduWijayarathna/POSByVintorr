@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\Facade;
  * Stock Facade
  *
  * @category Facade
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class StockFacade extends Facade

@@ -24,7 +24,7 @@ class CreatePosOrderItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'barcode' =>  ['required','string'],
+            'barcode' => ['required', 'string'],
         ];
     }
 }

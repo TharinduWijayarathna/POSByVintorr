@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 /*
  * InvoicePayment
  * php version 8
@@ -35,14 +36,8 @@ class InvoicePayment extends Model
         'post_date',
     ];
 
-
-
     public function invoice()
     {
         return $this->belongsTo(Invoice::class, 'invoice_id', 'id');
     }
-
-
-
-
 }

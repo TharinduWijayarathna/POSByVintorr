@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use domain\Facades\ReportFacade\ReportFacade;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 
 class DeleteOldReports extends Command
 {

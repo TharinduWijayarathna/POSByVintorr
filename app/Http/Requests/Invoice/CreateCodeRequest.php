@@ -4,7 +4,6 @@ namespace App\Http\Requests\Invoice;
 
 use App\Models\PosOrder;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CreateCodeRequest extends FormRequest
 {
@@ -28,15 +27,15 @@ class CreateCodeRequest extends FormRequest
                 'required',
                 'string',
                 'max:20',
-                'unique:' . PosOrder::class
+                'unique:'.PosOrder::class,
             ],
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
-            'code.required' => "The invoice code is required",
+            'code.required' => 'The invoice code is required',
             'code.unique' => 'This invoice code already exists',
         ];
     }

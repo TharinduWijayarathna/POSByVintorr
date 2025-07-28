@@ -12,21 +12,21 @@ class PurchaseOrder extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        "status",
-        "purchase_order_status",
-        "code",
-        "created_by",
-        "supplier_id",
-        "total",
-        "currency_id",
-        "note",
-        "ref_no",
-        "date",
-        "supplier_name",
-        "supplier_address",
-        "supplier_phone",
-        "supplier_email",
-        'purchase_order_link'
+        'status',
+        'purchase_order_status',
+        'code',
+        'created_by',
+        'supplier_id',
+        'total',
+        'currency_id',
+        'note',
+        'ref_no',
+        'date',
+        'supplier_name',
+        'supplier_address',
+        'supplier_phone',
+        'supplier_email',
+        'purchase_order_link',
     ];
 
     protected $appends = [
@@ -72,10 +72,10 @@ class PurchaseOrder extends Model
         $pending_po = $this->latest()->first();
         if ($pending_po) {
             $pending_po_items = PurchaseOrderItem::where('purchase_order_id', $pending_po->id)->get();
-            if ($pending_po->supplier_id != null || !$pending_po_items->isEmpty()) {
+            if ($pending_po->supplier_id != null || ! $pending_po_items->isEmpty()) {
                 $pending_po->status = 1;
                 $pending_po->save();
-            } else if ($pending_po->created_by == Auth::id()) {
+            } elseif ($pending_po->created_by == Auth::id()) {
                 return $pending_po;
             } else {
                 // no pending invoice
@@ -83,11 +83,10 @@ class PurchaseOrder extends Model
         }
     }
 
-
     /**
      * getCode
      *
-     * @param  mixed $code
+     * @param  mixed  $code
      * @return void
      */
     public function getCode(string $code)
@@ -168,8 +167,8 @@ class PurchaseOrder extends Model
     /**
      * updateTotals
      *
-     * @param  mixed $purchase_order_id
-     * @param  mixed $total
+     * @param  mixed  $purchase_order_id
+     * @param  mixed  $total
      * @return void
      */
     public function updateTotals($purchase_order_id, $total)
@@ -179,6 +178,7 @@ class PurchaseOrder extends Model
             $purchase_order->total = $total;
             $purchase_order->save();
         }
+
         return $purchase_order;
     }
 

@@ -27,23 +27,33 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use PDF;
 use Illuminate\Support\Str;
+use PDF;
 
 class InvoiceService
 {
-
     private $product;
+
     private $pos_order;
+
     private $pos_order_item;
+
     private $customer;
+
     private $bill_payment;
+
     private $transaction;
+
     private $invoice_parameter;
+
     private $invoice_item_parameter;
+
     private $invoice_footer_parameter;
+
     private $invoice_item_footer_parameter;
+
     private $transaction_balance;
+
     private $currency;
 
     private $business_details;
@@ -55,19 +65,19 @@ class InvoiceService
      */
     public function __construct()
     {
-        $this->product = new Product();
-        $this->pos_order = new PosOrder();
-        $this->pos_order_item = new PosOrderItem();
-        $this->customer = new Customer();
-        $this->bill_payment = new BillPayment();
-        $this->transaction = new Transaction();
-        $this->invoice_parameter = new InvoiceParameter();
-        $this->invoice_item_parameter = new InvoiceItemParameter();
-        $this->invoice_footer_parameter = new InvoiceFooterParameter();
-        $this->invoice_item_footer_parameter = new InvoiceItemFooterParameter();
-        $this->transaction_balance = new TransactionBalance();
-        $this->currency = new Currency();
-        $this->business_details = new BusinessDetail();
+        $this->product = new Product;
+        $this->pos_order = new PosOrder;
+        $this->pos_order_item = new PosOrderItem;
+        $this->customer = new Customer;
+        $this->bill_payment = new BillPayment;
+        $this->transaction = new Transaction;
+        $this->invoice_parameter = new InvoiceParameter;
+        $this->invoice_item_parameter = new InvoiceItemParameter;
+        $this->invoice_footer_parameter = new InvoiceFooterParameter;
+        $this->invoice_item_footer_parameter = new InvoiceItemFooterParameter;
+        $this->transaction_balance = new TransactionBalance;
+        $this->currency = new Currency;
+        $this->business_details = new BusinessDetail;
     }
 
     public function get(int $invoice_id)
@@ -80,7 +90,7 @@ class InvoiceService
         $business_detail = $this->business_details->first();
         $data['created_by'] = Auth::id();
 
-        $last_record = $this->pos_order->where('type', "1")->withTrashed()->latest()->first();
+        $last_record = $this->pos_order->where('type', '1')->withTrashed()->latest()->first();
         if ($last_record) {
 
             $old_code = $last_record['code'];
@@ -91,22 +101,22 @@ class InvoiceService
             // Replace the old numeric part with the incremented one
             $code = preg_replace('/\d+$/', str_pad($incrementedNumericPart, strlen($numericPart), '0', STR_PAD_LEFT), $old_code);
 
-            $check = $this->pos_order->where('type', "1")->where('code', $code)->withTrashed()->first();
+            $check = $this->pos_order->where('type', '1')->where('code', $code)->withTrashed()->first();
             while ($check) {
                 $incrementedNumericPart++;
                 $code = preg_replace('/\d+$/', str_pad($incrementedNumericPart, strlen($numericPart), '0', STR_PAD_LEFT), $old_code);
-                $check = $this->pos_order->where('type', "1")->where('code', $code)->withTrashed()->first();
+                $check = $this->pos_order->where('type', '1')->where('code', $code)->withTrashed()->first();
             }
         } else {
 
-            $count = $this->pos_order->where('code', 'like', "INV%")->withTrashed()->count();
+            $count = $this->pos_order->where('code', 'like', 'INV%')->withTrashed()->count();
 
-            $code = 'INV' . sprintf('%05d', $count + 1);
+            $code = 'INV'.sprintf('%05d', $count + 1);
             $check = $this->pos_order->getCode($code);
 
             while ($check) {
                 $count++;
-                $code = 'INV' . sprintf('%05d', $count);
+                $code = 'INV'.sprintf('%05d', $count);
                 $check = $this->pos_order->getCode($code);
             }
         }
@@ -121,12 +131,12 @@ class InvoiceService
         $request['created_by'] = Auth::id();
         $count = $this->bill_payment->count();
 
-        $code = 'B' . sprintf('%05d', $count + 1);
+        $code = 'B'.sprintf('%05d', $count + 1);
         $check = $this->bill_payment->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'B' . sprintf('%05d', $count);
+            $code = 'B'.sprintf('%05d', $count);
             $check = $this->bill_payment->getCode($code);
         }
 
@@ -154,6 +164,7 @@ class InvoiceService
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);
+
             return $order;
         } else {
             return $this->create();
@@ -199,6 +210,7 @@ class InvoiceService
                 'currency_id' => $business_detail->currency_id,
                 'note' => null,
             ]);
+
             return $order;
         } else {
             return $this->create();
@@ -209,13 +221,13 @@ class InvoiceService
     {
         $invoice = $this->pos_order->find($invoice_id);
         $customer = $this->customer->find($pos_customer_id);
-        if (!$customer) {
+        if (! $customer) {
             // Handle the case where customer is not found
             $customer = (object) [
                 'name' => 'Walking Customer',
                 'address' => '',
                 'email' => '',
-                'contact' => ''
+                'contact' => '',
             ];
         }
         if ($invoice->customer_id != $pos_customer_id || $invoice->customer_id == null) {
@@ -224,6 +236,7 @@ class InvoiceService
             $invoice->customer_address = $customer->address;
             $invoice->customer_email = $customer->email;
             $invoice->customer_mobile = $customer->contact;
+
             return $invoice->save();
         }
     }
@@ -234,6 +247,7 @@ class InvoiceService
         $date = Carbon::parse($dateString);
         $invoice = $this->pos_order->find($invoice_id);
         $invoice->date = $date;
+
         return $invoice->save();
     }
 
@@ -243,6 +257,7 @@ class InvoiceService
         $date = Carbon::parse($dateString);
         $invoice = $this->pos_order->find($invoice_id);
         $invoice->due_date = $date;
+
         // dd($invoice);
         return $invoice->save();
     }
@@ -251,6 +266,7 @@ class InvoiceService
     {
         $invoice = $this->pos_order->find($invoice_id);
         $invoice->note = $data['note'];
+
         return $invoice->save();
     }
 
@@ -258,6 +274,7 @@ class InvoiceService
     {
         $invoice = $this->pos_order->find($invoice_id);
         $invoice->code = $data['code'];
+
         return $invoice->save();
     }
 
@@ -265,6 +282,7 @@ class InvoiceService
     {
         $invoice = $this->pos_order->find($invoice_id);
         $invoice->currency_id = $currency_id;
+
         return $invoice->save();
     }
 
@@ -272,12 +290,14 @@ class InvoiceService
     {
         $pos_order = $this->pos_order->find($invoice_id);
         $pos_order->ref_no = $data['ref'];
+
         return $pos_order->save();
     }
 
     public function getLoyaltyCustomer(int $invoice_id)
     {
         $invoice = $this->pos_order->withTrashed()->find($invoice_id);
+
         return $this->customer->find($invoice->customer_id);
     }
 
@@ -287,6 +307,7 @@ class InvoiceService
         $pos_order->customer_mobile = $data['customer_mobile'];
         $pos_order->customer_email = $data['customer_email'];
         $pos_order->customer_address = $data['customer_address'];
+
         return $pos_order->save();
     }
 
@@ -306,7 +327,7 @@ class InvoiceService
             'parameter_id' => $created_parameter->id,
             'order' => $ip_count + 1,
         ]);
-        return;
+
     }
 
     public function updateParameter($data)
@@ -329,6 +350,7 @@ class InvoiceService
         if ($invoice_parameter) {
             $invoice_parameter->delete();
         }
+
         return $invoice_item_parameter->delete();
     }
 
@@ -348,6 +370,7 @@ class InvoiceService
                         'order' => $ip_count + 1,
                     ]);
                 }
+
                 return $this->invoice_item_parameter->where('invoice_id', $invoice_id)->orderBy('order', 'asc')->get();
             }
         } else {
@@ -360,6 +383,7 @@ class InvoiceService
     {
         $invoice_item_parameters = $this->invoice_item_parameter->find($data['id']);
         $invoice_item_parameters->description = $data['description'];
+
         return $invoice_item_parameters->save();
     }
 
@@ -380,7 +404,7 @@ class InvoiceService
             'parameter_id' => $created_footer_parameter->id,
             'order' => $ip_count + 1,
         ]);
-        return;
+
     }
 
     public function updateFooterParameter($data)
@@ -403,6 +427,7 @@ class InvoiceService
         if ($invoice_footer_parameter) {
             $invoice_footer_parameter->delete();
         }
+
         return $invoice_item_footer_parameter->delete();
     }
 
@@ -423,6 +448,7 @@ class InvoiceService
                         'order' => $ip_count + 1,
                     ]);
                 }
+
                 return $this->invoice_item_footer_parameter->where('invoice_id', $invoice_id)->orderBy('order', 'asc')->get();
             }
         } else {
@@ -442,7 +468,7 @@ class InvoiceService
             $invoice_footer_parameter->description = $data['description'];
             $invoice_footer_parameter->save();
         }
-        return;
+
     }
 
     public function editFooterParameter($id)
@@ -484,7 +510,7 @@ class InvoiceService
         $transaction_data['currency_id'] = $invoice->currency_id;
         $transaction_data['amount'] = $invoice->customer_paid;
         $transaction_data['sign'] = 0;
-        $transaction_data['description'] = "Invoice Delete";
+        $transaction_data['description'] = 'Invoice Delete';
         $this->transaction->create($transaction_data);
 
         $transaction_balance = $this->transaction_balance->where('currency_id', $invoice->currency_id)->first();
@@ -499,7 +525,7 @@ class InvoiceService
             $this->transaction_balance->create($balance_data);
         }
 
-        //end transaction log
+        // end transaction log
 
         // Update stock
         $order_items = $this->pos_order_item->where('order_id', $invoice_id)->get();
@@ -519,7 +545,7 @@ class InvoiceService
             $stock_log_data['balance'] = $product->stock_quantity;
             $stock_log_data['cost'] = $product->cost ?? 0;
             $stock_log_data['selling_price'] = $product->selling ?? 0;
-            $stock_log_data['reason'] = "Deleted the invoice";
+            $stock_log_data['reason'] = 'Deleted the invoice';
             $stock_log_data['type'] = StockLog::TYPE['plus'];
             $user = Auth::user();
             $stock_log_data['created_by'] = $user->id;
@@ -545,7 +571,7 @@ class InvoiceService
         $transaction_data['currency_id'] = $deleted_invoice->currency_id;
         $transaction_data['amount'] = $deleted_invoice->customer_paid;
         $transaction_data['sign'] = 1;
-        $transaction_data['description'] = "Invoice Restore";
+        $transaction_data['description'] = 'Invoice Restore';
         $this->transaction->create($transaction_data);
 
         $transaction_balance = $this->transaction_balance->where('currency_id', $deleted_invoice->currency_id)->first();
@@ -560,7 +586,7 @@ class InvoiceService
             $this->transaction_balance->create($balance_data);
         }
 
-        //end transaction log
+        // end transaction log
 
         // Update stock
         $order_items = $this->pos_order_item->where('order_id', $invoice_id)->get();
@@ -580,7 +606,7 @@ class InvoiceService
             $stock_log_data['balance'] = $product->stock_quantity;
             $stock_log_data['cost'] = $product->cost ?? 0;
             $stock_log_data['selling_price'] = $product->selling ?? 0;
-            $stock_log_data['reason'] = "Restored the deleted invoice";
+            $stock_log_data['reason'] = 'Restored the deleted invoice';
             $stock_log_data['type'] = StockLog::TYPE['minus'];
             $user = Auth::user();
             $stock_log_data['created_by'] = $user->id;
@@ -591,13 +617,14 @@ class InvoiceService
         }
 
         $deleted_invoice->deleted_at = null;
+
         return $deleted_invoice->save();
     }
 
     private function generateNewTRCode($prefix)
     {
         $latest_student = $this->transaction->withTrashed()
-            ->where('code', 'LIKE', $prefix . '%')
+            ->where('code', 'LIKE', $prefix.'%')
             ->orderBy('code', 'desc')
             ->first();
 
@@ -608,7 +635,7 @@ class InvoiceService
             $next_num = 1;
         }
 
-        $code = $prefix . sprintf('%05d', $next_num);
+        $code = $prefix.sprintf('%05d', $next_num);
 
         return $code;
     }
@@ -620,7 +647,7 @@ class InvoiceService
             $response['order'] = PosOrderFacade::get($invoice_id);
             $response['order_items'] = PosOrderItemFacade::all($invoice_id);
             $response['created_at'] = $response['order']['created_at'];
-            $response['print_type'] = "invoice";
+            $response['print_type'] = 'invoice';
             $response['bill'] = BillPaymentFacade::get($invoice_id);
             $response['config'] = $this->business_details->latest()->first();
 
@@ -637,7 +664,7 @@ class InvoiceService
             file_put_contents($filePath, $pdfContent);
 
             $sender_details = $this->business_details->first();
-            if (!$sender_details->email) {
+            if (! $sender_details->email) {
                 return response()->json(['message' => 'Please enter business email']);
             }
 
@@ -680,15 +707,17 @@ class InvoiceService
         $invoice = $this->pos_order->findOrFail($invoice_id);
         $key = Str::random(30);
         $invoice->update([
-            'invoice_link' => $key
+            'invoice_link' => $key,
         ]);
-        $url = url('/invoice/view/' . $key);
+        $url = url('/invoice/view/'.$key);
+
         return $url;
     }
 
     public function getPublicInvoice(string $invoice_key)
     {
         $invoice = $this->pos_order->where('invoice_link', $invoice_key)->get();
+
         return $invoice[0]->id;
     }
 
@@ -697,7 +726,7 @@ class InvoiceService
         $totals = [
             'total' => 0,
             'paid_amount' => 0,
-            'due_amount' => 0
+            'due_amount' => 0,
         ];
 
         foreach ($invoices as $invoice) {

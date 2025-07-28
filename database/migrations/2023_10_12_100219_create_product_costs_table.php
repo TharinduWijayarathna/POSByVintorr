@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\Product;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->bigInteger('supplier_id')->nullable();
             $table->text('remark')->nullable();
             $table->integer('quantity')->default(1);
-            $table->decimal('amount',12,2)->nullable();
+            $table->decimal('amount', 12, 2)->nullable();
             $table->timestamps();
         });
     }

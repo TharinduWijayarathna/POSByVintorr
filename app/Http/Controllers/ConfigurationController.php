@@ -11,7 +11,6 @@ use domain\Facades\ConfigurationFacade\ConfigurationFacade;
 use domain\Facades\ImageFacade\ImageFacade;
 use domain\Facades\MonthlyCustomerOutstandingFacade\MonthlyCustomerOutstandingFacade;
 use domain\Facades\MonthlySummaryReportFacade\MonthlySummaryReportFacade;
-use domain\Facades\UserFacade\UserFacade;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -42,6 +41,7 @@ class ConfigurationController extends ParentController
                     $banner_image = ImageFacade::convertImageToWebP($request->file('banner_image'));
                     $request->merge(['public_image_id' => $banner_image->id]);
                 }
+
                 return ConfigurationFacade::store($request->all());
             } catch (\Exception $e) {
                 return response()->json(['error' => 'something went wrong'], 500);
@@ -52,6 +52,7 @@ class ConfigurationController extends ParentController
     public function get()
     {
         $business = BusinessDetail::first();
+
         return GetBusinessDetailsResource::make($business);
     }
 
@@ -93,6 +94,7 @@ class ConfigurationController extends ParentController
                     $request->merge(['invoice_logo_ratio' => $aspect_ratio]);
                     $request->merge(['invoice_image_id' => $invoice_logo->id]);
                 }
+
                 return ConfigurationFacade::update($request->all(), $id);
             } catch (\Throwable $th) {
                 return response()->json(['message' => $th->getMessage()]);
@@ -169,13 +171,13 @@ class ConfigurationController extends ParentController
             return ConfigurationFacade::getDateValue();
         }
     }
+
     public function getMonthlyBusinessEmailDateValue()
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN']) {
             return ConfigurationFacade::getMonthlyBusinessEmailDateValue();
         }
     }
-
 
     public function sendMonthlyBusinessReport()
     {

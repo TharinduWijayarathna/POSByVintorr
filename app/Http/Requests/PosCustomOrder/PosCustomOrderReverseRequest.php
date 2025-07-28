@@ -24,7 +24,7 @@ class PosCustomOrderReverseRequest extends FormRequest
     public function rules()
     {
         return [
-            'status_remark' =>  ['required','string'],
+            'status_remark' => ['required', 'string'],
         ];
     }
 }

@@ -33,8 +33,6 @@ class CustomerResource extends JsonResource
 
     /**
      * Calculate the customer's due amount.
-     *
-     * @return string
      */
     public function CustomerDue(): string
     {
@@ -48,7 +46,7 @@ class CustomerResource extends JsonResource
         foreach ($orders as $order) {
             $currencyId = $order->currency_id;
 
-            if (!isset($groups[$currencyId])) {
+            if (! isset($groups[$currencyId])) {
                 $groups[$currencyId] = [
                     'currency_name' => $order->currency_name,
                     'due_amount' => 0,
@@ -59,7 +57,7 @@ class CustomerResource extends JsonResource
         }
 
         $result = array_map(function ($group) {
-            return "{$group['currency_name']} " . number_format($group['due_amount'], 2);
+            return "{$group['currency_name']} ".number_format($group['due_amount'], 2);
         }, array_values($groups));
 
         return implode(', ', $result);

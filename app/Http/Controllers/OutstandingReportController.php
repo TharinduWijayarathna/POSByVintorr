@@ -11,10 +11,10 @@ use domain\Facades\OutstandingReportFacade\OutstandingReportFacade;
 use domain\Facades\UserFacade\UserFacade;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class OutstandingReportController extends ParentController
 {
@@ -32,7 +32,7 @@ class OutstandingReportController extends ParentController
     /**
      * all
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function all(Request $request)
@@ -107,7 +107,6 @@ class OutstandingReportController extends ParentController
         if ($request->search_order_currency > 0) {
             $query->where('currency_id', $request->search_order_currency);
         }
-
 
         $payload = QueryBuilder::for($query)
             // sort by code
@@ -186,8 +185,8 @@ class OutstandingReportController extends ParentController
             $query->where('currency_id', $request->search_order_currency);
         }
 
-        if ($request->has('code') && !empty($request->input('code'))) {
-            $query->where('code', 'like', '%' . $request->input('code') . '%');
+        if ($request->has('code') && ! empty($request->input('code'))) {
+            $query->where('code', 'like', '%'.$request->input('code').'%');
         }
 
         return $query;
@@ -196,10 +195,9 @@ class OutstandingReportController extends ParentController
     /**
      * print
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
-
     public function print(Request $request)
     {
 
@@ -237,14 +235,14 @@ class OutstandingReportController extends ParentController
 
         // Generate the PDF
         $pdf = PDF::loadView('print.pages.Reports.OutstandingReport.report', $data);
-        return $pdf->stream("OutstandingReport.pdf", ["Attachment" => false]);
-    }
 
+        return $pdf->stream('OutstandingReport.pdf', ['Attachment' => false]);
+    }
 
     /**
      * export
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function export(Request $request)
@@ -256,7 +254,6 @@ class OutstandingReportController extends ParentController
         $code = $request->input('code');
         $customer = $request->input('customer');
         $totals = [];
-
 
         // Build the order query
         $ordersQuery = $this->buildOrderQuery($request);
@@ -280,13 +277,13 @@ class OutstandingReportController extends ParentController
         ];
 
         // Generate the Excel and store it in the storage then return the path
-        $fileName = 'OutstandingReport-' . date('Y-m-d') . '-' . time() . '.xlsx';
-        $filePath = 'exports/Reports/' . $fileName;
-        $outstanding_export = new OutstandingReportExport();
+        $fileName = 'OutstandingReport-'.date('Y-m-d').'-'.time().'.xlsx';
+        $filePath = 'exports/Reports/'.$fileName;
+        $outstanding_export = new OutstandingReportExport;
         Excel::store($outstanding_export->export($data), $filePath, 'public');
 
         // Generate the URL to the stored file
-        $path = asset('storage/' . $filePath);
+        $path = asset('storage/'.$filePath);
 
         return response()->json(['path' => $path]);
     }

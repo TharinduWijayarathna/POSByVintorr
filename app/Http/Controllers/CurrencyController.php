@@ -10,6 +10,7 @@ class CurrencyController extends Controller
     public function list()
     {
         $currency = Currency::query()->orderBy('code', 'asc')->get();
+
         return GetCurrencyListResource::collection($currency);
     }
 }

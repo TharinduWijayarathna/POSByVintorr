@@ -23,13 +23,14 @@ class UpdateStockRequest extends FormRequest
     {
         return [
             'transaction_type_id' => ['required', 'numeric'],
-            'quantity' => ['required', 'numeric','min:1', 'max:10000'],
+            'quantity' => ['required', 'numeric', 'min:1', 'max:10000'],
             'remarks' => ['nullable', 'string', 'max:120'],
         ];
     }
-    function messages()
+
+    public function messages()
     {
-        return[
+        return [
             'transaction_type_id.required' => ' The transaction type is required',
             'quantity.required' => ' The quantity is required',
             'quantity.max' => ' The quantity must be less than 10,000',

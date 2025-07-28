@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_payments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount',12,2)->nullable();
+            $table->decimal('amount', 12, 2)->nullable();
             $table->bigInteger('no_of_month');
             $table->date('date')->nullable();
             $table->text('note')->nullable();

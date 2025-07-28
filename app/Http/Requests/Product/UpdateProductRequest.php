@@ -29,7 +29,7 @@ class UpdateProductRequest extends FormRequest
             'product_category_id' => ['nullable', 'numeric'],
             'cost' => ['nullable', 'numeric', 'min:0', 'max:100000000000'],
             'selling' => ['required', 'numeric', 'min:0', 'max:100000000000'],
-            'rol' => ['nullable', 'numeric','min:0', 'max:100000000000'],
+            'rol' => ['nullable', 'numeric', 'min:0', 'max:100000000000'],
             'unit' => ['nullable', 'numeric'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:5100'],
             'description' => ['nullable', 'string', 'max:120'],
@@ -37,9 +37,10 @@ class UpdateProductRequest extends FormRequest
             'order_no' => ['nullable', 'numeric', 'min:1'],
         ];
     }
-    function messages()
+
+    public function messages()
     {
-        return[
+        return [
             'name.required' => ' The product name is required',
             'selling.required' => ' The product selling price is required',
             'image.image' => ' The product image must be an image',

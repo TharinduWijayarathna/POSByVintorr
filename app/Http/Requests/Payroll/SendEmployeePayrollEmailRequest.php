@@ -26,10 +26,10 @@ class SendEmployeePayrollEmailRequest extends FormRequest
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
-            'to.required' => "The receiver mail address is required",
+            'to.required' => 'The receiver mail address is required',
         ];
     }
 }

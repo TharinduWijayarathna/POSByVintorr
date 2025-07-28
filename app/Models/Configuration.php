@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 /*
  * Configuration
  * php version 8
@@ -43,8 +44,9 @@ class Configuration extends Model
     ];
 
     protected $appends = [
-        'currency_code'
+        'currency_code',
     ];
+
     public function currency()
     {
         return $this->belongsTo(Currency::class, 'currency', 'id');
@@ -53,8 +55,8 @@ class Configuration extends Model
     public function getCurrencyCodeAttribute()
     {
         $currency_id = $this->currency;
-        $currency = Currency::where('id',$currency_id)->first();
+        $currency = Currency::where('id', $currency_id)->first();
+
         return $currency->code;
     }
-
 }

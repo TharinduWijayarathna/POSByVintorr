@@ -15,6 +15,7 @@ class SendAccountResetTokenMailJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $sendData;
+
     public $email;
 
     /**
@@ -29,10 +30,10 @@ class SendAccountResetTokenMailJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle() : void
+    public function handle(): void
     {
         Mail::to($this->email)
-        ->send(new SendAccountResetTokenMail ($this->sendData));
+            ->send(new SendAccountResetTokenMail($this->sendData));
 
     }
 }

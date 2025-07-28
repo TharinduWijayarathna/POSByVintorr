@@ -3,21 +3,22 @@
 namespace domain\Services\PosCustomOrderService;
 
 use App\Models\PosCustomOrder;
-use App\Models\PosCustomOrderItem;
 use App\Models\PosCustomOrderIssue;
-use domain\Facades\PosCustomOrderFacade\PosCustomOrderFacade;
-use domain\Facades\PosAdvanceReceiptFacade\PosAdvanceReceiptFacade;
-use Illuminate\Support\Facades\Auth;
+use App\Models\PosCustomOrderItem;
 use Carbon\Carbon;
 use domain\Facades\CashierManagementFacade\CashierManagementFacade;
+use domain\Facades\PosAdvanceReceiptFacade\PosAdvanceReceiptFacade;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * PosCustomOrderService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosCustomOrderService
@@ -29,9 +30,9 @@ class PosCustomOrderService
      */
     public function __construct()
     {
-        $this->order = new PosCustomOrder();
-        $this->order_issue = new PosCustomOrderIssue();
-        $this->order_items = new PosCustomOrderItem();
+        $this->order = new PosCustomOrder;
+        $this->order_issue = new PosCustomOrderIssue;
+        $this->order_items = new PosCustomOrderItem;
     }
 
     /**
@@ -42,27 +43,25 @@ class PosCustomOrderService
      */
     public function all()
     {
-        return  $this->order->all();
+        return $this->order->all();
     }
 
     /**
      * Store
      * store data in database
      *
-     * @param  array $data
      * @return void
      */
     public function store(array $data)
     {
         $count = $this->order->count();
 
-        $order_no = 'CO' . sprintf('%05d', $count+1);
+        $order_no = 'CO'.sprintf('%05d', $count + 1);
         $check = $this->order->where('order_no', $order_no)->first();
 
-        while ($check)
-        {
+        while ($check) {
             $count++;
-            $order_no = 'CO' . sprintf('%05d',  $count);
+            $order_no = 'CO'.sprintf('%05d', $count);
             $check = $this->order->where('order_no', $order_no)->first();
         }
         $data['payment_status'] = 0;
@@ -71,6 +70,7 @@ class PosCustomOrderService
         $cashier_id = Auth::id();
         $cashier = CashierManagementFacade::get($cashier_id);
         $data['location_id'] = $cashier->location_id;
+
         return $this->order->create($data);
         // $order =  $this->order->create($data);
         // $receipt_data['order_id'] = $order->id;
@@ -85,7 +85,6 @@ class PosCustomOrderService
      * Get
      * retrieve relevant data using order_id
      *
-     * @param  int  $order_id
      * @return void
      */
     public function get(int $order_id)
@@ -96,13 +95,13 @@ class PosCustomOrderService
     /**
      * updateTotal
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function updateTotal(int $order_id)
     {
-        $order =  $this->order->find($order_id);
-        $total =  $this->order_items->getTotal($order_id);
+        $order = $this->order->find($order_id);
+        $total = $this->order_items->getTotal($order_id);
         $receipt_total = PosAdvanceReceiptFacade::getTotalByOrderId($order_id);
         if ($receipt_total != null) {
             $total = $total - $receipt_total;
@@ -110,8 +109,7 @@ class PosCustomOrderService
         $order->grand_total = $total;
         if ($receipt_total == null || $receipt_total == 0) {
             $order->payment_status = 0;
-        }
-        else if ($order->grand_total <=0) {
+        } elseif ($order->grand_total <= 0) {
             $order->payment_status = 2;
         } else {
             $order->payment_status = 1;
@@ -123,13 +121,13 @@ class PosCustomOrderService
      * Update
      * update existing data using order_id
      *
-     * @param  array $data
-     * @param  int   $order_id
+     * @param  int  $order_id
      * @return void
      */
     public function update(array $data, int $customer_id)
     {
         $customer = $this->order->find($customer_id);
+
         return $customer->update($this->edit($customer, $data));
     }
 
@@ -137,8 +135,6 @@ class PosCustomOrderService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosCustomOrder $order
-     * @param  array $data
      * @return void
      */
     protected function edit(PosCustomOrder $order, array $data)
@@ -150,7 +146,6 @@ class PosCustomOrderService
      * Delete
      * delete specific data using order_id
      *
-     * @param  int   $order_id
      * @return void
      */
     public function delete(int $order_id)
@@ -161,13 +156,12 @@ class PosCustomOrderService
     /**
      * getTotalByAdvanceReceipt
      *
-     * @param  mixed $amount
-     * @param  int $order_id
+     * @param  mixed  $amount
      * @return void
      */
     public function getTotalByAdvanceReceipt($amount, int $order_id)
     {
-        $order =  $this->order->find($order_id);
+        $order = $this->order->find($order_id);
         $total = $this->order_items->getTotal($order_id);
         $order->grand_total = $total - $amount;
         // dd($order);
@@ -177,7 +171,6 @@ class PosCustomOrderService
     /**
      * approve
      *
-     * @param  int $order_id
      * @return void
      */
     public function approve(int $order_id)
@@ -190,7 +183,6 @@ class PosCustomOrderService
     /**
      * reject
      *
-     * @param  int $order_id
      * @return void
      */
     public function reject(int $order_id)
@@ -203,8 +195,6 @@ class PosCustomOrderService
     /**
      * reverse
      *
-     * @param  int $order_id
-     * @param  string $remark
      * @return void
      */
     public function reverse(int $order_id, string $remark)
@@ -236,18 +226,18 @@ class PosCustomOrderService
     /**
      * storeIssue
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
-    public function storeIssue(array $data){
+    public function storeIssue(array $data)
+    {
         $data['created_by'] = Auth::id();
         $stored_item = $this->order_issue->create($data);
 
-        $item =  $this->order_items->find($data['order_item_id']);
+        $item = $this->order_items->find($data['order_item_id']);
         $item->issue_quantity = $item->issue_quantity + $data['quantity'];
         $item->save();
 
         return $stored_item;
     }
-
 }

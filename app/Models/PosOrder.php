@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use domain\Facades\TaxFacade\TaxFacade;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class PosOrder extends Model
 {
@@ -118,12 +116,13 @@ class PosOrder extends Model
 
         if ($order !== null) {
             return $order;
-        } else if ($check_status !== null) {
+        } elseif ($check_status !== null) {
 
             $check_zero_status = $this->where('created_by', Auth::id())->where('status', 0)->where('is_return', 0)->where('type', 0)->first();
             if ($check_zero_status === null) {
                 $check_status->status = 0;
                 $check_status->save();
+
                 return $check_status;
             }
         }
@@ -145,10 +144,10 @@ class PosOrder extends Model
         $pending_invoice = $this->where('type', 1)->latest()->first();
         if ($pending_invoice) {
             $pending_invoice_items = PosOrderItem::where('order_id', $pending_invoice->id)->get();
-            if ($pending_invoice->customer_id != null || !$pending_invoice_items->isEmpty()) {
+            if ($pending_invoice->customer_id != null || ! $pending_invoice_items->isEmpty()) {
                 $pending_invoice->status = 1;
                 $pending_invoice->save();
-            } else if ($pending_invoice->created_by == Auth::id()) {
+            } elseif ($pending_invoice->created_by == Auth::id()) {
                 return $pending_invoice;
             } else {
                 // no pending invoice
@@ -166,7 +165,6 @@ class PosOrder extends Model
     {
         return $this->hasMany(PosOrderItem::class, 'order_id', 'id');
     }
-
 
     /**
      * getCustomerTypeNameAttribute
@@ -202,14 +200,15 @@ class PosOrder extends Model
             }
             $order1->save();
         }
+
         return $order1;
     }
 
     /**
      * updateTaxes
      *
-     * @param  mixed $order_id
-     * @param  mixed $subTotal
+     * @param  mixed  $order_id
+     * @param  mixed  $subTotal
      * @return void
      */
     public function updateTaxes($order_id, $tax_total)
@@ -219,6 +218,7 @@ class PosOrder extends Model
             $order->total_tax = $tax_total;
             $order->save();
         }
+
         return $order;
     }
 
@@ -235,6 +235,7 @@ class PosOrder extends Model
         $createdAt = $this->created_at;
         $carbon = \Carbon\Carbon::parse($createdAt);
         $date = $carbon->toDateTimeString();
+
         return $this->created_at ? $date : '-';
     }
 
@@ -257,10 +258,12 @@ class PosOrder extends Model
     {
         return number_format($this->customer_paid, 2);
     }
+
     public function getFormattedCreditAttribute()
     {
         return number_format($this->balance, 2);
     }
+
     public function getFormattedDueAttribute()
     {
         return number_format(max($this->total - $this->customer_paid, 0), 2);
@@ -269,6 +272,7 @@ class PosOrder extends Model
     public function getFormattedMinusTotalAttribute()
     {
         $formattedTotal = number_format(abs($this->total), 2);
+
         return $formattedTotal;
     }
 
@@ -302,7 +306,7 @@ class PosOrder extends Model
             $currency = Currency::find($currencyId);
             $currencyData = [
                 'name' => $currency->code,
-                'data' => []
+                'data' => [],
             ];
 
             for ($month = 1; $month <= 12; $month++) {
@@ -337,7 +341,6 @@ class PosOrder extends Model
 
         // return $data;
 
-
         $data = [];
 
         $currencyIds = $this->whereYear('date', Carbon::now()->year)
@@ -350,7 +353,7 @@ class PosOrder extends Model
             $currency = Currency::find($currencyId);
             $currencyData = [
                 'name' => $currency->code,
-                'data' => []
+                'data' => [],
             ];
 
             for ($month = 1; $month <= 12; $month++) {
@@ -409,13 +412,13 @@ class PosOrder extends Model
             $currency = Currency::find($currencyId);
             $currencyData = [
                 'name' => $currency->code,
-                'data' => []
+                'data' => [],
             ];
 
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 $rowCount = $this->whereYear('date', $currentYear)
                     ->whereMonth('date', $currentMonth)
-                    ->whereDate('date', $currentYear . '-' . $currentMonth . '-' . $day)
+                    ->whereDate('date', $currentYear.'-'.$currentMonth.'-'.$day)
                     ->where('currency_id', $currencyId)
                     ->where('total', '>', 0)
                     ->where('status', 1)
@@ -472,13 +475,13 @@ class PosOrder extends Model
             $currency = Currency::find($currencyId);
             $currencyData = [
                 'name' => $currency->code,
-                'data' => []
+                'data' => [],
             ];
 
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 $rowCount = $this->whereYear('date', $currentYear)
                     ->whereMonth('date', $currentMonth)
-                    ->whereDate('date', $currentYear . '-' . $currentMonth . '-' . $day)
+                    ->whereDate('date', $currentYear.'-'.$currentMonth.'-'.$day)
                     ->where('currency_id', $currencyId)
                     ->where('status', 1)
                     ->sum('total');

@@ -18,10 +18,15 @@ use PDF;
 class PayrollService
 {
     protected $payroll;
+
     protected $employee;
+
     protected $transaction;
+
     private $transaction_balance;
+
     private $currency;
+
     private $business_details;
 
     /**
@@ -31,19 +36,18 @@ class PayrollService
      */
     public function __construct()
     {
-        $this->payroll = new Expense();
-        $this->employee = new Supplier();
-        $this->transaction = new Transaction();
-        $this->transaction_balance = new TransactionBalance();
-        $this->currency = new Currency();
-        $this->business_details = new BusinessDetail();
+        $this->payroll = new Expense;
+        $this->employee = new Supplier;
+        $this->transaction = new Transaction;
+        $this->transaction_balance = new TransactionBalance;
+        $this->currency = new Currency;
+        $this->business_details = new BusinessDetail;
     }
-
 
     /**
      * store
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
     public function store(array $data)
@@ -68,7 +72,7 @@ class PayrollService
         $created_payroll->created_at = $data['created_at'];
         $created_payroll->save();
 
-        //transaction log
+        // transaction log
         $transaction_count = $this->transaction->count();
         $tr_code = $this->generateNewTransactionCode('TR');
 
@@ -82,13 +86,13 @@ class PayrollService
             if ($employee) {
                 $transaction_data['client'] = $employee->name;
             } else {
-                $transaction_data['client'] = "Employee not available";
+                $transaction_data['client'] = 'Employee not available';
             }
         }
         $transaction_data['currency_id'] = $created_payroll->currency_id;
         $transaction_data['amount'] = $created_payroll->amount;
         $transaction_data['sign'] = 0;
-        $transaction_data['description'] = "Salary Payment";
+        $transaction_data['description'] = 'Salary Payment';
         $this->transaction->create($transaction_data);
 
         $business_detail = BusinessDetail::first();
@@ -106,7 +110,7 @@ class PayrollService
             $balance_data['amount'] = -$created_payroll->amount;
             $this->transaction_balance->create($balance_data);
         }
-        //end transaction log
+        // end transaction log
 
         return $created_payroll->id;
     }
@@ -114,14 +118,14 @@ class PayrollService
     /**
      * generateNewPayrollCode
      *
-     * @param  mixed $prefix
+     * @param  mixed  $prefix
      * @return void
      */
     private function generateNewPayrollCode($prefix)
     {
         // Fetch the latest record that starts with the prefix
         $latest_payroll = $this->payroll->where('type', 1)->withTrashed()
-            ->where('code', 'LIKE', $prefix . '%')
+            ->where('code', 'LIKE', $prefix.'%')
             ->orderBy('code', 'desc')
             ->first();
 
@@ -135,7 +139,7 @@ class PayrollService
         }
 
         // Generate the new code
-        $code = $prefix . sprintf('%05d', $next_num);
+        $code = $prefix.sprintf('%05d', $next_num);
 
         return $code;
     }
@@ -143,14 +147,14 @@ class PayrollService
     /**
      * generateNewTransactionCode
      *
-     * @param  mixed $prefix
+     * @param  mixed  $prefix
      * @return void
      */
     private function generateNewTransactionCode($prefix)
     {
         // Fetch the latest record that starts with the prefix
         $latest_transaction = $this->transaction->where('type', 1)->withTrashed()
-            ->where('code', 'LIKE', $prefix . '%')
+            ->where('code', 'LIKE', $prefix.'%')
             ->latest()
             ->first();
 
@@ -164,16 +168,15 @@ class PayrollService
         }
 
         // Generate the new code
-        $code = $prefix . sprintf('%05d', $next_num);
+        $code = $prefix.sprintf('%05d', $next_num);
 
         return $code;
     }
 
-
     /**
      * get
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function get($id)
@@ -184,11 +187,10 @@ class PayrollService
     /**
      * update
      *
-     * @param  mixed $id
-     * @param  mixed $data
+     * @param  mixed  $id
+     * @param  mixed  $data
      * @return void
      */
-
     public function update($id, $data)
     {
         $dateString = $data['date'];
@@ -200,7 +202,7 @@ class PayrollService
         }
         $payroll = $this->payroll->findOrFail($id);
 
-        //transaction log
+        // transaction log
         $created_transaction = $this->transaction->where('reference_code', $payroll->code)->where('payment_code', $payroll->code)->first();
         if ($created_transaction) {
             if (isset($data['employee_id'])) {
@@ -209,7 +211,7 @@ class PayrollService
                 if ($employee) {
                     $created_transaction->client = $employee->name;
                 } else {
-                    $created_transaction->client = "Employee not available";
+                    $created_transaction->client = 'Employee not available';
                 }
             }
 
@@ -247,21 +249,21 @@ class PayrollService
         $payroll->update($data);
         $payroll->created_at = $payroll->date;
         $payroll->save();
-        return $payroll;
-        //end transaction log
-    }
 
+        return $payroll;
+        // end transaction log
+    }
 
     /**
      * Delete
      * delete specific data using pos_customer_id
      *
-     * @param  int   $pos_customer_id
+     * @param  int  $pos_customer_id
      * @return void
      */
     public function delete(int $payroll_id)
     {
-        //transaction log
+        // transaction log
         $payroll = $this->payroll->find($payroll_id);
         $transaction = $this->transaction->where('reference_code', $payroll->code)->first();
 
@@ -278,28 +280,29 @@ class PayrollService
         }
 
         $transaction->delete();
+
         return $payroll->delete();
     }
 
     /**
      * removeImage
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function removeImage(int $id)
     {
         $details = $this->payroll->find($id);
         $details->image_id = null;
+
         return $details->save();
     }
-
 
     /**
      * getExpenseByPropsCategory
      *
-     * @param  mixed $category_id
-     * @param  mixed $currency_id
+     * @param  mixed  $category_id
+     * @param  mixed  $currency_id
      * @return void
      */
     public function getExpenseByPropsCategory($category_id, $currency_id)
@@ -331,8 +334,8 @@ class PayrollService
     /**
      * getExpenseAmountByPropsCategory
      *
-     * @param  mixed $category_id
-     * @param  mixed $currency_id
+     * @param  mixed  $category_id
+     * @param  mixed  $currency_id
      * @return void
      */
     public function getExpenseAmountByPropsCategory($category_id, $currency_id)
@@ -353,9 +356,9 @@ class PayrollService
     /**
      * getExpenseByCategory
      *
-     * @param  mixed $category_id
-     * @param  mixed $currency_id
-     * @param  mixed $monthly_id
+     * @param  mixed  $category_id
+     * @param  mixed  $currency_id
+     * @param  mixed  $monthly_id
      * @return void
      */
     public function getExpenseByCategory($category_id = null, $currency_id = null, $monthly_id = null)
@@ -398,7 +401,7 @@ class PayrollService
     /**
      * restorePayroll
      *
-     * @param  mixed $payroll_id
+     * @param  mixed  $payroll_id
      * @return void
      */
     public function restorePayroll(int $payroll_id)
@@ -421,27 +424,29 @@ class PayrollService
         $deleted_transaction->deleted_at = null;
         $deleted_transaction->save();
         $deleted_payroll->deleted_at = null;
+
         return $deleted_payroll->save();
     }
 
     /**
      * deleteEmployeePayroll
      *
-     * @param  mixed $payroll_id
+     * @param  mixed  $payroll_id
      * @return void
      */
     public function deleteEmployeePayroll(int $payroll_id)
     {
         $payroll = $this->payroll->find($payroll_id);
         $payroll->supplier_id = null;
+
         return $payroll->save();
     }
 
     /**
      * sendEmployeePayrollEmail
      *
-     * @param  mixed $payroll_id
-     * @param  mixed $data
+     * @param  mixed  $payroll_id
+     * @param  mixed  $data
      * @return void
      */
     public function sendEmployeePayrollEmail(int $payroll_id, array $data)
@@ -449,7 +454,7 @@ class PayrollService
         try {
             $response['payroll'] = ExpenseFacade::get($payroll_id);
             $response['created_at'] = $response['payroll']['created_at'];
-            $response['print_type'] = "payroll";
+            $response['print_type'] = 'payroll';
             $response['config'] = $this->business_details->orderBy('id', 'desc')->first();
             $pdf = PDF::loadView('print.pages.Payroll.payroll', $response)->setPaper('a4');
 
@@ -471,6 +476,7 @@ class PayrollService
             ];
 
             SendEmployeePayrollEmailJob::dispatch($sendData, $default_mail, $filePath, $image);
+
             return response()->json(['message' => 'Email sent successfully']);
         } catch (\Throwable $th) {
             return $th;
@@ -481,7 +487,7 @@ class PayrollService
     {
         // Initialize totals array
         $totals = [
-            'total' => 0
+            'total' => 0,
         ];
 
         // Calculate totals

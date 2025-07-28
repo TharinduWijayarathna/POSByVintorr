@@ -15,20 +15,25 @@ use domain\Facades\ExpenseFacade\ExpenseFacade;
 class DashboardService
 {
     protected $business_details;
+
     protected $pos_order;
+
     protected $expense;
+
     protected $bill_payment;
+
     protected $transaction;
+
     protected $dashboard_item_controller;
 
     public function __construct()
     {
-        $this->business_details = new BusinessDetail();
-        $this->pos_order = new PosOrder();
-        $this->expense = new Expense();
-        $this->bill_payment = new BillPayment();
-        $this->transaction = new Transaction();
-        $this->dashboard_item_controller = new DashboardItemController();
+        $this->business_details = new BusinessDetail;
+        $this->pos_order = new PosOrder;
+        $this->expense = new Expense;
+        $this->bill_payment = new BillPayment;
+        $this->transaction = new Transaction;
+        $this->dashboard_item_controller = new DashboardItemController;
     }
 
     public function getTwelveMonths()
@@ -45,7 +50,7 @@ class DashboardService
         return $monthsArray;
     }
 
-    function getTwelveMonthsArray()
+    public function getTwelveMonthsArray()
     {
         $monthsArray = [];
         $currentYear = Carbon::now()->format('Y');
@@ -74,8 +79,8 @@ class DashboardService
         foreach ($monthsArray as $month) {
             // $monthStart = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
             // $monthEnd = Carbon::createFromFormat('Y-m', $month)->endOfMonth();
-            $monthStart = Carbon::createFromFormat('Y-m-d', $month . '-01')->startOfMonth();
-            $monthEnd = Carbon::createFromFormat('Y-m-d', $month . '-01')->endOfMonth();
+            $monthStart = Carbon::createFromFormat('Y-m-d', $month.'-01')->startOfMonth();
+            $monthEnd = Carbon::createFromFormat('Y-m-d', $month.'-01')->endOfMonth();
 
             // Check if $year is provided and filter by that year if so
             if ($data['year']) {
@@ -108,8 +113,8 @@ class DashboardService
         $monthsArray = $this->getTwelveMonths();
 
         foreach ($monthsArray as $month) {
-            $monthStart = Carbon::createFromFormat('Y-m-d', $month . '-01')->startOfMonth();
-            $monthEnd = Carbon::createFromFormat('Y-m-d', $month . '-01')->endOfMonth();
+            $monthStart = Carbon::createFromFormat('Y-m-d', $month.'-01')->startOfMonth();
+            $monthEnd = Carbon::createFromFormat('Y-m-d', $month.'-01')->endOfMonth();
 
             // Check if $year is provided and filter by that year if so
             if ($data['year']) {
@@ -142,8 +147,8 @@ class DashboardService
         $monthsArray = $this->getTwelveMonths();
 
         foreach ($monthsArray as $month) {
-            $monthStart = Carbon::createFromFormat('Y-m-d', $month . '-01')->startOfMonth();
-            $monthEnd = Carbon::createFromFormat('Y-m-d', $month . '-01')->endOfMonth();
+            $monthStart = Carbon::createFromFormat('Y-m-d', $month.'-01')->startOfMonth();
+            $monthEnd = Carbon::createFromFormat('Y-m-d', $month.'-01')->endOfMonth();
 
             // Check if $year is provided and filter by that year if so
             if ($data['year']) {
@@ -187,8 +192,8 @@ class DashboardService
         $monthsArray = $this->getTwelveMonths();
 
         foreach ($monthsArray as $month) {
-            $monthStart = Carbon::createFromFormat('Y-m-d', $month . '-01')->startOfMonth();
-            $monthEnd = Carbon::createFromFormat('Y-m-d', $month . '-01')->endOfMonth();
+            $monthStart = Carbon::createFromFormat('Y-m-d', $month.'-01')->startOfMonth();
+            $monthEnd = Carbon::createFromFormat('Y-m-d', $month.'-01')->endOfMonth();
 
             // Check if $year is provided and filter by that year if so
             if ($data['year']) {
@@ -232,8 +237,8 @@ class DashboardService
         $monthsArray = $this->getTwelveMonths();
 
         foreach ($monthsArray as $month) {
-            $monthStart = Carbon::createFromFormat('Y-m-d', $month . '-01')->startOfMonth();
-            $monthEnd = Carbon::createFromFormat('Y-m-d', $month . '-01')->endOfMonth();
+            $monthStart = Carbon::createFromFormat('Y-m-d', $month.'-01')->startOfMonth();
+            $monthEnd = Carbon::createFromFormat('Y-m-d', $month.'-01')->endOfMonth();
 
             // Check if $year is provided and filter by that year if so
             if ($data['year']) {
@@ -277,8 +282,8 @@ class DashboardService
         $monthsArray = $this->getTwelveMonths();
 
         foreach ($monthsArray as $month) {
-            $monthStart = Carbon::createFromFormat('Y-m-d', $month . '-01')->startOfMonth();
-            $monthEnd = Carbon::createFromFormat('Y-m-d', $month . '-01')->endOfMonth();
+            $monthStart = Carbon::createFromFormat('Y-m-d', $month.'-01')->startOfMonth();
+            $monthEnd = Carbon::createFromFormat('Y-m-d', $month.'-01')->endOfMonth();
 
             // Check if $year is provided and filter by that year if so
             if ($data['year']) {
@@ -331,7 +336,7 @@ class DashboardService
 
         $payrolls = ExpenseFacade::getExpenseAmountByPropsCurrencyId($currency_id);
 
-        $category_count = sizeof($categories);
+        $category_count = count($categories);
 
         $expenses[$category_count] = floatval($payrolls);
         $expense_category[$category_count] = 'Salary';
@@ -339,8 +344,10 @@ class DashboardService
         $response['categories'] = $expense_category;
         $response['expenses'] = $expenses;
         $response['total_amount'] = $expenses_amount;
+
         return $response;
     }
+
     public function ExpensesChartData($data)
     {
         $categories = ExpenseFacade::getExpenseCategories();
@@ -372,6 +379,7 @@ class DashboardService
 
         $response['categories'] = $expense_category;
         $response['expenses'] = $expenses;
+
         return $response;
     }
 
@@ -384,6 +392,7 @@ class DashboardService
 
         $transactionBalance = TransactionBalance::where('currency_id', $currency_id)->first();
         $response['transactionBalance'] = $transactionBalance;
+
         return $response;
     }
 

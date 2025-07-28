@@ -24,13 +24,13 @@ class CreatePosCustomOrderItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' =>  ['nullable','numeric'],
-            'product_name' =>  ['required','string'],
-            'description' =>  ['nullable','string'],
-            'size' =>  ['required','string'],
-            'quantity' =>  ['required','numeric'],
-            'unit_price' =>  ['required','numeric'],
-            'remark' =>  ['nullable','string'],
+            'product_id' => ['nullable', 'numeric'],
+            'product_name' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
+            'size' => ['required', 'string'],
+            'quantity' => ['required', 'numeric'],
+            'unit_price' => ['required', 'numeric'],
+            'remark' => ['nullable', 'string'],
         ];
     }
 }

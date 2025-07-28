@@ -26,14 +26,15 @@ class CreateTransactionRequest extends FormRequest
             'date' => ['required', 'date'],
             'currency_id' => ['required', 'numeric'],
             'amount' => ['required', 'numeric', 'min:1', 'max:100000000000'],
-            'remark' =>  ['nullable', 'string', 'max:120'],
+            'remark' => ['nullable', 'string', 'max:120'],
         ];
     }
-    function messages()
+
+    public function messages()
     {
         return [
-            'currency_id.required' => "Currency is required.",
-            'amount.max' => "Amount must be less than 100,000,000,000",
+            'currency_id.required' => 'Currency is required.',
+            'amount.max' => 'Amount must be less than 100,000,000,000',
         ];
     }
 }

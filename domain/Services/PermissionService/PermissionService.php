@@ -9,13 +9,16 @@ use Spatie\Permission\Models\Permission;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PermissionService
 {
     protected $permission;
+
     /**
      * __construct
      *
@@ -23,7 +26,7 @@ class PermissionService
      */
     public function __construct()
     {
-        $this->permission = new Permission();
+        $this->permission = new Permission;
     }
 
     /**
@@ -34,13 +37,11 @@ class PermissionService
      */
     public function groups()
     {
-        return $this->permission->orderBy('group_name','asc')->select('group_name')->distinct()->get();
+        return $this->permission->orderBy('group_name', 'asc')->select('group_name')->distinct()->get();
     }
 
     public function allList()
     {
         return $this->permission->all();
     }
-
-
 }

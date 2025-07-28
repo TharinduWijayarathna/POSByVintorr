@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
+
 /*
  * Customer
  * php version 8
@@ -68,19 +69,20 @@ class Customer extends Model
         if ($invoice < 0) {
             $invoice = 0;
         }
-        return number_format((float)$invoice, 2, '.', '');
+
+        return number_format((float) $invoice, 2, '.', '');
     }
 
     public function search($query)
     {
         // $payload = $this->where('tenant_id', Auth::user()->tenant_id);
         $payload = $this->where(function ($payload) use ($query) {
-            $payload = $payload->where('name', 'like', '%' . $query . '%')
-                ->orWhere('email', 'like', '%' . $query . '%')
-                ->orWhere('contact', 'like', '%' . $query . '%')
-                ->orWhere('website', 'like', '%' . $query . '%')
-                ->orWhere('address', 'like', '%' . $query . '%')
-                ->orWhere('company', 'like', '%' . $query . '%');
+            $payload = $payload->where('name', 'like', '%'.$query.'%')
+                ->orWhere('email', 'like', '%'.$query.'%')
+                ->orWhere('contact', 'like', '%'.$query.'%')
+                ->orWhere('website', 'like', '%'.$query.'%')
+                ->orWhere('address', 'like', '%'.$query.'%')
+                ->orWhere('company', 'like', '%'.$query.'%');
         });
         // $payload = $payload->where(function ($payload) use ($query) {
         //     $payload = $payload->where('name', 'like', '%' . $query . '%')

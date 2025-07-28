@@ -11,35 +11,35 @@ use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class EmployeeImport implements ToCollection, SkipsOnError
+class EmployeeImport implements SkipsOnError, ToCollection
 {
     use SkipsErrors;
 
     private $employee;
+
     private $expectedColumns = ['Name', 'Address', 'Email', 'Phone Number'];
 
     public function __construct()
     {
-        $this->employee = new Supplier();
+        $this->employee = new Supplier;
     }
 
-    /**
-     * @param Collection $rows
-     */
     public function collection(Collection $rows)
     {
         $count_row = 0;
         $errors = [];
 
         if ($rows->isEmpty()) {
-            $this->flashError("Invalid Data Format: The file is empty.");
+            $this->flashError('Invalid Data Format: The file is empty.');
+
             return;
         }
 
         $headerRow = $rows->first()->toArray();
 
-        if (!$this->validateHeader($headerRow)) {
-            $this->flashError("Invalid Data Format: The file does not match the expected columns.");
+        if (! $this->validateHeader($headerRow)) {
+            $this->flashError('Invalid Data Format: The file does not match the expected columns.');
+
             return;
         }
 
@@ -47,21 +47,24 @@ class EmployeeImport implements ToCollection, SkipsOnError
 
         foreach ($dataRows as $key => $row) {
             if ($row->filter()->isEmpty()) {
-                $errors[] = "Row " . ($key + 1) . ": Rows can't be empty.";
+                $errors[] = 'Row '.($key + 1).": Rows can't be empty.";
+
                 continue;
             }
 
             $data = $this->prepareData($row);
 
-            $validator = Validator::make($data, (new CreateEmployeeRequest())->rules());
+            $validator = Validator::make($data, (new CreateEmployeeRequest)->rules());
 
             if ($validator->fails()) {
-                $errors[] = "Row " . ($key + 1) . ": " . implode(", ", $validator->errors()->all());
+                $errors[] = 'Row '.($key + 1).': '.implode(', ', $validator->errors()->all());
+
                 continue;
             }
 
             if (isset($data['email']) && $this->isExistingEmployee($data)) {
-                $errors[] = "Row " . ($key + 1) . ": This employee already registered.";
+                $errors[] = 'Row '.($key + 1).': This employee already registered.';
+
                 continue;
             }
 
@@ -74,7 +77,8 @@ class EmployeeImport implements ToCollection, SkipsOnError
 
     private function validateHeader(array $headerRow): bool
     {
-        $cleanedHeaderRow = array_filter($headerRow, fn($value) => !is_null($value) && $value !== '');
+        $cleanedHeaderRow = array_filter($headerRow, fn ($value) => ! is_null($value) && $value !== '');
+
         return $cleanedHeaderRow === $this->expectedColumns;
     }
 

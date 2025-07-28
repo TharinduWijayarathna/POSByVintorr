@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Console\Commands;
+
 use domain\Facades\MonthlySummaryReportFacade\MonthlySummaryReportFacade;
 use Illuminate\Console\Command;
-use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Log;
 
 class SendMonthlyBusinessSummaryCommand extends Command

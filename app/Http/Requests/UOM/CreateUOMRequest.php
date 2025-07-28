@@ -22,7 +22,7 @@ class CreateUOMRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required','string','max:40'],
+            'name' => ['required', 'string', 'max:40'],
         ];
     }
 }

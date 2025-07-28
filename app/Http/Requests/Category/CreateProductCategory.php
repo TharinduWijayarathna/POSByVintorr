@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Category;
 
-use App\Models\ProductCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,11 +23,12 @@ class CreateProductCategory extends FormRequest
     public function rules()
     {
         $categoryId = $this->route('category_id');
+
         return [
-            'name' =>  ['required', 'string', 'max:255', Rule::unique('product_categories')->where(function ($query) {
+            'name' => ['required', 'string', 'max:255', Rule::unique('product_categories')->where(function ($query) {
                 return $query->whereNull('deleted_at');
             })->ignore($categoryId)],
-            'remarks' =>  ['nullable', 'string', 'max:255'],
+            'remarks' => ['nullable', 'string', 'max:255'],
 
         ];
     }
@@ -36,10 +36,10 @@ class CreateProductCategory extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => "The category name is required.",
+            'name.required' => 'The category name is required.',
 
-            'name.max' => "The category name must not exceed 255 characters.",
-            'remarks.max' => "The remarks must not exceed 255 characters.",
+            'name.max' => 'The category name must not exceed 255 characters.',
+            'remarks.max' => 'The remarks must not exceed 255 characters.',
         ];
     }
 }

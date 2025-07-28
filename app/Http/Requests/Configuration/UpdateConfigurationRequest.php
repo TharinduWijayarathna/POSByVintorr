@@ -28,8 +28,8 @@ class UpdateConfigurationRequest extends FormRequest
             'banner_image' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg', 'max:5120'],
             'name' => ['required', 'string', 'max:120'],
             'address' => ['nullable', 'string', 'max:255'],
-            'mobile' =>  ['nullable'],
-            'email' =>  ['nullable', 'email', 'max:255'],
+            'mobile' => ['nullable'],
+            'email' => ['nullable', 'email', 'max:255'],
             'currency_id' => ['required', 'numeric'],
             'footer' => ['nullable', 'string', 'max:60'],
             'color_code' => ['nullable'],
@@ -37,11 +37,11 @@ class UpdateConfigurationRequest extends FormRequest
         ];
     }
 
-    function messages()
+    public function messages()
     {
         return [
-            'name.required' => "The business name is required.",
-            'currency_id.required' => "Currency is required.",
+            'name.required' => 'The business name is required.',
+            'currency_id.required' => 'Currency is required.',
             'image.image' => ' The logo image must be an image',
             'image.max' => ' The logo image must be less than 5MB',
             'image.mimes' => 'The logo image must be a valid image file of type: jpeg, png, jpg, gif, svg.',

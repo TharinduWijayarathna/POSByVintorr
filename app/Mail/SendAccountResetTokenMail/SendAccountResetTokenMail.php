@@ -3,7 +3,6 @@
 namespace App\Mail\SendAccountResetTokenMail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -15,6 +14,7 @@ class SendAccountResetTokenMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $sendData;
+
     /**
      * Create a new message instance.
      */

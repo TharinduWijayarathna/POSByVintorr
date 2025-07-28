@@ -17,20 +17,28 @@ use Illuminate\Support\Facades\Auth;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosReceiptService
 {
-
     protected $order;
+
     protected $pos_receipt;
+
     protected $bill_payment;
+
     protected $transaction;
+
     protected $customer;
+
     private $transaction_balance;
+
     private $currency;
+
     /**
      * __construct
      *
@@ -38,13 +46,13 @@ class PosReceiptService
      */
     public function __construct()
     {
-        $this->order = new PosOrder();
-        $this->pos_receipt = new PosReceipt();
-        $this->bill_payment = new BillPayment();
-        $this->transaction = new Transaction();
-        $this->customer = new Customer();
-        $this->transaction_balance = new TransactionBalance();
-        $this->currency = new Currency();
+        $this->order = new PosOrder;
+        $this->pos_receipt = new PosReceipt;
+        $this->bill_payment = new BillPayment;
+        $this->transaction = new Transaction;
+        $this->customer = new Customer;
+        $this->transaction_balance = new TransactionBalance;
+        $this->currency = new Currency;
     }
 
     /**
@@ -62,7 +70,6 @@ class PosReceiptService
      * Store
      * store data in database
      *
-     * @param  array $data
      * @return void
      */
     public function store(array $data)
@@ -74,7 +81,6 @@ class PosReceiptService
      * Get
      * retrieve relevant data using pos_receipt_id
      *
-     * @param  int  $pos_receipt_id
      * @return void
      */
     public function get(int $pos_receipt_id)
@@ -98,13 +104,12 @@ class PosReceiptService
      * Update
      * update existing data using pos_receipt_id
      *
-     * @param  array $data
-     * @param  int   $pos_receipt_id
      * @return void
      */
     public function update(array $data, int $pos_receipt_id)
     {
         $pos_receipt = $this->pos_receipt->find($pos_receipt_id);
+
         return $pos_receipt->update($this->edit($pos_receipt, $data));
     }
 
@@ -126,12 +131,12 @@ class PosReceiptService
 
         $count = $this->bill_payment->count();
 
-        $code = 'B' . sprintf('%05d', $count + 1);
+        $code = 'B'.sprintf('%05d', $count + 1);
         $check = $this->bill_payment->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'B' . sprintf('%05d', $count);
+            $code = 'B'.sprintf('%05d', $count);
             $check = $this->bill_payment->getCode($code);
         }
 
@@ -193,14 +198,14 @@ class PosReceiptService
         }
         $created_bill = $this->bill_payment->create($data);
 
-        //transaction log
+        // transaction log
         $transaction_count = $this->transaction->count();
-        $tr_code = 'TR' . sprintf('%05d', $transaction_count + 1);
+        $tr_code = 'TR'.sprintf('%05d', $transaction_count + 1);
         $check_tr = $this->transaction->getCode($tr_code);
 
         while ($check_tr) {
             $transaction_count++;
-            $tr_code = 'TR' . sprintf('%05d', $transaction_count);
+            $tr_code = 'TR'.sprintf('%05d', $transaction_count);
             $check_tr = $this->transaction->getCode($tr_code);
         }
 
@@ -213,22 +218,22 @@ class PosReceiptService
             if ($customer) {
                 $transaction_data['client'] = $customer->name;
             } else {
-                $transaction_data['client'] = "Customer not available";
+                $transaction_data['client'] = 'Customer not available';
             }
         } else {
-            $transaction_data['client'] = "Walking Customer";
+            $transaction_data['client'] = 'Walking Customer';
         }
         $transaction_data['currency_id'] = $updated_order->currency_id;
         $transaction_data['amount'] = $created_bill->accepted_amount;
         if ($order->type == 1) {
             $transaction_data['type'] = 2;
-            $transaction_data['description'] = "Invoice Payment";
+            $transaction_data['description'] = 'Invoice Payment';
             if (isset($data['remark'])) {
                 $transaction_data['remark'] = $data['remark'];
             }
         } elseif ($order->type == 0) {
             $transaction_data['type'] = 1;
-            $transaction_data['description'] = "POS Credit Payment";
+            $transaction_data['description'] = 'POS Credit Payment';
             if (isset($data['remark'])) {
                 $transaction_data['remark'] = $data['remark'];
             }
@@ -246,7 +251,7 @@ class PosReceiptService
             $balance_data['amount'] = $created_bill->accepted_amount;
             $this->transaction_balance->create($balance_data);
         }
-        //end transaction log
+        // end transaction log
     }
 
     public function updateCreditPay(array $data)
@@ -307,7 +312,7 @@ class PosReceiptService
 
         $order->save();
 
-        //transaction log
+        // transaction log
         $created_transaction = $this->transaction->where('reference_code', $order->code)->where('payment_code', $bill_payment->code)->first();
         if ($created_transaction) {
 
@@ -331,15 +336,13 @@ class PosReceiptService
             $created_transaction->save();
         }
 
-        //end transaction log
+        // end transaction log
     }
 
     /**
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosReceipt $pos_receipt
-     * @param  array $data
      * @return void
      */
     protected function edit(PosReceipt $pos_receipt, array $data)
@@ -351,7 +354,6 @@ class PosReceiptService
      * Delete
      * delete specific data using pos_receipt_id
      *
-     * @param  int   $pos_receipt_id
      * @return void
      */
     public function delete(int $pos_receipt_id)
@@ -370,12 +372,14 @@ class PosReceiptService
         $order->total = $order->items->sum('total');
         $order->sub_total = $order->items->sum('total');
         $order->save();
+
         return $order;
     }
 
     public function holdOrders()
     {
         $user = Auth::user();
+
         return $this->pos_receipt->holds($user->name);
     }
 

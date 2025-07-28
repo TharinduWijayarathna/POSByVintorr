@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 /*
  * InvoiceItemParameter
  * php version 8
@@ -27,6 +28,7 @@ class InvoiceItemParameter extends Model
         'description',
         'order',
     ];
+
     public function invoice()
     {
         return $this->hasOne(Invoice::class, 'invoice_id', 'id');

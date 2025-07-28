@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\ExpenseCategory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
 /*
  * InvoiceCost
  * php version 8
@@ -34,12 +34,12 @@ class InvoiceCost extends Model
 
     public function getSupplierNameAttribute()
     {
-        return $this->supplier?$this->supplier->name:'';
+        return $this->supplier ? $this->supplier->name : '';
     }
 
     public function getExpenseCategoryNameAttribute()
     {
-        return $this->expenseCategory?$this->expenseCategory->title:'';
+        return $this->expenseCategory ? $this->expenseCategory->title : '';
     }
 
     public function expenseCategory()

@@ -11,21 +11,19 @@ use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class CustomerImport implements ToCollection, SkipsOnError
+class CustomerImport implements SkipsOnError, ToCollection
 {
     use SkipsErrors;
 
     private $customer;
+
     private $expectedColumns = ['Name', 'Address', 'Email', 'Phone Number', 'Website'];
 
     public function __construct()
     {
-        $this->customer = new Customer();
+        $this->customer = new Customer;
     }
 
-    /**
-     * @param Collection $rows
-     */
     public function collection(Collection $rows)
     {
         $count_row = 0;
@@ -35,14 +33,16 @@ class CustomerImport implements ToCollection, SkipsOnError
         $missingDetailsCount = 0;
 
         if ($rows->isEmpty()) {
-            $this->flashError("Invalid Data Format: The file is empty.");
+            $this->flashError('Invalid Data Format: The file is empty.');
+
             return;
         }
 
         $headerRow = $rows->first()->toArray();
 
-        if (!$this->validateHeader($headerRow)) {
-            $this->flashError("Invalid Data Format: The file does not match the expected columns.");
+        if (! $this->validateHeader($headerRow)) {
+            $this->flashError('Invalid Data Format: The file does not match the expected columns.');
+
             return;
         }
 
@@ -50,30 +50,34 @@ class CustomerImport implements ToCollection, SkipsOnError
 
         foreach ($dataRows as $key => $row) {
             if ($row->filter()->isEmpty()) {
-                $errors[] = "Row " . ($key + 1) . ": Rows can't be empty.";
+                $errors[] = 'Row '.($key + 1).": Rows can't be empty.";
                 $missingDetailsCount++;
+
                 continue;
             }
 
-            if (!isset($row[0])) {
-                $errors[] = "Row " . ($key + 1) . ": Customer Name can't be empty.";
+            if (! isset($row[0])) {
+                $errors[] = 'Row '.($key + 1).": Customer Name can't be empty.";
                 $missingDetailsCount++;
+
                 continue;
             }
 
             $data = $this->prepareData($row);
 
-            $validator = Validator::make($data, (new CreateCustomerRequest())->rules());
+            $validator = Validator::make($data, (new CreateCustomerRequest)->rules());
 
             if ($validator->fails()) {
-                $errors[] = "Row " . ($key + 1) . ": " . implode(", ", $validator->errors()->all());
+                $errors[] = 'Row '.($key + 1).': '.implode(', ', $validator->errors()->all());
                 $invalidDetailsCount++;
+
                 continue;
             }
 
             if (isset($data['email']) && $this->isExistingCustomer($data)) {
-                $errors[] = "Row " . ($key + 1) . ": This email is already registered.";
+                $errors[] = 'Row '.($key + 1).': This email is already registered.';
                 $existingDataCount++;
+
                 continue;
             }
 
@@ -86,7 +90,8 @@ class CustomerImport implements ToCollection, SkipsOnError
 
     private function validateHeader(array $headerRow): bool
     {
-        $cleanedHeaderRow = array_filter($headerRow, fn($value) => !is_null($value) && $value !== '');
+        $cleanedHeaderRow = array_filter($headerRow, fn ($value) => ! is_null($value) && $value !== '');
+
         return $cleanedHeaderRow === $this->expectedColumns;
     }
 

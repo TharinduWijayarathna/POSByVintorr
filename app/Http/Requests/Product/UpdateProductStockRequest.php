@@ -37,9 +37,10 @@ class UpdateProductStockRequest extends FormRequest
             'date' => 'required|date',
         ];
     }
-    function messages()
+
+    public function messages()
     {
-        return[
+        return [
             'new_quantity.required' => ' Quantity Field Is Required.',
             'new_quantity.max' => ' Quantity must be less than 10,000',
             'cost.max' => ' The product cost must be less than 100,000,000,000',

@@ -5,15 +5,16 @@ namespace domain\Services\PosAdvanceReceiptService;
 use App\Models\PosAdvanceReceipt;
 use App\Models\PosCustomOrder;
 use domain\Facades\PosCustomOrderFacade\PosCustomOrderFacade;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * PosAdvanceReceiptService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosAdvanceReceiptService
@@ -25,8 +26,8 @@ class PosAdvanceReceiptService
      */
     public function __construct()
     {
-        $this->receipt = new PosAdvanceReceipt();
-        $this->order = new PosCustomOrder();
+        $this->receipt = new PosAdvanceReceipt;
+        $this->order = new PosCustomOrder;
     }
 
     /**
@@ -37,37 +38,36 @@ class PosAdvanceReceiptService
      */
     public function all()
     {
-        return  $this->receipt->all();
+        return $this->receipt->all();
     }
 
     /**
      * Store
      * store data in database
      *
-     * @param  array $data
      * @return void
      */
     public function store(int $order_id, array $data)
     {
         $count = $this->receipt->count();
 
-        $receipt_no = sprintf('%05d', $count+1);
+        $receipt_no = sprintf('%05d', $count + 1);
         $check = $this->receipt->where('receipt_no', $receipt_no)->first();
 
-        while ($check)
-        {
+        while ($check) {
             $count++;
-            $receipt_no = sprintf('%05d',  $count);
+            $receipt_no = sprintf('%05d', $count);
             $check = $this->receipt->where('receipt_no', $receipt_no)->first();
         }
         $data['receipt_no'] = $receipt_no;
         $data['order_id'] = $order_id;
-        $receipt =  $this->receipt->create($data);
+        $receipt = $this->receipt->create($data);
         $order_data = $this->order->find($order_id);
         $order_data['advanced_receipt_id'] = $receipt->id;
         $order_data['advanced_receipt_no'] = $receipt->receipt_no;
         $order_data->save();
         PosCustomOrderFacade::updateTotal($data['order_id']);
+
         return $receipt;
     }
 
@@ -75,7 +75,6 @@ class PosAdvanceReceiptService
      * Get
      * retrieve relevant data using order_id
      *
-     * @param  int  $order_id
      * @return void
      */
     public function get(int $order_id)
@@ -86,10 +85,12 @@ class PosAdvanceReceiptService
         $order_data['advanced_receipt_id'] = $stored_receipt->id;
         $order_data['advanced_receipt_no'] = $stored_receipt->receipt_no;
         $order_data->save();
+
         return $stored_receipt;
     }
 
-    public function getById(int $order_id){
+    public function getById(int $order_id)
+    {
         return $this->receipt->getByOrderId($order_id);
     }
 
@@ -97,8 +98,6 @@ class PosAdvanceReceiptService
      * Update
      * update existing data using receipt_id
      *
-     * @param  array $data
-     * @param  int   $receipt_id
      * @return void
      */
     public function update(array $data, int $receipt_id)
@@ -107,6 +106,7 @@ class PosAdvanceReceiptService
         if ($data['amount']) {
             PosCustomOrderFacade::getTotalByAdvanceReceipt($data['amount'], $data['order_id']);
         }
+
         return $receipt->update($this->edit($receipt, $data));
     }
 
@@ -114,8 +114,6 @@ class PosAdvanceReceiptService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosAdvanceReceipt $receipt
-     * @param  array $data
      * @return void
      */
     protected function edit(PosAdvanceReceipt $receipt, array $data)
@@ -127,7 +125,6 @@ class PosAdvanceReceiptService
      * Delete
      * delete specific data using receipt_id
      *
-     * @param  int   $receipt_id
      * @return void
      */
     public function delete(int $receipt_id)
@@ -138,7 +135,7 @@ class PosAdvanceReceiptService
     /**
      * getByOrderId
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function getByOrderId(int $order_id)
@@ -149,7 +146,7 @@ class PosAdvanceReceiptService
     /**
      * getTotalByOrderId
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function getTotalByOrderId(int $order_id)
@@ -160,7 +157,7 @@ class PosAdvanceReceiptService
     /**
      * getAllByOrderId
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function list(int $order_id)
@@ -171,7 +168,7 @@ class PosAdvanceReceiptService
     /**
      * getAdvanceReceipt
      *
-     * @param  mixed $order_id
+     * @param  mixed  $order_id
      * @return void
      */
     public function getAdvanceReceipt(int $order_id)

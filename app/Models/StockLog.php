@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StockLog extends Model
 {
@@ -17,6 +15,7 @@ class StockLog extends Model
         'minus' => 0,
         'plus' => 1,
     ];
+
     const TRANSACTION_TYPE_ID = [
         'stock_out' => 0,
         'stock_in' => 1,
@@ -36,7 +35,7 @@ class StockLog extends Model
         'barcode', // Stock barcode
         'reference_id',
         'reference',
-        'invoice_id',// Main system
+        'invoice_id', // Main system
         'Pos_invoice_id', // POS system
         'cost',
         'po_number',
@@ -67,21 +66,23 @@ class StockLog extends Model
     {
         return $this->grnTransactionType ? $this->grnTransactionType->name : $this->remarks;
     }
+
     public function getProductNameAttribute()
     {
-        return $this->product ? ($this->product->code .' - '.$this->product->name) : "N/A";
+        return $this->product ? ($this->product->code.' - '.$this->product->name) : 'N/A';
     }
+
     public function getCreatedUserAttribute()
     {
-        return $this->user ? $this->user->name : "N/A";
+        return $this->user ? $this->user->name : 'N/A';
     }
+
     public function getCreatedDateTimeAttribute()
     {
         $createdAt = $this->created_at;
         $carbon = \Carbon\Carbon::parse($createdAt);
         $date = $carbon->toDateTimeString();
+
         return $this->created_at ? $date : '-';
     }
-
-
 }

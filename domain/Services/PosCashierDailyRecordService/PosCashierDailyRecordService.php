@@ -3,7 +3,6 @@
 namespace domain\Services\PosCashierDailyRecordService;
 
 use App\Models\PosCashierDailyRecord;
-use domain\Facades\PosCashierDailyRecordFacade\PosCashierDailyRecordFacade;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -11,8 +10,10 @@ use Illuminate\Support\Facades\Auth;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosCashierDailyRecordService
@@ -24,7 +25,7 @@ class PosCashierDailyRecordService
      */
     public function __construct()
     {
-        $this->daily_record = new PosCashierDailyRecord();
+        $this->daily_record = new PosCashierDailyRecord;
     }
 
     /**
@@ -35,20 +36,21 @@ class PosCashierDailyRecordService
      */
     public function all()
     {
-        return  $this->daily_record->all();
+        return $this->daily_record->all();
     }
 
     /**
      * Store
      * store data in database
      *
-     * @param  array $data
+     * @param  array  $data
      * @return void
      */
     public function store(float $start_amount)
     {
         $data['start_day_amount'] = $start_amount;
         $data['user_id'] = Auth::id();
+
         return $this->daily_record->create($data);
     }
 
@@ -67,16 +69,16 @@ class PosCashierDailyRecordService
     /**
      * Update
      *
-     * @param  float $end_amount
      * @return void
      */
     public function update(float $end_amount)
     {
         $id = Auth::id();
         $cashier = $this->daily_record->getDetailsForUpdate($id);
-        if($cashier){
+        if ($cashier) {
             $cashier->end_day_amount = $end_amount;
             $cashier->save();
+
             return $cashier;
         }
     }
@@ -85,8 +87,6 @@ class PosCashierDailyRecordService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosCashierDailyRecord $daily_record
-     * @param  array $data
      * @return void
      */
     protected function edit(PosCashierDailyRecord $daily_record, array $data)
@@ -98,7 +98,6 @@ class PosCashierDailyRecordService
      * Delete
      * delete specific data using daily_record_id
      *
-     * @param  int   $daily_record_id
      * @return void
      */
     public function delete(int $daily_record_id)

@@ -2,17 +2,17 @@
 
 namespace App\Exports\Reports;
 
-use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ExpenseReportExport implements FromView, WithColumnWidths, WithColumnFormatting, WithEvents
+class ExpenseReportExport implements FromView, WithColumnFormatting, WithColumnWidths, WithEvents
 {
     protected $data;
 
@@ -24,8 +24,10 @@ class ExpenseReportExport implements FromView, WithColumnWidths, WithColumnForma
     public function export($data)
     {
         $this->data = $data;
+
         return $this;
     }
+
     public function columnWidths(): array
     {
         return [

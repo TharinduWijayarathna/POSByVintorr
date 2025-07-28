@@ -2,8 +2,8 @@
 
 namespace domain\Services\PosPaymentService;
 
-use App\Models\PosPayment;
 use App\Models\CustomerType;
+use App\Models\PosPayment;
 use domain\Facades\PosOrderFacade\PosOrderFacade;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,14 +12,16 @@ use Illuminate\Support\Facades\Auth;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosPaymentService
 {
-
     protected $pos_payment;
+
     protected $customer_type;
 
     /**
@@ -29,8 +31,8 @@ class PosPaymentService
      */
     public function __construct()
     {
-        $this->pos_payment = new PosPayment();
-        $this->customer_type = new CustomerType();
+        $this->pos_payment = new PosPayment;
+        $this->customer_type = new CustomerType;
     }
 
     /**
@@ -41,30 +43,30 @@ class PosPaymentService
      */
     public function all()
     {
-        return  $this->pos_payment->all();
+        return $this->pos_payment->all();
     }
 
     /**
      * Store
      * store data in database
      *
-     * @param  array $data
      * @return void
      */
     public function store(array $data)
     {
         $user = Auth::user();
         $data['cashier_name'] = $user->name;
-        $data['cashier_id'] =  Auth::id();
+        $data['cashier_id'] = Auth::id();
         // dd($data);
-        if(isset($data['customer_id'])){
+        if (isset($data['customer_id'])) {
             $order['customer_type'] = 'loyalty-customer';
             $order['customer_id'] = $data['customer_id'];
 
-        }else{
+        } else {
             $order['customer_type'] = 'walking-customer';
         }
         PosOrderFacade::done($data);
+
         return $this->pos_payment->create($data);
     }
 
@@ -72,7 +74,6 @@ class PosPaymentService
      * Get
      * retrieve relevant data using pos_payment_id
      *
-     * @param  int  $pos_payment_id
      * @return void
      */
     public function get(int $pos_payment_id)
@@ -83,7 +84,6 @@ class PosPaymentService
     /**
      * getByOrderId
      *
-     * @param  int $order_id
      * @return void
      */
     public function getByOrderId(int $order_id)
@@ -91,13 +91,12 @@ class PosPaymentService
         return $this->pos_payment->where('order_id', $order_id)->first();
     }
 
-
     /**
      * Update
      * update existing data using pos_payment_id
      *
-     * @param  array $data
-     * @param  int   $pos_payment_id
+     * @param  array  $data
+     * @param  int  $pos_payment_id
      * @return void
      */
     public function update(int $item_id, int $quantity)
@@ -108,6 +107,7 @@ class PosPaymentService
         $item->save();
 
         PosPaymentFacade::storeTotal($item->total, $item->order_id);
+
         return $item;
     }
 
@@ -115,8 +115,6 @@ class PosPaymentService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosPayment $pos_payment
-     * @param  array $data
      * @return void
      */
     protected function edit(PosPayment $pos_payment, array $data)
@@ -128,7 +126,6 @@ class PosPaymentService
      * Delete
      * delete specific data using pos_payment_id
      *
-     * @param  int   $pos_payment_id
      * @return void
      */
     public function delete(int $pos_payment_id)
@@ -139,12 +136,12 @@ class PosPaymentService
     /**
      * getInvoicesByLocationAndTime
      *
-     * @param  array $hours
+     * @param  array  $hours
      * @return void
      */
     public function getInvoicesByLocationAndTime($hours)
     {
-        return  $this->pos_payment->getInvoicesByLocationAndTime($hours);
+        return $this->pos_payment->getInvoicesByLocationAndTime($hours);
     }
 
     /**
@@ -154,7 +151,7 @@ class PosPaymentService
      */
     public function getTotalInvoices()
     {
-        return  $this->pos_payment->getTotalInvoices();
+        return $this->pos_payment->getTotalInvoices();
     }
 
     /**
@@ -164,6 +161,6 @@ class PosPaymentService
      */
     public function getMonthlyInvoices()
     {
-        return  $this->pos_payment->getMonthlyInvoices();
+        return $this->pos_payment->getMonthlyInvoices();
     }
 }

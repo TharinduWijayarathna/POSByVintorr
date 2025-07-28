@@ -26,7 +26,8 @@ class UpdateOrderProductRequest extends FormRequest
             'quantity' => 'required|integer|min:1|max:10000',
         ];
     }
-    function messages()
+
+    public function messages()
     {
         return [
             'unit_price.required' => 'Unit price is required',
@@ -48,8 +49,9 @@ class UpdateOrderProductRequest extends FormRequest
             $quantity = $this->input('quantity');
             $price = $this->input('unit_price');
 
-            if (!is_numeric($quantity) || !is_numeric($price)) {
+            if (! is_numeric($quantity) || ! is_numeric($price)) {
                 $validator->errors()->add('product_amount', 'The quantity and price must be numbers.');
+
                 return;
             }
 

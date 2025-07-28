@@ -24,6 +24,6 @@ class PosReceipt extends Model
 
     public function getFormatPriceAttribute()
     {
-        return number_format($this->price, 2) ;
+        return number_format($this->price, 2);
     }
 }

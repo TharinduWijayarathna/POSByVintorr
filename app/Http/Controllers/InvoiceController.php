@@ -16,8 +16,8 @@ use App\Http\Resources\DataResource;
 use App\Models\BusinessDetail;
 use App\Models\InvoiceItemFooterParameter;
 use App\Models\InvoiceItemParameter;
-use App\Models\User;
 use App\Models\PosOrder;
+use App\Models\User;
 use domain\Facades\BillPaymentFacade\BillPaymentFacade;
 use domain\Facades\InvoiceFacade\InvoiceFacade;
 use domain\Facades\PosOrderFacade\PosOrderFacade;
@@ -28,14 +28,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
-use PDF;
-use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceController extends ParentController
 {
-
     public function viewAllInvoices()
     {
         // if (Auth::user()->user_role_id != User::USER_ROLE_ID['CASHIER']) {
@@ -66,6 +65,7 @@ class InvoiceController extends ParentController
     {
         // if (Auth::user()->user_role_id != User::USER_ROLE_ID['CASHIER']) {
         $invoice = InvoiceFacade::getOrCreateNew();
+
         return redirect()->route('invoice.process', $invoice->id);
         // }
     }
@@ -76,9 +76,11 @@ class InvoiceController extends ParentController
             $invoice = InvoiceFacade::get($invoice_id);
             if ($invoice->created_by != Auth::id()) {
                 $response['alert-danger'] = 'Invoice Can\'t be processed.';
+
                 return redirect()->route('cart')->with($response);
             } else {
                 $response['invoice_id'] = $invoice_id;
+
                 return Inertia::render('Invoice/edit', $response);
             }
         }
@@ -91,11 +93,11 @@ class InvoiceController extends ParentController
         if (isset($request->sorting_value)) {
             if ($request->sorting_value == 1) {
                 $query->orderBy('code', 'desc');
-            } else if ($request->sorting_value == 2) {
+            } elseif ($request->sorting_value == 2) {
                 $query->orderBy('date', 'desc');
-            } else if ($request->sorting_value == 3) {
+            } elseif ($request->sorting_value == 3) {
                 $query->orderBy('total', 'asc');
-            } else if ($request->sorting_value == 4) {
+            } elseif ($request->sorting_value == 4) {
                 $query->orderBy('total', 'desc');
             } else {
                 $query->orderByRaw('date DESC, created_at DESC');
@@ -153,6 +155,7 @@ class InvoiceController extends ParentController
                 })
             )
             ->paginate(request('per_page', config('basic.pagination_per_page')));
+
         return DataResource::collection($payload);
         // }
     }
@@ -164,11 +167,11 @@ class InvoiceController extends ParentController
             if (isset($request->sorting_value)) {
                 if ($request->sorting_value == 1) {
                     $query->orderBy('code', 'desc');
-                } else if ($request->sorting_value == 2) {
+                } elseif ($request->sorting_value == 2) {
                     $query->orderBy('date', 'desc');
-                } else if ($request->sorting_value == 3) {
+                } elseif ($request->sorting_value == 3) {
                     $query->orderBy('total', 'asc');
-                } else if ($request->sorting_value == 4) {
+                } elseif ($request->sorting_value == 4) {
                     $query->orderBy('total', 'desc');
                 } else {
                     $query->orderByRaw('date DESC, created_at DESC');
@@ -223,6 +226,7 @@ class InvoiceController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -248,17 +252,19 @@ class InvoiceController extends ParentController
             $invoice_item_parameter = InvoiceItemParameter::where('invoice_id', $invoice_id)->where('name', $request['title'])->first();
             if ($invoice_item_parameter) {
                 $errorMessage = 'The custom title has already been taken.';
+
                 return response()->json([
                     'errors' => [
-                        'title' => [$errorMessage]
+                        'title' => [$errorMessage],
                     ],
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 402);
             }
             if ($invoice_id == null) {
                 $invoice = InvoiceFacade::getOrCreate();
                 $invoice_id = $invoice->id;
             }
+
             return InvoiceFacade::storeParameter($invoice_id, $request->all());
         }
     }
@@ -270,14 +276,16 @@ class InvoiceController extends ParentController
             if ($invoice_item_parameter) {
                 if ($invoice_item_parameter->id != $request['id']) {
                     $errorMessage = 'The custom title has already been taken.';
+
                     return response()->json([
                         'errors' => [
-                            'title' => [$errorMessage]
+                            'title' => [$errorMessage],
                         ],
-                        'message' => $errorMessage
+                        'message' => $errorMessage,
                     ], 402);
                 }
             }
+
             return InvoiceFacade::updateParameter($request->all());
         }
     }
@@ -289,6 +297,7 @@ class InvoiceController extends ParentController
             $invoice = InvoiceFacade::getOrCreate();
             $invoice_id = $invoice->id;
         }
+
         return InvoiceFacade::getParameters($invoice_id);
         // }
     }
@@ -322,17 +331,19 @@ class InvoiceController extends ParentController
             $invoice_item_footer_parameter = InvoiceItemFooterParameter::where('invoice_id', $invoice_id)->where('name', $request['title'])->first();
             if ($invoice_item_footer_parameter) {
                 $errorMessage = 'The custom title has already been taken.';
+
                 return response()->json([
                     'errors' => [
-                        'title' => [$errorMessage]
+                        'title' => [$errorMessage],
                     ],
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 402);
             }
             if ($invoice_id == null) {
                 $invoice = InvoiceFacade::getOrCreate();
                 $invoice_id = $invoice->id;
             }
+
             return InvoiceFacade::storeFooterParameter($invoice_id, $request->all());
         }
     }
@@ -344,14 +355,16 @@ class InvoiceController extends ParentController
             if ($invoice_item_footer_parameter) {
                 if ($invoice_item_footer_parameter->id != $request['id']) {
                     $errorMessage = 'The custom title has already been taken.';
+
                     return response()->json([
                         'errors' => [
-                            'title' => [$errorMessage]
+                            'title' => [$errorMessage],
                         ],
-                        'message' => $errorMessage
+                        'message' => $errorMessage,
                     ], 402);
                 }
             }
+
             return InvoiceFacade::updateFooterParameter($request->all());
         }
     }
@@ -363,6 +376,7 @@ class InvoiceController extends ParentController
             $invoice = InvoiceFacade::getOrCreate();
             $invoice_id = $invoice->id;
         }
+
         return InvoiceFacade::getFooterParameters($invoice_id);
         // }
     }
@@ -393,6 +407,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = InvoiceFacade::getOrCreate();
+
             return InvoiceFacade::storeCustomer($invoice->id, $customer_id);
         }
     }
@@ -401,6 +416,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = InvoiceFacade::getOrCreate();
+
             return InvoiceFacade::storeCurrency($invoice->id, $currency_id);
         }
     }
@@ -409,6 +425,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = InvoiceFacade::getOrCreate();
+
             return InvoiceFacade::storeInvoiceRef($request->all(), $invoice->id);
         }
     }
@@ -424,6 +441,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = InvoiceFacade::getOrCreate();
+
             return InvoiceFacade::storeDate($invoice->id, $request->all());
         }
     }
@@ -432,6 +450,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = InvoiceFacade::getOrCreate();
+
             return InvoiceFacade::storeDueDate($invoice->id, $request->all());
         }
     }
@@ -440,6 +459,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = InvoiceFacade::getOrCreate();
+
             return InvoiceFacade::storeNote($invoice->id, $request->all());
         }
     }
@@ -451,6 +471,7 @@ class InvoiceController extends ParentController
                 $invoice = InvoiceFacade::getOrCreate();
                 $invoice_id = $invoice->id;
             }
+
             return InvoiceFacade::storeCode($request->all(), $invoice_id);
         }
     }
@@ -494,6 +515,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $new_price = $request->quantity * $request->selling_price;
+
             return number_format($new_price, 2);
         }
     }
@@ -502,6 +524,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $product = ProductFacade::getById($request['product_id']);
+
             return PosOrderFacade::selectInvoiceProduct($product, $request['invoice_id'], $request->all());
         }
     }
@@ -510,6 +533,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $product = ProductFacade::getById($request['product_id']);
+
             return PosOrderFacade::selectInvoiceProduct($product, $request['invoice_id'], $request->all());
         }
     }
@@ -518,6 +542,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $order = InvoiceFacade::getOrCreate();
+
             return PosOrderFacade::getOrderProduct($order);
         }
     }
@@ -533,6 +558,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $order = InvoiceFacade::getOrCreate();
+
             return ProductFacade::getOrderItem($id, $order->id);
         }
     }
@@ -549,6 +575,7 @@ class InvoiceController extends ParentController
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $order = InvoiceFacade::getOrCreate();
             $product = ProductFacade::getById($product_id);
+
             return PosOrderFacade::updateQty($request, $product, $order->id);
         }
     }
@@ -568,6 +595,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $order = InvoiceFacade::getOrCreate();
+
             return PosOrderFacade::removeItem($product_id, $order->id);
         }
     }
@@ -583,6 +611,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $order = InvoiceFacade::getOrCreate();
+
             return PosOrderFacade::getTotals($order->id);
         }
     }
@@ -610,6 +639,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = InvoiceFacade::getOrCreate();
+
             return InvoiceFacade::getLoyaltyCustomer($invoice->id);
         }
     }
@@ -625,6 +655,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $invoice = InvoiceFacade::getOrCreate();
+
             return InvoiceFacade::changeInvoiceCustomer($request->all(), $invoice->id);
         }
     }
@@ -640,6 +671,7 @@ class InvoiceController extends ParentController
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
             $order = InvoiceFacade::getOrCreate();
+
             return PosOrderFacade::holdCart($order->id);
         }
     }
@@ -651,14 +683,17 @@ class InvoiceController extends ParentController
             return $invoice;
         }
     }
+
     public function loadInvoice(int $invoice_id)
     {
         // if (Auth::user()->user_role_id != User::USER_ROLE_ID['CASHIER']) {
         // $response = UserFacade::retrieveHost();
         $response['invoice_id'] = $invoice_id;
+
         return Inertia::render('Invoice/edit', $response);
         // }
     }
+
     public function editBill(int $bill_id)
     {
         if (Auth::user()->user_role_id == User::USER_ROLE_ID['ADMIN'] || Auth::user()->user_role_id == User::USER_ROLE_ID['CASHIER'] || Auth::user()->user_role_id == User::USER_ROLE_ID['INSPECTOR']) {
@@ -690,8 +725,6 @@ class InvoiceController extends ParentController
     /**
      * SendCustomerInvoiceEmail
      *
-     * @param $invoice_id
-     * @param SendCustomerInvoiceEmailRequest $request
      *
      * @return void
      */
@@ -723,11 +756,12 @@ class InvoiceController extends ParentController
             $pdf = PDF::loadView('print.pages.Invoice.invoice', $response)->setPaper('a4');
         }
 
-        $pdfPath = 'invoices/' . $invoice_key . '.pdf';
+        $pdfPath = 'invoices/'.$invoice_key.'.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
         $pdfUrl = Storage::url($pdfPath);
 
         $businessDetails = $response['config'];
+
         return Inertia::render('PublicArea/Invoice/view', [
             'pdfUrl' => $pdfUrl,
             'businessDetails' => $businessDetails,
@@ -746,7 +780,6 @@ class InvoiceController extends ParentController
         $header_fields = $request->input('header_fields');
 
         $invoices = $this->buildInvoiceQuery($request);
-
 
         if ($currency['id'] != 0) {
             $totals = InvoiceFacade::calculateTotals($invoices);
@@ -767,12 +800,12 @@ class InvoiceController extends ParentController
             'currency' => $currency,
         ];
 
-        $fileName = 'InvoiceReport-' . date('Y-m-d') . '-' . time() . '.xlsx';
-        $filePath = 'exports/Reports/' . $fileName;
-        $invoice_export = new InvoiceReportExport();
+        $fileName = 'InvoiceReport-'.date('Y-m-d').'-'.time().'.xlsx';
+        $filePath = 'exports/Reports/'.$fileName;
+        $invoice_export = new InvoiceReportExport;
         Excel::store($invoice_export->export($data), $filePath, 'public');
 
-        $path = asset('storage/' . $filePath);
+        $path = asset('storage/'.$filePath);
 
         return response()->json(['path' => $path]);
     }
@@ -783,11 +816,11 @@ class InvoiceController extends ParentController
         if (isset($request->sorting_value)) {
             if ($request->sorting_value == 1) {
                 $query->orderBy('code', 'desc');
-            } else if ($request->sorting_value == 2) {
+            } elseif ($request->sorting_value == 2) {
                 $query->orderBy('date', 'desc');
-            } else if ($request->sorting_value == 3) {
+            } elseif ($request->sorting_value == 3) {
                 $query->orderBy('total', 'asc');
-            } else if ($request->sorting_value == 4) {
+            } elseif ($request->sorting_value == 4) {
                 $query->orderBy('total', 'desc');
             } else {
                 $query->orderByRaw('date DESC, created_at DESC');
@@ -839,6 +872,7 @@ class InvoiceController extends ParentController
         }
 
         $payload = $query->get();
+
         return DataResource::collection($payload);
     }
 }

@@ -17,6 +17,7 @@ class CategoryController extends ParentController
     public function all()
     {
         $categories = CategoryFacade::all();
+
         return GetCategoriesResource::collection($categories);
     }
 
@@ -79,6 +80,7 @@ class CategoryController extends ParentController
     {
         // if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
         $units = CategoryFacade::unitsAll();
+
         return GetUnitsResource::collection($units);
         // }
     }

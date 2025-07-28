@@ -14,19 +14,25 @@ use Illuminate\Support\Str;
 class CartService
 {
     protected $cart;
+
     protected $cart_items;
+
     protected $pos_order;
+
     protected $pos_order_items;
+
     protected $customers;
+
     protected $products;
+
     public function __construct()
     {
-        $this->cart = new Cart();
-        $this->cart_items = new CartItem();
-        $this->pos_order = new PosOrder();
-        $this->pos_order_items = new PosOrderItem();
-        $this->customers = new Customer();
-        $this->products = new Product();
+        $this->cart = new Cart;
+        $this->cart_items = new CartItem;
+        $this->pos_order = new PosOrder;
+        $this->pos_order_items = new PosOrderItem;
+        $this->customers = new Customer;
+        $this->products = new Product;
     }
 
     public function getOrCreateCart()
@@ -46,6 +52,7 @@ class CartService
 
                     $data['key'] = $newKey;
                     $cart = $this->cart->create($data);
+
                     return $cart;
                 }
             } else {
@@ -54,6 +61,7 @@ class CartService
 
                 $data['key'] = $newKey;
                 $cart = $this->cart->create($data);
+
                 return $cart;
             }
         } else {
@@ -63,6 +71,7 @@ class CartService
 
             $data['key'] = $newKey;
             $cart = $this->cart->create($data);
+
             return $cart;
         }
     }
@@ -70,20 +79,21 @@ class CartService
     public function addToCart($product_data, $cart_id)
     {
         $cart_item = $this->cart_items->where('product_id', $product_data['id'])->where('cart_id', $cart_id)->first();
-        if (!empty($cart_item)) {
+        if (! empty($cart_item)) {
             if ($cart_item->quantity < 10000) {
                 $cart_item->quantity += 1;
                 $cart_item->total = $cart_item->quantity * $cart_item['unit_price'];
                 $cart_item->save();
             } else {
                 $errorMessage = 'Quantity cannot exceed 10,000';
+
                 return response()->json([
                     'errors' => [
-                        'quantity' => [$errorMessage]
+                        'quantity' => [$errorMessage],
                     ],
                     'quantity' => [$errorMessage],
                     0 => $errorMessage,
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 400);
             }
         } else {
@@ -127,13 +137,14 @@ class CartService
                 $cart->save();
             } else {
                 $errorMessage = 'Quantity cannot exceed 10,000';
+
                 return response()->json([
                     'errors' => [
-                        'quantity' => [$errorMessage]
+                        'quantity' => [$errorMessage],
                     ],
                     'quantity' => [$errorMessage],
                     0 => $errorMessage,
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 400);
             }
         }
@@ -152,13 +163,14 @@ class CartService
                 $cart->total = $cart->quantity * $cart['unit_price'];
                 $cart->save();
                 $errorMessage = 'Quantity cannot exceed 10,000';
+
                 return response()->json([
                     'errors' => [
-                        'quantity' => [$errorMessage]
+                        'quantity' => [$errorMessage],
                     ],
                     'quantity' => [$errorMessage],
                     0 => $errorMessage,
-                    'message' => $errorMessage
+                    'message' => $errorMessage,
                 ], 400);
             }
         }
@@ -172,6 +184,7 @@ class CartService
     public function getCount(int $cart_id)
     {
         $cartProductCount = $this->cart_items->where('cart_id', $cart_id)->sum('quantity');
+
         return $cartProductCount;
     }
 
@@ -179,14 +192,14 @@ class CartService
     {
         $customer = $this->customers->find($customer_id);
 
-        $count = $this->pos_order->where('code', 'like', "P%")->count();
+        $count = $this->pos_order->where('code', 'like', 'P%')->count();
 
-        $code = 'P' . sprintf('%05d', $count + 1);
+        $code = 'P'.sprintf('%05d', $count + 1);
         $check = $this->pos_order->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'P' . sprintf('%05d',  $count);
+            $code = 'P'.sprintf('%05d', $count);
             $check = $this->pos_order->getCode($code);
         }
 
@@ -209,21 +222,22 @@ class CartService
         $orderProducts = $this->cart_items->where('cart_id', $cart_id)->get();
         foreach ($orderProducts as $orderProduct) {
             $product = $this->products->find($orderProduct->product_id);
-            if (!$product) {
+            if (! $product) {
                 $deleted_product = $this->products->withTrashed()->find($orderProduct->product_id);
+
                 return response()->json([
                     'status' => 'error',
-                    'message' => $deleted_product->name . " is not available anymore. Please remove that item before checking out."
+                    'message' => $deleted_product->name.' is not available anymore. Please remove that item before checking out.',
                 ], 400);
-            } else if ($product->product_type == $this->products::PRODUCT_TYPE['stockable'] && $product->stock_quantity <= 0 && $orderProduct->quantity > 0) {
+            } elseif ($product->product_type == $this->products::PRODUCT_TYPE['stockable'] && $product->stock_quantity <= 0 && $orderProduct->quantity > 0) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $product->name . " is out of stock. Please remove that item before checking out."
+                    'message' => $product->name.' is out of stock. Please remove that item before checking out.',
                 ], 400);
-            } else if ($product->product_type == $this->products::PRODUCT_TYPE['stockable'] && $product->stock_quantity > 0 && $orderProduct->quantity > $product->stock_quantity) {
+            } elseif ($product->product_type == $this->products::PRODUCT_TYPE['stockable'] && $product->stock_quantity > 0 && $orderProduct->quantity > $product->stock_quantity) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => "We only have " . $product->stock_quantity . " of " . $product->name . " in our stock. Please adjust the quantity before checking out."
+                    'message' => 'We only have '.$product->stock_quantity.' of '.$product->name.' in our stock. Please adjust the quantity before checking out.',
                 ], 400);
             }
         }
@@ -256,6 +270,7 @@ class CartService
 
         $cart = $this->cart->where('id', $cart_id)->first();
         $cart->status = 1;
+
         return $cart->save();
     }
 }

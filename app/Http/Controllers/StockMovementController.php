@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DataResource;
 use App\Models\StockLog;
 use App\Models\User;
-use domain\Facades\UserFacade\UserFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -48,6 +47,7 @@ class StockMovementController extends Controller
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }

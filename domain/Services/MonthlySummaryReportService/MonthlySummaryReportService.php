@@ -10,34 +10,38 @@ use App\Models\PosOrder;
 use domain\Facades\DashboardFacade\DashboardFacade;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use PDO;
 
 /**
  * MonthlySummaryReportService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class MonthlySummaryReportService
 {
     protected $business_detail;
+
     protected $pos_order;
+
     protected $pos_order_item;
+
     protected $dashboard_item;
+
     private $currency;
+
     private $business_summary_email;
-
-
 
     public function __construct()
     {
-        $this->business_detail = new BusinessDetail();
-        $this->pos_order = new PosOrder();
-        $this->currency = new Currency();
-        $this->business_summary_email = new MonthlyBusinessSummaryEmail();
+        $this->business_detail = new BusinessDetail;
+        $this->pos_order = new PosOrder;
+        $this->currency = new Currency;
+        $this->business_summary_email = new MonthlyBusinessSummaryEmail;
     }
 
     public function sendMonthlySummaryReport()
@@ -53,7 +57,6 @@ class MonthlySummaryReportService
             $today_date = Carbon::now()->format('d');
             $custom_date = $email_date->value;
 
-
             if (isset($custom_date)) {
                 if ($custom_date != 0 && $custom_date == $today_date) {
 
@@ -63,15 +66,15 @@ class MonthlySummaryReportService
                     $actualMonthlyExpense = [];
 
                     // if custom date is 31 calculation start from 1st of current month
-                    if($custom_date == 31 ){
-                        $custom_start_date  = 0;
-                    }else{
+                    if ($custom_date == 31) {
+                        $custom_start_date = 0;
+                    } else {
                         $custom_start_date = $custom_date;
                     }
 
                     // set start and end dates
-                    $start_date = Carbon::now()->subMonth()->format('Y-m-') . ($custom_start_date + 1);
-                    $end_date = Carbon::now()->format('Y-m-') . $custom_date;
+                    $start_date = Carbon::now()->subMonth()->format('Y-m-').($custom_start_date + 1);
+                    $end_date = Carbon::now()->format('Y-m-').$custom_date;
 
                     // Formatting dates
                     $from_date = Carbon::now()->subMonth()->day($custom_start_date + 1);
@@ -136,7 +139,7 @@ class MonthlySummaryReportService
             }
 
         } catch (\Throwable $th) {
-            Log::info('email not send' . $th);
+            Log::info('email not send'.$th);
         }
     }
 }

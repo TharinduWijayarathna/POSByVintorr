@@ -65,9 +65,9 @@ class PosCustomerController extends ParentController
             if (isset($request->search_customer_contact)) {
                 $searchContact = $request->search_customer_contact;
                 $query->where(function ($query) use ($searchContact) {
-                    $query->where('contact', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact2', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact3', 'like', '%' . $searchContact . '%');
+                    $query->where('contact', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact2', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact3', 'like', '%'.$searchContact.'%');
                 });
             }
             $payload = QueryBuilder::for($query)
@@ -78,6 +78,7 @@ class PosCustomerController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return CustomerResource::collection($payload);
         }
     }
@@ -115,6 +116,7 @@ class PosCustomerController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             // $response = UserFacade::retrieveHost();
             $response['customer_id'] = $customer_id;
+
             return Inertia::render('Customer/edit', $response);
         }
     }
@@ -131,6 +133,7 @@ class PosCustomerController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -147,6 +150,7 @@ class PosCustomerController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -163,6 +167,7 @@ class PosCustomerController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return DataResource::collection($payload);
         }
     }
@@ -180,7 +185,7 @@ class PosCustomerController extends ParentController
             foreach ($orders as $order) {
                 $currencyId = $order->currency_id;
 
-                if (!isset($groups[$currencyId])) {
+                if (! isset($groups[$currencyId])) {
                     $groups[$currencyId] = [
                         'currency_name' => $order->currency_name,
                         'due_amount' => 0,
@@ -214,9 +219,9 @@ class PosCustomerController extends ParentController
             if (isset($request->search_customer_contact)) {
                 $searchContact = $request->search_customer_contact;
                 $query->where(function ($query) use ($searchContact) {
-                    $query->where('contact', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact2', 'like', '%' . $searchContact . '%');
-                    $query->orWhere('contact3', 'like', '%' . $searchContact . '%');
+                    $query->where('contact', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact2', 'like', '%'.$searchContact.'%');
+                    $query->orWhere('contact3', 'like', '%'.$searchContact.'%');
                 });
             }
             $payload = QueryBuilder::for($query)
@@ -227,6 +232,7 @@ class PosCustomerController extends ParentController
                     })
                 )
                 ->paginate(request('per_page', config('basic.pagination_per_page')));
+
             return CustomerResource::collection($payload);
         }
     }
@@ -248,14 +254,14 @@ class PosCustomerController extends ParentController
     /**
      * import
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function import(Request $request)
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $request->validate([
-                'customer_file' => 'required|mimes:xlsx'
+                'customer_file' => 'required|mimes:xlsx',
             ]);
 
             Excel::import(new CustomerImport, $request->file('customer_file'));
@@ -266,7 +272,7 @@ class PosCustomerController extends ParentController
 
             $response = [
                 'message' => $count_description,
-                'errors' => $errors
+                'errors' => $errors,
             ];
 
             return response()->json($response);
@@ -283,12 +289,13 @@ class PosCustomerController extends ParentController
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
             $file = public_path('sample_excel/customers.xlsx');
             $headers = ['Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
             // dd($file, $headers);
             return response()->download($file, 'customer.xlsx', $headers);
         }
     }
 
-    //send mail to customer
+    // send mail to customer
     public function sendCustomerOutstandingMail($customer_id, Request $request)
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
@@ -296,23 +303,23 @@ class PosCustomerController extends ParentController
                 $today = Carbon::now()->format('Y-m-d');
 
                 $credit_invoices = PosOrder::where('credit_status', 0)
-                ->where('total', '>', 0)
-                ->where('type', 1)
-                ->where('customer_id', $customer_id)
-                ->where('status', '<', 4)
-                ->whereNotIn('status', [3])
-                ->where(function ($query) use ($today) {
-                    $query->whereDate('due_date', $today)
-                          ->orWhereNull('due_date');
-                })
-                ->get();
+                    ->where('total', '>', 0)
+                    ->where('type', 1)
+                    ->where('customer_id', $customer_id)
+                    ->where('status', '<', 4)
+                    ->whereNotIn('status', [3])
+                    ->where(function ($query) use ($today) {
+                        $query->whereDate('due_date', $today)
+                            ->orWhereNull('due_date');
+                    })
+                    ->get();
 
                 $credit_bills = PosOrder::where('status', 1)
-                ->where('credit_status', 0)
-                ->where('is_return', 0)
-                ->where('type', 0)
-                ->where('customer_id',$customer_id)
-                ->get();
+                    ->where('credit_status', 0)
+                    ->where('is_return', 0)
+                    ->where('type', 0)
+                    ->where('customer_id', $customer_id)
+                    ->get();
 
                 if (count($credit_invoices) > 0 || count($credit_bills) > 0) {
                     $customer = Customer::find($customer_id);
@@ -333,7 +340,7 @@ class PosCustomerController extends ParentController
 
                     $image = $sender_details->image_url;
 
-                    if (!isset($sender_details->email)) {
+                    if (! isset($sender_details->email)) {
                         return response()->json(['message' => 'Check again your business email in settings section'], 500);
                     }
 
@@ -347,6 +354,7 @@ class PosCustomerController extends ParentController
                     $sendData['cc'] = $request->cc;
 
                     SendCustomerOutstandingMailJob::dispatch($sendData, $sendData['email'], $image);
+
                     return response()->json(['message' => 'email send successfully']);
                 } else {
                     return response()->json(['message' => 'No expiry outstanding balance found'], 500);

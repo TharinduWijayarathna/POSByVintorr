@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Currency;
 use App\Models\ExpenseCategory;
-use App\Models\Image;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;

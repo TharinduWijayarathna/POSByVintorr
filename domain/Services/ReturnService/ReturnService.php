@@ -15,40 +15,47 @@ use Illuminate\Support\Facades\Auth;
 class ReturnService
 {
     protected $pos_order;
+
     protected $pos_order_item;
+
     protected $product;
+
     protected $transaction;
+
     protected $customer;
+
     private $transaction_balance;
+
     private $currency;
 
     public function __construct()
     {
-        $this->pos_order = new PosOrder();
-        $this->pos_order_item = new PosOrderItem();
-        $this->product = new Product();
-        $this->transaction = new Transaction();
-        $this->customer = new Customer();
-        $this->transaction_balance = new TransactionBalance();
-        $this->currency = new Currency();
+        $this->pos_order = new PosOrder;
+        $this->pos_order_item = new PosOrderItem;
+        $this->product = new Product;
+        $this->transaction = new Transaction;
+        $this->customer = new Customer;
+        $this->transaction_balance = new TransactionBalance;
+        $this->currency = new Currency;
     }
 
     public function create()
     {
         $data['created_by'] = Auth::id();
         $data['is_return'] = 1;
-        $count = $this->pos_order->withTrashed()->where('code', 'like', "R%")->count();
+        $count = $this->pos_order->withTrashed()->where('code', 'like', 'R%')->count();
 
-        $code = 'R' . sprintf('%05d', $count + 1);
+        $code = 'R'.sprintf('%05d', $count + 1);
         $check = $this->pos_order->getCode($code);
 
         while ($check) {
             $count++;
-            $code = 'R' . sprintf('%05d',  $count);
+            $code = 'R'.sprintf('%05d', $count);
             $check = $this->pos_order->getCode($code);
         }
 
         $data['code'] = $code;
+
         return $this->pos_order->create($data);
     }
 
@@ -71,6 +78,7 @@ class ReturnService
     {
         return $this->pos_order->where('created_by', Auth::user()->id)->where('code', $order_code)->first();
     }
+
     public function get($order_code)
     {
         $order = $this->pos_order->where('created_by', Auth::user()->id)->where('code', $order_code)->first();
@@ -136,6 +144,7 @@ class ReturnService
             $order['customer_email'] = $customer->email;
         }
         $order->save();
+
         return $order;
     }
 
@@ -152,6 +161,7 @@ class ReturnService
             $order->customer_type = null;
             $order->save();
         }
+
         return $order;
     }
 
@@ -170,23 +180,23 @@ class ReturnService
         }
 
         $order->status = 4;
-        $order->total =  - ($request['order_total']);
-        $order->sub_total =  - ($request['order_total']);
-        $order->remark =  $request['remark'];
-        $order->date =  $today;
-        $order->created_by =  Auth::id();
+        $order->total = -($request['order_total']);
+        $order->sub_total = -($request['order_total']);
+        $order->remark = $request['remark'];
+        $order->date = $today;
+        $order->created_by = Auth::id();
         $order->currency_id = $currency_id;
 
         $order->save();
 
-        //transaction log
+        // transaction log
         $transaction_count = $this->transaction->count();
-        $tr_code = 'TR' . sprintf('%05d', $transaction_count + 1);
+        $tr_code = 'TR'.sprintf('%05d', $transaction_count + 1);
         $check_tr = $this->transaction->getCode($tr_code);
 
         while ($check_tr) {
             $transaction_count++;
-            $tr_code = 'TR' . sprintf('%05d',  $transaction_count);
+            $tr_code = 'TR'.sprintf('%05d', $transaction_count);
             $check_tr = $this->transaction->getCode($tr_code);
         }
 
@@ -201,13 +211,13 @@ class ReturnService
             if ($customer) {
                 $transaction_data['client'] = $customer->name;
             } else {
-                $transaction_data['client'] = "Customer not available";
+                $transaction_data['client'] = 'Customer not available';
             }
         }
         $transaction_data['currency_id'] = $order->currency_id;
         $transaction_data['amount'] = abs($order->total);
         $transaction_data['remark'] = $order->remark;
-        $transaction_data['description'] = "Return";
+        $transaction_data['description'] = 'Return';
         $transaction_data['sign'] = 0;
         $this->transaction->create($transaction_data);
 
@@ -222,7 +232,7 @@ class ReturnService
             $balance_data['amount'] = $order->total;
             $this->transaction_balance->create($balance_data);
         }
-        //end transaction log
+        // end transaction log
     }
 
     public function returnUpdate($request)
@@ -236,7 +246,7 @@ class ReturnService
             $currency_id = $business_details->currency_id;
         }
 
-        //transaction log
+        // transaction log
         $created_transaction = $this->transaction->where('reference_code', $order->code)->where('payment_code', $order->code)->first();
         if ($created_transaction) {
 
@@ -244,10 +254,10 @@ class ReturnService
             if (isset($order['customer_id'])) {
                 $customer = $this->customer->withTrashed()->find($order['customer_id']);
                 $created_transaction->customer_id = $order['customer_id'];
-                if($customer){
+                if ($customer) {
                     $created_transaction->client = $customer->name;
-                }else{
-                    $created_transaction->client = "Customer not available";
+                } else {
+                    $created_transaction->client = 'Customer not available';
                 }
 
             } else {
@@ -286,17 +296,18 @@ class ReturnService
             $created_transaction->save();
         }
 
-        $order->total =  - ($request['order_total']);
-        $order->sub_total =  - ($request['order_total']);
-        $order->remark =  $request['remark'];
+        $order->total = -($request['order_total']);
+        $order->sub_total = -($request['order_total']);
+        $order->remark = $request['remark'];
         $order->currency_id = $currency_id;
+
         return $order->save();
-        //end transaction log
+        // end transaction log
     }
 
     public function delete(int $order_id)
     {
-        //transaction log
+        // transaction log
         $order = $this->pos_order->find($order_id);
         $transaction = $this->transaction->where('reference_code', $order->code)->first();
 
@@ -313,6 +324,7 @@ class ReturnService
         }
 
         $transaction->delete();
+
         return $order->delete();
     }
 
@@ -322,7 +334,7 @@ class ReturnService
         $deleted_return->deleted_at = null;
         $deleted_return->save();
 
-        //transaction log
+        // transaction log
         $order = $this->pos_order->find($order_id);
         $deleted_transaction = $this->transaction->where('reference_code', $order->code)->withTrashed()->first();
         $deleted_transaction->deleted_at = null;
@@ -333,6 +345,7 @@ class ReturnService
             $transaction_balance->amount = $transaction_balance->amount - abs($order->sub_total);
             $transaction_balance->save();
         }
+
         return $order;
     }
 
@@ -340,13 +353,13 @@ class ReturnService
      * ResetPosOrderItem
      * remove pos order items belongs to that order_id
      *
-     * @param $order_id
      *
      * @return void
      */
-    public function removePosOrderItems($order_id){
+    public function removePosOrderItems($order_id)
+    {
 
-        return $this->pos_order_item->where('order_id',$order_id)->delete();
+        return $this->pos_order_item->where('order_id', $order_id)->delete();
 
     }
 
@@ -354,19 +367,19 @@ class ReturnService
      * ResetReturnDraft
      * reset draft pos order into default values
      *
-     * @param $order_id
-     * @param $user_id
      *
      * @return void
      */
-    public function resetReturnDraft($order_id, $user_id){
+    public function resetReturnDraft($order_id, $user_id)
+    {
         $order = $this->pos_order->find($order_id);
+
         return $order->update([
-            'id'=>$order->id,
+            'id' => $order->id,
             'created_by' => $user_id,
             'customer_type' => null,
             'customer_id' => null,
-            'code'=>$order->code,
+            'code' => $order->code,
             'status' => 0,
             'sub_total' => 0,
             'total' => 0,

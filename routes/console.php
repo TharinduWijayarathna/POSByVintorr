@@ -2,7 +2,6 @@
 
 use App\Models\PosOrderItem;
 use App\Models\Product;
-use domain\Facades\PosCustomerFacade\PosCustomerFacade;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 

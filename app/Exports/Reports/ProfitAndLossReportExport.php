@@ -3,20 +3,17 @@
 namespace App\Exports\Reports;
 
 use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProfitAndLossReportExport implements FromView, WithColumnWidths, WithColumnFormatting, WithEvents
+class ProfitAndLossReportExport implements FromView, WithColumnFormatting, WithColumnWidths, WithEvents
 {
-
     protected $data;
 
     public function view(): View
@@ -27,8 +24,10 @@ class ProfitAndLossReportExport implements FromView, WithColumnWidths, WithColum
     public function export($data)
     {
         $this->data = $data;
+
         return $this;
     }
+
     public function columnWidths(): array
     {
         return [
@@ -43,7 +42,6 @@ class ProfitAndLossReportExport implements FromView, WithColumnWidths, WithColum
             'B' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
         ];
     }
-
 
     public function styles(Worksheet $sheet)
     {

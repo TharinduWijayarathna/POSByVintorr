@@ -16,7 +16,7 @@ class CartItem extends Model
         'product_id',
         'quantity',
         'unit_price',
-        'total'
+        'total',
     ];
 
     protected $appends = [

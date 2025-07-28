@@ -2,13 +2,13 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ProductStockExport implements FromView, WithColumnWidths, WithStyles
 {
@@ -22,6 +22,7 @@ class ProductStockExport implements FromView, WithColumnWidths, WithStyles
     public function export($product)
     {
         $this->product = $product;
+
         return $this;
     }
 
@@ -54,20 +55,19 @@ class ProductStockExport implements FromView, WithColumnWidths, WithStyles
         ];
     }
 
-
     public function styles(Worksheet $sheet)
     {
         return [
-            1    => [
+            1 => [
                 'font' => ['bold' => true, 'size' => 16],
             ],
             // 2nd row
-            3    => [
+            3 => [
                 'font' => ['bold' => false, 'size' => 14],
                 'fill' => [
-                    'fillType'   => Fill::FILL_SOLID,
-                    'color' => array('rgb' => '92d050'),
-                ]
+                    'fillType' => Fill::FILL_SOLID,
+                    'color' => ['rgb' => '92d050'],
+                ],
             ],
 
             // specific ones

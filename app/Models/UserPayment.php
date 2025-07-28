@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 
 class UserPayment extends Model
 {
@@ -17,7 +17,7 @@ class UserPayment extends Model
         'no_of_month',
         'date',
         'expired_date',
-        'note'
+        'note',
     ];
 
     protected $appends = [

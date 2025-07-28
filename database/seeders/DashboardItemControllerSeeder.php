@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\DashboardItemController;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Seeder;
 
 class DashboardItemControllerSeeder extends Seeder
@@ -13,7 +11,7 @@ class DashboardItemControllerSeeder extends Seeder
 
     public function __construct()
     {
-        $this->dashboard_item_controller = new DashboardItemController();
+        $this->dashboard_item_controller = new DashboardItemController;
     }
 
     /**

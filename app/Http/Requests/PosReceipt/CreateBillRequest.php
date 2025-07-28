@@ -26,9 +26,10 @@ class CreateBillRequest extends FormRequest
             'remark' => ['nullable', 'string', 'max:80'],
         ];
     }
-    function messages()
+
+    public function messages()
     {
-        return[
+        return [
             'balance.required' => 'The amount is required',
             'balance.numeric' => 'The amount field must be a number',
             'balance.min' => 'The amount must be greater than 1',

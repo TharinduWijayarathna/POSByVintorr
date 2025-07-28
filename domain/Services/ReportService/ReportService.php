@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Storage;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class ReportService
 {
-
     /**
      * deleteOldReports
      *
@@ -36,6 +37,7 @@ class ReportService
                 Storage::delete($file);
             }
         }
+
         return 0;
     }
 }

@@ -4,7 +4,6 @@ namespace domain\Services\ProductService;
 
 use App\Models\PosOrderItem;
 use App\Models\Product;
-
 use App\Models\ProductCost;
 use App\Models\Stock;
 use App\Models\StockLog;
@@ -17,24 +16,28 @@ use Illuminate\Support\Facades\Auth;
 class ProductService
 {
     protected $product;
+
     protected $cost;
+
     protected $order_item;
+
     protected $stock;
+
     protected $stock_log;
+
     public function __construct()
     {
-        $this->product = new Product();
-        $this->cost = new ProductCost();
-        $this->order_item = new PosOrderItem();
-        $this->stock = new Stock();
-        $this->stock_log = new StockLog();
+        $this->product = new Product;
+        $this->cost = new ProductCost;
+        $this->order_item = new PosOrderItem;
+        $this->stock = new Stock;
+        $this->stock_log = new StockLog;
     }
-
 
     /**
      * store
      *
-     * @param  mixed $data
+     * @param  mixed  $data
      * @return void
      */
     public function store(array $data)
@@ -44,11 +47,11 @@ class ProductService
         if (isset($data['rol']) && $data['rol'] === null) {
             $data['rol'] = 0;
         }
-        if (isset($data["order_no"])) {
+        if (isset($data['order_no'])) {
             $product = $this->product->where('order_no', $data['order_no'])->first();
 
             if ($product) {
-                return "this priority number already exists";
+                return 'this priority number already exists';
             } else {
                 $data['created_by'] = Auth::user()->id;
 
@@ -58,12 +61,12 @@ class ProductService
 
                 $count = $this->product->withTrashed()->count();
 
-                $code = 'P' . sprintf('%05d', $count + 1);
+                $code = 'P'.sprintf('%05d', $count + 1);
                 $check = $this->product->withTrashed()->where('code', $code)->first();
 
                 while ($check) {
                     $count++;
-                    $code = 'P' . sprintf('%05d',  $count);
+                    $code = 'P'.sprintf('%05d', $count);
                     $check = $this->product->withTrashed()->where('code', $code)->first();
                 }
 
@@ -80,7 +83,7 @@ class ProductService
                 $stock_log_data['balance'] = $product_data->stock_quantity ?? 0;
                 $stock_log_data['cost'] = $product_data->cost ?? 0;
                 $stock_log_data['selling_price'] = $product_data->selling ?? 0;
-                $stock_log_data['reason'] = "Open balance";
+                $stock_log_data['reason'] = 'Open balance';
                 $stock_log_data['type'] = StockLog::TYPE['plus'];
                 $user = Auth::user();
                 $stock_log_data['created_by'] = $user->id;
@@ -101,12 +104,12 @@ class ProductService
 
             $count = $this->product->withTrashed()->count();
 
-            $code = 'P' . sprintf('%05d', $count + 1);
+            $code = 'P'.sprintf('%05d', $count + 1);
             $check = $this->product->withTrashed()->where('code', $code)->first();
 
             while ($check) {
                 $count++;
-                $code = 'P' . sprintf('%05d', $count);
+                $code = 'P'.sprintf('%05d', $count);
                 $check = $this->product->withTrashed()->where('code', $code)->first();
             }
 
@@ -123,7 +126,7 @@ class ProductService
             $stock_log_data['balance'] = $product_data->stock_quantity ?? 0;
             $stock_log_data['cost'] = $product_data->cost ?? 0;
             $stock_log_data['selling_price'] = $product_data->selling ?? 0;
-            $stock_log_data['reason'] = "Open balance";
+            $stock_log_data['reason'] = 'Open balance';
             $stock_log_data['type'] = StockLog::TYPE['plus'];
             $user = Auth::user();
             $stock_log_data['created_by'] = $user->id;
@@ -134,13 +137,14 @@ class ProductService
                 StockLogFacade::store($stock_log_data);
             }
         }
+
         return $product_data ? $product_data->id : null;
     }
 
     public function getNewCode()
     {
         $count = Product::where('status', 0)->withTrashed()->count();
-        //Uniqu product code generator
+        // Uniqu product code generator
         $code = sprintf('%05d', $count + 1);
         $check = Product::withTrashed()->where('code', $code)->first();
         while ($check) {
@@ -160,7 +164,7 @@ class ProductService
     /**
      * show
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function show($id)
@@ -171,7 +175,7 @@ class ProductService
     /**
      * get
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function get($id)
@@ -182,7 +186,7 @@ class ProductService
     /**
      * getWithDeleted
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function getWithDeleted($id)
@@ -203,11 +207,10 @@ class ProductService
     /**
      * update
      *
-     * @param  mixed $id
-     * @param  mixed $data
+     * @param  mixed  $id
+     * @param  mixed  $data
      * @return void
      */
-
     public function update($id, $data)
     {
         if (isset($data['order_no'])) {
@@ -215,7 +218,7 @@ class ProductService
 
             if ($product) {
                 if ($product->id != $id) {
-                    return "this priority number already exists";
+                    return 'this priority number already exists';
                 } else {
                     $data['updated_by'] = Auth::user()->id;
                     $product = $this->product->findOrFail($id);
@@ -228,7 +231,7 @@ class ProductService
                             $stock_log_data['balance'] = $product->stock_quantity ?? 0;
                             $stock_log_data['cost'] = $product->cost ?? 0;
                             $stock_log_data['selling_price'] = $product->selling ?? 0;
-                            $stock_log_data['reason'] = "Product changed to stockable";
+                            $stock_log_data['reason'] = 'Product changed to stockable';
                             $stock_log_data['type'] = StockLog::TYPE['plus'];
                             $user = Auth::user();
                             $stock_log_data['created_by'] = $user->id;
@@ -247,7 +250,7 @@ class ProductService
                             $stock_log_data['balance'] = 0;
                             $stock_log_data['cost'] = $product->cost ?? 0;
                             $stock_log_data['selling_price'] = $product->selling ?? 0;
-                            $stock_log_data['reason'] = "Product changed to non-stockable";
+                            $stock_log_data['reason'] = 'Product changed to non-stockable';
                             $stock_log_data['type'] = StockLog::TYPE['minus'];
                             $user = Auth::user();
                             $stock_log_data['created_by'] = $user->id;
@@ -271,7 +274,7 @@ class ProductService
                         $stock_log_data['balance'] = $product->stock_quantity ?? 0;
                         $stock_log_data['cost'] = $product->cost ?? 0;
                         $stock_log_data['selling_price'] = $product->selling ?? 0;
-                        $stock_log_data['reason'] = "Product changed to stockable";
+                        $stock_log_data['reason'] = 'Product changed to stockable';
                         $stock_log_data['type'] = StockLog::TYPE['plus'];
                         $user = Auth::user();
                         $stock_log_data['created_by'] = $user->id;
@@ -290,7 +293,7 @@ class ProductService
                         $stock_log_data['balance'] = 0;
                         $stock_log_data['cost'] = $product->cost ?? 0;
                         $stock_log_data['selling_price'] = $product->selling ?? 0;
-                        $stock_log_data['reason'] = "Product changed to non-stockable";
+                        $stock_log_data['reason'] = 'Product changed to non-stockable';
                         $stock_log_data['type'] = StockLog::TYPE['minus'];
                         $user = Auth::user();
                         $stock_log_data['created_by'] = $user->id;
@@ -315,7 +318,7 @@ class ProductService
                     $stock_log_data['balance'] = $product->stock_quantity ?? 0;
                     $stock_log_data['cost'] = $product->cost ?? 0;
                     $stock_log_data['selling_price'] = $product->selling ?? 0;
-                    $stock_log_data['reason'] = "Product changed to stockable";
+                    $stock_log_data['reason'] = 'Product changed to stockable';
                     $stock_log_data['type'] = StockLog::TYPE['plus'];
                     $user = Auth::user();
                     $stock_log_data['created_by'] = $user->id;
@@ -334,7 +337,7 @@ class ProductService
                     $stock_log_data['balance'] = 0;
                     $stock_log_data['cost'] = $product->cost ?? 0;
                     $stock_log_data['selling_price'] = $product->selling ?? 0;
-                    $stock_log_data['reason'] = "Product changed to non-stockable";
+                    $stock_log_data['reason'] = 'Product changed to non-stockable';
                     $stock_log_data['type'] = StockLog::TYPE['minus'];
                     $user = Auth::user();
                     $stock_log_data['created_by'] = $user->id;
@@ -373,11 +376,11 @@ class ProductService
         if ($data['transaction_type_id'] == 1) {
             $stock_log_data['type'] = StockLog::TYPE['plus'];
             $stock_log_data['transaction_type_id'] = StockLog::TRANSACTION_TYPE_ID['stock_in'];
-            $stock_log_data['reason'] = "Stock In";
+            $stock_log_data['reason'] = 'Stock In';
         } else {
             $stock_log_data['type'] = StockLog::TYPE['minus'];
             $stock_log_data['transaction_type_id'] = StockLog::TRANSACTION_TYPE_ID['stock_out'];
-            $stock_log_data['reason'] = "Stock Out";
+            $stock_log_data['reason'] = 'Stock Out';
         }
         $user = Auth::user();
         $stock_log_data['created_by'] = $user->id;
@@ -393,6 +396,7 @@ class ProductService
     {
         $product = $this->product->find($product_id);
         $product->image_id = null;
+
         return $product->save();
     }
 
@@ -400,7 +404,7 @@ class ProductService
      * Delete
      * delete specific data using pos_customer_id
      *
-     * @param  int   $pos_customer_id
+     * @param  int  $pos_customer_id
      * @return void
      */
     public function delete(int $product_id, int $order_id)
@@ -416,7 +420,7 @@ class ProductService
         $stock_log_data['balance'] = 0;
         $stock_log_data['cost'] = $product->cost ?? 0;
         $stock_log_data['selling_price'] = $product->selling ?? 0;
-        $stock_log_data['reason'] = "Product deleted";
+        $stock_log_data['reason'] = 'Product deleted';
         $stock_log_data['type'] = StockLog::TYPE['minus'];
         $user = Auth::user();
         $stock_log_data['created_by'] = $user->id;
@@ -452,19 +456,21 @@ class ProductService
     /**
      * destroy
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function destroy($id)
     {
         $product = $this->product->findOrFail($id);
         $product->costs()->delete();
+
         return $product->delete();
     }
 
     public function deleteCost($id)
     {
         $cost = $this->cost->findOrFail($id);
+
         return $cost->delete();
     }
 
@@ -476,7 +482,7 @@ class ProductService
     /**
      * status
      *
-     * @param  mixed $id
+     * @param  mixed  $id
      * @return void
      */
     public function status($id)
@@ -488,6 +494,7 @@ class ProductService
             $product->status = 0;
         }
         $product->update();
+
         return $product;
     }
 
@@ -504,13 +511,16 @@ class ProductService
     public function permanentDelete($id)
     {
         $product = $this->product->withTrashed()->findOrFail($id);
+
         return $product->forceDelete();
     }
+
     public function getLatestProduct()
     {
         $count = $this->product->count();
         if ($count > 0) {
             $product = $this->product->latest('id')->first(['id', 'name', 'selling', 'introduction']);
+
             return $product;
         } else {
         }
@@ -561,12 +571,14 @@ class ProductService
     public function getById($product_id)
     {
         $product = $this->product->getById($product_id);
+
         return $product;
     }
 
     public function getCount()
     {
         $count = $this->product->where('stock_quantity', '>', 0)->count();
+
         return $count;
     }
 
@@ -606,7 +618,7 @@ class ProductService
         $stock_log_data['balance'] = $deleted_product['stock_quantity'] ?? 0;
         $stock_log_data['cost'] = $deleted_product->cost ?? 0;
         $stock_log_data['selling_price'] = $deleted_product->selling ?? 0;
-        $stock_log_data['reason'] = "Restored deleted product";
+        $stock_log_data['reason'] = 'Restored deleted product';
         $stock_log_data['type'] = StockLog::TYPE['plus'];
         $user = Auth::user();
         $stock_log_data['created_by'] = $user->id;
@@ -650,9 +662,10 @@ class ProductService
             $products = $this->product->orderBy('name', 'asc')
                 ->where('product_type', $this->product::PRODUCT_TYPE['stockable'])
                 ->where(function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%')
-                        ->orWhere('code', 'like', '%' . $query . '%');
+                    $q->where('name', 'like', '%'.$query.'%')
+                        ->orWhere('code', 'like', '%'.$query.'%');
                 });
+
             return $products->get();
         } else {
             return [];
@@ -667,9 +680,10 @@ class ProductService
                 ->where('product_type', $this->product::PRODUCT_TYPE['stockable'])
                 ->where('visibility', $this->product::VISIBILITY['visible'])
                 ->where(function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%')
-                        ->orWhere('code', 'like', '%' . $query . '%');
+                    $q->where('name', 'like', '%'.$query.'%')
+                        ->orWhere('code', 'like', '%'.$query.'%');
                 });
+
             return $products->get();
         } else {
             return [];
@@ -682,9 +696,10 @@ class ProductService
         if ($query) {
             $products = $this->product->orderBy('name', 'asc')
                 ->where(function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%')
-                        ->orWhere('code', 'like', '%' . $query . '%');
+                    $q->where('name', 'like', '%'.$query.'%')
+                        ->orWhere('code', 'like', '%'.$query.'%');
                 });
+
             return $products->get();
         } else {
             return [];
@@ -698,9 +713,10 @@ class ProductService
             $products = $this->product->orderBy('name', 'asc')
                 ->where('visibility', $this->product::VISIBILITY['visible'])
                 ->where(function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%')
-                        ->orWhere('code', 'like', '%' . $query . '%');
+                    $q->where('name', 'like', '%'.$query.'%')
+                        ->orWhere('code', 'like', '%'.$query.'%');
                 });
+
             return $products->get();
         } else {
             return [];

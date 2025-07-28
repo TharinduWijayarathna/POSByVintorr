@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\PosCustomer;
+use Illuminate\Database\Seeder;
 
 class PosCustomerSeeder extends Seeder
 {

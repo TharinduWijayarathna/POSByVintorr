@@ -10,13 +10,16 @@ use Illuminate\Support\Facades\Auth;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosSavedOrderService
 {
     private $pos_order;
+
     /**
      * __construct
      *
@@ -24,7 +27,7 @@ class PosSavedOrderService
      */
     public function __construct()
     {
-        $this->pos_order = new PosOrder();
+        $this->pos_order = new PosOrder;
     }
 
     /**
@@ -37,6 +40,4 @@ class PosSavedOrderService
     {
         return $this->pos_order->where('created_by', Auth::user()->id)->where('status', 2)->orderBy('id', 'desc')->get();
     }
-
-
 }

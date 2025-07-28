@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\TimeZone;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class TimeZoneSeeder extends Seeder
 {
@@ -442,11 +441,10 @@ class TimeZoneSeeder extends Seeder
 
         foreach ($timeZones as $timezone) {
             $check = TimeZone::where('name', $timezone['name'])->first();
-            if (!$check) {
+            if (! $check) {
                 TimeZone::create($timezone);
             }
         }
-
 
     }
 }

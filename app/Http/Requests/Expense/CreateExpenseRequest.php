@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Expense;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateExpenseRequest extends FormRequest
@@ -27,7 +26,7 @@ class CreateExpenseRequest extends FormRequest
         return [
             'expense_category_id' => ['required', 'numeric'],
             'supplier_id' => ['nullable', 'numeric'],
-            'date' => ['required','date'],
+            'date' => ['required', 'date'],
             'description' => ['nullable', 'string', 'max:500'],
             'currency_id' => ['required', 'numeric'],
             'amount' => ['required', 'numeric', 'min:1', 'max:100000000000'],
@@ -35,7 +34,8 @@ class CreateExpenseRequest extends FormRequest
             'remark' => ['nullable', 'string', 'max:80'],
         ];
     }
-    function messages()
+
+    public function messages()
     {
         return [
             'expense_category_id.required' => 'Expense category is required',

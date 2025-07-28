@@ -10,13 +10,16 @@ use Illuminate\Support\Facades\DB;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class ProductSalesService
 {
     private $pos_order_item;
+
     /**
      * __construct
      *
@@ -24,13 +27,13 @@ class ProductSalesService
      */
     public function __construct()
     {
-        $this->pos_order_item = new PosOrderItem();
+        $this->pos_order_item = new PosOrderItem;
     }
 
     /**
      * getOrderItems
      *
-     * @param  mixed $pos_order_ids
+     * @param  mixed  $pos_order_ids
      * @return void
      */
     public function getOrderItems($pos_order_ids)

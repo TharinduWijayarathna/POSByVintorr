@@ -7,8 +7,8 @@ use App\Models\BusinessDetail;
 use domain\Facades\ProfitAndLossReportFacade\ProfitAndLossReportFacade;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use PDF;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class ProfitAndLossReportController extends Controller
 {
@@ -22,11 +22,10 @@ class ProfitAndLossReportController extends Controller
         return Inertia::render('Reports/ProfitAndLoss/index');
     }
 
-
     /**
      * all
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function all(Request $request)
@@ -34,7 +33,7 @@ class ProfitAndLossReportController extends Controller
         // Check if any filters are set
         $filtersSet = $request->has('search_data_currency') || $request->has('search_data_from_date');
 
-        if (!$filtersSet) {
+        if (! $filtersSet) {
             // Return an appropriate response if no filters are set
             return response()->json([
                 'sales_on_cash' => '0',
@@ -45,7 +44,7 @@ class ProfitAndLossReportController extends Controller
                 'payroll' => '0',
                 'otherExpenses' => '0',
                 'profit' => '0',
-                'profit_percentage' => '0'
+                'profit_percentage' => '0',
             ]);
         }
 
@@ -59,10 +58,9 @@ class ProfitAndLossReportController extends Controller
     /**
      * print
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
-
     public function print(Request $request)
     {
 
@@ -102,14 +100,14 @@ class ProfitAndLossReportController extends Controller
 
         // Generate the PDF
         $pdf = PDF::loadView('print.pages.Reports.ProfitAndLossReport.report', $data);
-        return $pdf->stream("ProfitAndLossReport.pdf", ["Attachment" => false]);
-    }
 
+        return $pdf->stream('ProfitAndLossReport.pdf', ['Attachment' => false]);
+    }
 
     /**
      * export
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function export(Request $request)
@@ -145,13 +143,13 @@ class ProfitAndLossReportController extends Controller
         ];
 
         // Generate the Excel and store it in the storage then return the path
-        $fileName = 'ProfitAndLossReport-' . date('Y-m-d') . '-' . time() . '.xlsx';
-        $filePath = 'exports/Reports/' . $fileName;
-        $profit_and_loss_export = new ProfitAndLossReportExport();
+        $fileName = 'ProfitAndLossReport-'.date('Y-m-d').'-'.time().'.xlsx';
+        $filePath = 'exports/Reports/'.$fileName;
+        $profit_and_loss_export = new ProfitAndLossReportExport;
         Excel::store($profit_and_loss_export->export($data), $filePath, 'public');
 
         // Generate the URL to the stored file
-        $path = asset('storage/' . $filePath);
+        $path = asset('storage/'.$filePath);
 
         return response()->json(['path' => $path]);
     }

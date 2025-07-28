@@ -11,21 +11,21 @@ use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class ProductsImport implements ToCollection, SkipsOnError
+class ProductsImport implements SkipsOnError, ToCollection
 {
     use SkipsErrors;
 
     private $product;
-    private $expectedColumns = ['Name', 'Stock', 'ROL', 'Product Cost', 'Selling Price']; // Define expected columns
 
+    private $expectedColumns = ['Name', 'Stock', 'ROL', 'Product Cost', 'Selling Price']; // Define expected columns
 
     public function __construct()
     {
-        $this->product = new Product();
+        $this->product = new Product;
     }
 
     /**
-     * @param Collection $collection
+     * @param  Collection  $collection
      */
     public function collection(Collection $rows)
     {
@@ -34,8 +34,9 @@ class ProductsImport implements ToCollection, SkipsOnError
 
         // Check if the file has data
         if ($rows->isEmpty()) {
-            $errors[] = "Invalid Data Format: The file is empty.";
+            $errors[] = 'Invalid Data Format: The file is empty.';
             Session::flash('import_errors', $errors);
+
             return;
         }
 
@@ -43,9 +44,10 @@ class ProductsImport implements ToCollection, SkipsOnError
         $headerRow = $rows->first()->toArray();
 
         // Check if the header matches the expected columns
-        if (!$this->validateHeader($headerRow)) {
-            $errors[] = "Invalid Data Format: The file does not match the expected columns.";
+        if (! $this->validateHeader($headerRow)) {
+            $errors[] = 'Invalid Data Format: The file does not match the expected columns.';
             Session::flash('import_errors', $errors);
+
             return;
         }
 
@@ -58,26 +60,27 @@ class ProductsImport implements ToCollection, SkipsOnError
 
                 // Skip empty rows
                 if ($row->filter()->isEmpty()) {
-                    $errors[] = "Row " . ($key + 1) . ": Rows can't be empty.";
+                    $errors[] = 'Row '.($key + 1).": Rows can't be empty.";
+
                     continue;
                 }
-                if (!isset($row[0])) {
-                    $errors[] = "Row " . ($key + 1) . ": Product name is required.";
+                if (! isset($row[0])) {
+                    $errors[] = 'Row '.($key + 1).': Product name is required.';
                 }
-                if (!isset($row[4])) {
-                    $errors[] = "Row " . ($key + 1) . ": Selling price is required.";
+                if (! isset($row[4])) {
+                    $errors[] = 'Row '.($key + 1).': Selling price is required.';
                 }
 
                 $product = Product::where('name', $row[0])
-                ->where('selling', $row[4])
+                    ->where('selling', $row[4])
                     ->first();
 
                 if (isset($row[0]) && isset($row[4])) {
 
-                    $code = 'P' . sprintf('%05d', $base_count + 1);
+                    $code = 'P'.sprintf('%05d', $base_count + 1);
                     do {
                         $base_count++;
-                        $code = 'P' . sprintf('%05d', $base_count);
+                        $code = 'P'.sprintf('%05d', $base_count);
                         $code_exists = $this->product->withTrashed()->where('code', $code)->exists();
                     } while ($code_exists);
 
@@ -93,10 +96,11 @@ class ProductsImport implements ToCollection, SkipsOnError
                     ];
 
                     // Validate the data
-                    $validator = Validator::make($product, (new CreateProductRequest())->rules());
+                    $validator = Validator::make($product, (new CreateProductRequest)->rules());
 
                     if ($validator->fails()) {
-                        $errors[] = "Row " . ($key + 1) . ": " . implode(", ", $validator->errors()->all());
+                        $errors[] = 'Row '.($key + 1).': '.implode(', ', $validator->errors()->all());
+
                         continue;
                     }
 
@@ -106,24 +110,20 @@ class ProductsImport implements ToCollection, SkipsOnError
             }
         }
         if ($count_row > 0) {
-            Session::flash('imported', $count_row . " rows imported successfully.");
+            Session::flash('imported', $count_row.' rows imported successfully.');
         } else {
-            Session::flash('imported', "No data was imported.");
+            Session::flash('imported', 'No data was imported.');
         }
         Session::flash('import_errors', $errors);
     }
 
-
     /**
      * Validate the header row against the expected columns.
-     *
-     * @param array $headerRow
-     * @return bool
      */
     private function validateHeader(array $headerRow): bool
     {
         // Remove any null or empty values from the header row
-        $cleanedHeaderRow = array_filter($headerRow, fn ($value) => !is_null($value) && $value !== '');
+        $cleanedHeaderRow = array_filter($headerRow, fn ($value) => ! is_null($value) && $value !== '');
 
         // Compare the cleaned header row with the expected columns
         return $cleanedHeaderRow === $this->expectedColumns;

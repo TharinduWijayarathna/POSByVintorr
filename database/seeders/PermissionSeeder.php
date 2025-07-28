@@ -2,20 +2,18 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class PermissionSeeder extends Seeder
 {
-
     protected $permission;
     // protected $db;
 
     public function __construct(DatabaseManager $db)
     {
-        $this->permission = new Permission();
+        $this->permission = new Permission;
         // $this->db = $db;
     }
 
@@ -56,7 +54,7 @@ class PermissionSeeder extends Seeder
 
         foreach ($permissions as $permission) {
             $old_permission = $this->permission->where('name', $permission['name'])->first();
-            if (!$old_permission) {
+            if (! $old_permission) {
                 $this->permission->create($permission);
             }
         }

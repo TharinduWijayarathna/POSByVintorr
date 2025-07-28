@@ -10,23 +10,23 @@ use Illuminate\Support\Facades\Hash;
 class UserService
 {
     protected $users;
+
     protected $customer;
+
     protected $demo_request;
 
     protected $user_feedback;
 
     public function __construct()
     {
-        $this->users = new User();
-        $this->customer = new Customer();
+        $this->users = new User;
+        $this->customer = new Customer;
     }
-
 
     /**
      * Get
      * retrieve relevant data using user_id
      *
-     * @param  int  $user_id
      * @return void
      */
     public function get(int $user_id)
@@ -77,7 +77,6 @@ class UserService
     /**
      * find
      *
-     * @param  int $user_id
      * @return void
      */
     public function find(int $user_id)
@@ -89,8 +88,8 @@ class UserService
      * Update
      * update existing data using user_id
      *
-     * @param  array $data
-     * @param  int   $user_id
+     * @param  array  $data
+     * @param  int  $user_id
      * @return void
      */
     public function update($data, $user_id)
@@ -104,17 +103,20 @@ class UserService
             if ($data['user_role_id'] != 1) {
                 $data['user_role_id'] = 1;
                 $user->update($this->edit($user, $data));
-                return "The admin who is logged into the system cannot change hir user role.";
+
+                return 'The admin who is logged into the system cannot change hir user role.';
             } else {
                 $user->update($this->edit($user, $data));
-                return "success";
+
+                return 'success';
             }
         } else {
             if (isset($data['password'])) {
                 $data['password'] = bcrypt($data['password']);
             }
             $user->update($this->edit($user, $data));
-            return "success";
+
+            return 'success';
         }
     }
 
@@ -128,15 +130,15 @@ class UserService
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->save();
-        return "success";
+
+        return 'success';
     }
 
     /**
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  selyn $user
-     * @param  array    $data
+     * @param  selyn  $user
      * @return void
      */
     protected function edit(User $user, array $data)
@@ -147,7 +149,6 @@ class UserService
     /**
      * make
      *
-     * @param  array $data
      * @return void
      */
     public function store(array $data)
@@ -162,11 +163,9 @@ class UserService
         return $user;
     }
 
-
     /**
      * update Password
      *
-     * @param  array $data
      * @return void
      */
     public function updatePassword(array $data, int $user_id)
@@ -174,13 +173,13 @@ class UserService
         $user = $this->users->withTrashed()->find($user_id);
         // $user = $this->users->find($user_id);
         $user->password = bcrypt($data['password']);
+
         return $user->update();
     }
 
     /**
      * delete
      *
-     * @param  int $user_id
      * @return void
      */
     public function delete(int $user_id)
@@ -188,17 +187,17 @@ class UserService
         $users = $this->users->find($user_id);
         $admin_count = User::where('user_role_id', '1')->count();
         if ($admin_count == 1 && $users->user_role_id == 1) {
-            return "Last admin can not delete";
+            return 'Last admin can not delete';
         } else {
             $users->delete();
-            return "success";
+
+            return 'success';
         }
     }
 
     /**
      * restore
      *
-     * @param  int $user_id
      * @return void
      */
     public function restore(int $user_id)
@@ -211,8 +210,6 @@ class UserService
      * SendUserFeedback
      * send user feedback to admin end
      *
-     * @param int $user_id
-     * @param array $data
      *
      * @return void
      */
@@ -221,11 +218,10 @@ class UserService
         $user = $this->users->find($user_id);
         $data['user_id'] = $user_id;
         $data['user_name'] = $user->name;
-        if(isset($user->email)){
+        if (isset($user->email)) {
             $data['user_email'] = $user->email;
         }
+
         return $this->user_feedback->create($data);
     }
-
-
 }

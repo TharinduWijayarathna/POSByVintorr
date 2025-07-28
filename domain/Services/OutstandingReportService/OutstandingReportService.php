@@ -9,28 +9,29 @@ use Carbon\Carbon;
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class OutstandingReportService
 {
-
     /**
      * calculateAgesAndTotals
      *
-     * @param  mixed $orders
+     * @param  mixed  $orders
      * @return void
      */
     public function calculateAgesAndTotals($orders)
     {
         // Calculate age and totals for each order
         foreach ($orders as $order) {
-            if (!$order->date) {
+            if (! $order->date) {
                 // If date is not set, use created_at
                 $order->date = Carbon::parse($order->created_at)->format('Y-m-d');
             }
-            if (!$order->due_date) {
+            if (! $order->due_date) {
                 // If due date is not set, use date
                 $order->due_date = $order->date;
             }
@@ -42,11 +43,10 @@ class OutstandingReportService
         return $orders;
     }
 
-
     /**
      * calculateAge
      *
-     * @param  mixed $order
+     * @param  mixed  $order
      * @return void
      */
     private function calculateAge($order)
@@ -77,7 +77,7 @@ class OutstandingReportService
     /**
      * calculateTotals
      *
-     * @param  mixed $orders
+     * @param  mixed  $orders
      * @return void
      */
     public function calculateTotals($orders)
@@ -120,7 +120,7 @@ class OutstandingReportService
             }
 
             // Calculate outstanding total
-            $totals['outstanding_total'] += $order['total'] - $order['customer_paid'] ;
+            $totals['outstanding_total'] += $order['total'] - $order['customer_paid'];
         }
 
         return $totals;

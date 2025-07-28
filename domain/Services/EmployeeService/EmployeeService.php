@@ -4,30 +4,32 @@ namespace domain\Services\EmployeeService;
 
 use App\Models\BillPayment;
 use App\Models\Configuration;
-use App\Models\Customer;
 use App\Models\PosCustomer;
 use App\Models\Supplier;
-use domain\Facades\PosCustomerFacade\PosCustomerFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Psy\Readline\Hoa\Console;
 
 /**
  * EmployeeService
  * php version 8
  *
  * @category Service
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class EmployeeService
 {
     protected $employee;
+
     protected $pos_customer;
+
     protected $pos_cashier;
+
     protected $bill_payment;
+
     /**
      * __construct
      *
@@ -35,10 +37,10 @@ class EmployeeService
      */
     public function __construct()
     {
-        $this->employee = new Supplier();
-        $this->pos_customer = new PosCustomer();
-        $this->pos_cashier = new Configuration();
-        $this->bill_payment = new BillPayment();
+        $this->employee = new Supplier;
+        $this->pos_customer = new PosCustomer;
+        $this->pos_cashier = new Configuration;
+        $this->bill_payment = new BillPayment;
     }
 
     /**
@@ -49,21 +51,23 @@ class EmployeeService
      */
     public function all()
     {
-        return  $this->pos_customer->all();
+        return $this->pos_customer->all();
     }
 
     public function multiselectEmployees()
     {
-        return  $this->employee->orderBy('name', 'asc')->where('type', 1)->get();
+        return $this->employee->orderBy('name', 'asc')->where('type', 1)->get();
     }
 
     public function multiselectEmployeesSearch(Request $request)
     {
         $query = $request->input('query');
         if ($query) {
-            $employees = $this->employee->where('type', 1)->orderBy('name', 'asc')->where('name', 'like', '%' . $query . '%');
+            $employees = $this->employee->where('type', 1)->orderBy('name', 'asc')->where('name', 'like', '%'.$query.'%');
+
             return $employees->get();
         }
+
         return [];  // Return an empty array if no query
     }
 
@@ -86,9 +90,10 @@ class EmployeeService
             ->first();
 
         if ($employee != null) {
-            return "This contact number already registered";
+            return 'This contact number already registered';
         } elseif ($employee == null) {
             $createdEmployee = $this->employee->create($data);
+
             return $createdEmployee;
         }
     }
@@ -97,7 +102,6 @@ class EmployeeService
      * Get
      * retrieve relevant data using pos_employee_id
      *
-     * @param  int  $pos_employee_id
      * @return void
      */
     public function get(int $pos_employee_id)
@@ -109,13 +113,13 @@ class EmployeeService
      * Update
      * update existing data using pos_employee_id
      *
-     * @param  array $data
-     * @param  int   $pos_employee_id
+     * @param  int  $pos_employee_id
      * @return void
      */
     public function update(array $data, int $employee_id)
     {
         $employee = $this->employee->find($employee_id);
+
         return $employee->update($this->edit($employee, $data));
     }
 
@@ -123,8 +127,7 @@ class EmployeeService
      * Edit
      * merge data which retrieved from update function as an array
      *
-     * @param  PosCustomer $pos_customer
-     * @param  array $data
+     * @param  PosCustomer  $pos_customer
      * @return void
      */
     protected function edit(Supplier $employee, array $data)
@@ -136,7 +139,7 @@ class EmployeeService
      * Delete
      * delete specific data using pos_employee_id
      *
-     * @param  int   $pos_employee_id
+     * @param  int  $pos_employee_id
      * @return void
      */
     public function delete(int $employee_id)
@@ -162,6 +165,7 @@ class EmployeeService
     {
         $deleted_employee = $this->employee->withTrashed()->find($employee_id);
         $deleted_employee->deleted_at = null;
+
         return $deleted_employee->save();
     }
 }

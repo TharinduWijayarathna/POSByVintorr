@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
             $table->string('receipt_no')->nullable();
-            $table->decimal('amount',12,2)->nullable();
+            $table->decimal('amount', 12, 2)->nullable();
             $table->date('date')->nullable();
             $table->integer('status')->default(0);
             $table->integer('type')->nullable();

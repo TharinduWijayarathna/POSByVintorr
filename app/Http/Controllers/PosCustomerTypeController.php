@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\CustomerType;
 
 /**
@@ -10,8 +9,10 @@ use App\Models\CustomerType;
  * php version 8
  *
  * @category Controller
+ *
  * @author   EmergentSpark <contact@emergentspark.com>
  * @license  https://emergentspark.com Config
+ *
  * @link     https://emergentspark.com
  * */
 class PosCustomerTypeController extends ParentController
@@ -31,11 +32,11 @@ class PosCustomerTypeController extends ParentController
      * get
      * Get single customer type by slug
      *
-     * @param  mixed $slug
+     * @param  mixed  $slug
      * @return void
      */
     public function get(string $slug)
     {
-        return CustomerType::where('slug',$slug)->first();;
+        return CustomerType::where('slug', $slug)->first();
     }
 }
