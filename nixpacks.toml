@@ -40,10 +40,7 @@ cmds = [
     "php artisan config:cache || true",
     "php artisan view:cache || true",
 
-    # Run migrations (only if not in production or with force flag)
-    "php artisan migrate --force",
-
-    # Clear caches after migration
+    # Clear caches
     "php artisan cache:clear",
     "php artisan config:clear",
     "php artisan view:clear"
@@ -61,6 +58,9 @@ set -e
 
 # Wait for database to be ready (if needed)
 # sleep 10
+
+# Run migrations at runtime
+php /app/artisan migrate --force || echo "Migration failed, continuing..."
 
 # Transform the nginx configuration
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /etc/nginx.conf
