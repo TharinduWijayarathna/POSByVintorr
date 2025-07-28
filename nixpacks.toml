@@ -1,14 +1,21 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "python311Packages.supervisor", "php82Extensions.redis", "nginx"]
+nixPkgs = ["nodejs_20", "python311Packages.supervisor", "php82Extensions.redis", "nginx", "composer"]
+
+cmds = [
+    "cd /app"
+]
 
 [phases.install]
 cmds = [
-    "composer install --no-dev --optimize-autoloader",
-    "npm ci --only=production"
+    "composer install --no-dev --optimize-autoloader --no-interaction",
+    "npm ci --only=production --no-audit"
 ]
 
 [phases.build]
 cmds = [
+    # Ensure we're in the app directory
+    "cd /app",
+
     # Create required directories
     "mkdir -p /var/log /app/storage/framework/{views,cache,sessions} /app/bootstrap/cache /etc/supervisor/conf.d",
 
@@ -23,6 +30,9 @@ cmds = [
 
 [phases.postbuild]
 cmds = [
+    # Ensure we're in the app directory
+    "cd /app",
+
     # Build frontend assets
     "npm run build",
 
