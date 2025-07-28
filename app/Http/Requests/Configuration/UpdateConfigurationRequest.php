@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Http\Requests\Configuration;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateConfigurationRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'image' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg', 'max:5120'],
+            'bill_logo' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg', 'max:5120'],
+            'invoice_logo' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg', 'max:5120'],
+            'banner_image' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg', 'max:5120'],
+            'name' => ['required', 'string', 'max:120'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'mobile' =>  ['nullable'],
+            'email' =>  ['nullable', 'email', 'max:255'],
+            'currency_id' => ['required', 'numeric'],
+            'footer' => ['nullable', 'string', 'max:60'],
+            'color_code' => ['nullable'],
+            'account_api_key' => ['nullable'],
+        ];
+    }
+
+    function messages()
+    {
+        return [
+            'name.required' => "The business name is required.",
+            'currency_id.required' => "Currency is required.",
+            'image.image' => ' The logo image must be an image',
+            'image.max' => ' The logo image must be less than 5MB',
+            'image.mimes' => 'The logo image must be a valid image file of type: jpeg, png, jpg, gif, svg.',
+            'bill_logo.image' => ' The bill logo image must be an image',
+            'bill_logo.max' => ' The bill logo image must be less than 5MB',
+            'bill_logo.mimes' => 'The bill logo image must be a valid image file of type: jpeg, png, jpg, gif, svg.',
+            'invoice_logo.image' => ' The invoice logo image must be an image',
+            'invoice_logo.max' => ' The invoice logo image must be less than 5MB',
+            'invoice_logo.mimes' => 'The invoice logo image must be a valid image file of type: jpeg, png, jpg, gif, svg.',
+        ];
+    }
+}

@@ -1,0 +1,15 @@
+
+/* Icons */
+@import '../src/assets/css/bootstrap.min.css';
+@import '../src/assets/css/style.bundle.css';
+@import '../src/assets/plugins/global/plugins.bundle.css';
+@import '../src/assets/css/bootstrap-icons.css';
+@import 'https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css';
+
+
+@import url('./style.scss');
+
+
+/* @tailwind base; */
+/* @tailwind components; */
+@tailwind utilities;
