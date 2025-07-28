@@ -19,10 +19,7 @@ cmds = [
 cmds = [
     "npm run build",
     "php /app/artisan migrate --force",
-    "php /app/artisan sitemap:generate",
     "php /app/artisan cache:clear",
-    "php /app/artisan horizon:terminate",
-    "php /app/artisan reverb:restart"
 ]
 dependsOn = ["build"]
 
