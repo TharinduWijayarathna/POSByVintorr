@@ -1,24 +1,44 @@
 [phases.setup]
-nixPkgs = ["...", "python311Packages.supervisor", "php82Extensions.redis"]
+nixPkgs = ["nodejs_20", "python311Packages.supervisor", "php82Extensions.redis", "nginx"]
+
+[phases.install]
+cmds = [
+    "composer install --no-dev --optimize-autoloader",
+    "npm ci --only=production"
+]
 
 [phases.build]
 cmds = [
-    # Create required directories in one command
+    # Create required directories
     "mkdir -p /var/log /app/storage/framework/{views,cache,sessions} /app/bootstrap/cache /etc/supervisor/conf.d",
 
-    # Set permissions in a single command
+    # Set proper permissions
     "chown -R www-data:www-data /var/log /app/storage /app/bootstrap/cache",
+    "chmod -R 775 /app/storage /app/bootstrap/cache",
 
     # Copy and setup config files
-    "cp /assets/{worker-*.conf,supervisord.conf} /etc/supervisor/conf.d/ && chmod +x /assets/start.sh"
+    "cp /assets/{worker-*.conf,supervisord.conf} /etc/supervisor/conf.d/",
+    "chmod +x /assets/start.sh"
 ]
 
 [phases.postbuild]
 cmds = [
-    "php artisan migrate --force",
+    # Build frontend assets
     "npm run build",
-    "php artisan view:clear",
+
+    # Laravel optimizations
+    "php artisan config:cache",
+    "php artisan route:cache",
+    "php artisan view:cache",
+
+    # Run migrations (only if not in production or with force flag)
+    "php artisan migrate --force",
+
+    # Clear caches after migration
     "php artisan cache:clear",
+    "php artisan config:clear",
+    "php artisan route:clear",
+    "php artisan view:clear"
 ]
 
 dependsOn = ["build"]
@@ -29,12 +49,50 @@ cmd = '/assets/start.sh'
 [staticAssets]
 "start.sh" = '''
 #!/bin/bash
+set -e
+
+# Wait for database to be ready (if needed)
+# sleep 10
 
 # Transform the nginx configuration
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /etc/nginx.conf
 
 # Start supervisor
-supervisord -c /etc/supervisord.conf -n
+exec supervisord -c /etc/supervisord.conf -n
+'''
+
+"scripts/prestart.mjs" = '''
+import { readFileSync, writeFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const templatePath = process.argv[2];
+const outputPath = process.argv[3];
+
+if (!templatePath || !outputPath) {
+    console.error('Usage: node prestart.mjs <template> <output>');
+    process.exit(1);
+}
+
+try {
+    let template = readFileSync(templatePath, 'utf8');
+
+    // Replace environment variables
+    const port = process.env.PORT || '8080';
+    template = template.replace(/\$\{PORT\}/g, port);
+
+    // Replace nginx path variables
+    template = template.replace(/\$!\{nginx\}/g, '/nix/store/*/nginx');
+
+    writeFileSync(outputPath, template);
+    console.log(`Nginx configuration written to ${outputPath}`);
+} catch (error) {
+    console.error('Error processing nginx template:', error);
+    process.exit(1);
+}
 '''
 
 "supervisord.conf" = '''
@@ -65,7 +123,7 @@ files = /etc/supervisor/conf.d/*.conf
 "worker-nginx.conf" = '''
 [program:worker-nginx]
 process_name=%(program_name)s_%(process_num)02d
-command=nginx -c /etc/nginx.conf
+command=nginx -c /etc/nginx.conf -g "daemon off;"
 autostart=true
 autorestart=true
 stdout_logfile=/var/log/worker-nginx.log
@@ -85,12 +143,12 @@ stderr_logfile=/var/log/worker-phpfpm.log
 "worker-laravel.conf" = '''
 [program:worker-laravel]
 process_name=%(program_name)s_%(process_num)02d
-command=bash -c 'exec php /app/artisan queue:work --sleep=3 --tries=3 --max-time=3600'
+command=php /app/artisan queue:work --sleep=3 --tries=3 --max-time=3600
 autostart=true
 autorestart=true
 stopasgroup=true
 killasgroup=true
-numprocs=12
+numprocs=4
 startsecs=0
 stopwaitsecs=3600
 stdout_logfile=/var/log/worker-laravel.log
@@ -98,70 +156,150 @@ stderr_logfile=/var/log/worker-laravel.log
 '''
 
 "php-fpm.conf" = '''
+[global]
+error_log = /var/log/php-fpm.log
+daemonize = no
+
 [www]
 listen = 127.0.0.1:9000
 user = www-data
 group = www-data
 listen.owner = www-data
 listen.group = www-data
+listen.mode = 0660
+
 pm = dynamic
 pm.max_children = 50
 pm.min_spare_servers = 4
 pm.max_spare_servers = 32
 pm.start_servers = 18
+pm.max_requests = 500
+
 clear_env = no
+catch_workers_output = yes
+decorate_workers_output = no
+
+php_admin_value[error_log] = /var/log/php-fpm.log
+php_admin_flag[log_errors] = on
+php_admin_value[memory_limit] = 256M
+php_admin_value[max_execution_time] = 300
+php_admin_value[max_input_time] = 300
+php_admin_value[post_max_size] = 100M
+php_admin_value[upload_max_filesize] = 100M
 '''
 
 "nginx.template.conf" = '''
 user www-data www-data;
-worker_processes 5;
+worker_processes auto;
 daemon off;
 
 worker_rlimit_nofile 8192;
 
 events {
-  worker_connections  4096;  # Default: 1024
+    worker_connections 4096;
+    use epoll;
+    multi_accept on;
 }
 
 http {
-    include    $!{nginx}/conf/mime.types;
-    index    index.html index.htm index.php;
-
+    include $!{nginx}/conf/mime.types;
     default_type application/octet-stream;
-    log_format   main '$remote_addr - $remote_user [$time_local]  $status '
-        '"$request" $body_bytes_sent "$http_referer" '
-        '"$http_user_agent" "$http_x_forwarded_for"';
-    access_log /var/log/nginx-access.log;
-    error_log /var/log/nginx-error.log;
-    sendfile     on;
-    tcp_nopush   on;
-    server_names_hash_bucket_size 128; # this seems to be required for some vhosts
+
+    # Logging
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log /var/log/nginx-access.log main;
+    error_log /var/log/nginx-error.log warn;
+
+    # Performance
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    server_names_hash_bucket_size 128;
+
+    # Gzip
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/json
+        application/javascript
+        application/xml+rss
+        application/atom+xml
+        image/svg+xml;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
 
     server {
         listen ${PORT};
         listen [::]:${PORT};
-        server_name pos.vintorr.com;
+        server_name _;
 
         root /app/public;
-
-        index index.php;
+        index index.php index.html;
 
         charset utf-8;
 
+        # Health check endpoint
+        location /health {
+            try_files /health-check.php =404;
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_param SCRIPT_FILENAME $realpath_root/health-check.php;
+            include $!{nginx}/conf/fastcgi_params;
+            include $!{nginx}/conf/fastcgi.conf;
+            fastcgi_buffering off;
+        }
+
+        # Handle Laravel routes
         location / {
             try_files $uri $uri/ /index.php?$query_string;
         }
 
+        # Handle PHP files
         location ~ \.php$ {
             fastcgi_pass 127.0.0.1:9000;
             fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
             include $!{nginx}/conf/fastcgi_params;
             include $!{nginx}/conf/fastcgi.conf;
+
             fastcgi_buffering off;
             fastcgi_read_timeout 300;
+            fastcgi_connect_timeout 300;
+            fastcgi_send_timeout 300;
+
+            # Security
+            fastcgi_param HTTP_PROXY "";
         }
 
-        location ~ /\.(?!well-known).* {
+        # Handle static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+            try_files $uri =404;
+        }
+
+        # Deny access to hidden files
+        location ~ /\. {
+            deny all;
+        }
+
+        # Deny access to sensitive files
+        location ~* \.(env|log|sql|md|txt)$ {
             deny all;
         }
     }
