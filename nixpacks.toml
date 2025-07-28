@@ -18,8 +18,7 @@ cmds = [
 [phases.postbuild]
 cmds = [
     "npm run build",
-    "php /app/artisan migrate:fresh || php /app/artisan migrate",
-    "php /app/artisan db:seed",
+    "php /app/artisan migrate",
     "php /app/artisan cache:clear",
 ]
 dependsOn = ["build"]
