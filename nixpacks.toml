@@ -1,8 +1,9 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "python311Packages.supervisor", "php82Extensions.redis", "nginx", "composer"]
+nixPkgs = ["nodejs_20", "python311Packages.supervisor", "php82Extensions.redis", "nginx", "php82", "curl"]
 
 cmds = [
-    "cd /app"
+    "cd /app",
+    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.6.5"
 ]
 
 [phases.install]
