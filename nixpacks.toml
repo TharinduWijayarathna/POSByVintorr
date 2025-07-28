@@ -32,15 +32,15 @@ cmd = '/assets/start.sh'
 # Transform the nginx configuration
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /etc/nginx.conf
 
-# Set APP_URL to HTTPS if not already set
-if [ -z "$APP_URL" ] || [[ "$APP_URL" == http://* ]]; then
+# Set APP_URL to HTTPS in production if not already set
+if [ "$APP_ENV" = "production" ] && ([ -z "$APP_URL" ] || [[ "$APP_URL" == http://* ]]); then
     export APP_URL="https://pos.vintorr.com"
 fi
 
 # Run migrations if database is available
 php /app/artisan migrate --force
 
-# Clear and cache config to ensure HTTPS is used
+# Clear and cache config
 php /app/artisan config:clear
 php /app/artisan config:cache
 

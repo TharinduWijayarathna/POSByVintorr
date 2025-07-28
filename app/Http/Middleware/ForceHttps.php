@@ -16,12 +16,15 @@ class ForceHttps
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Force HTTPS for all URLs
-        URL::forceScheme('https');
+        // Only force HTTPS in production environment
+        if (app()->environment() === 'production') {
+            // Force HTTPS for all URLs
+            URL::forceScheme('https');
 
-        // Redirect HTTP to HTTPS
-        if (!$request->secure() && app()->environment() === 'production') {
-            return redirect()->secure($request->getRequestUri());
+            // Redirect HTTP to HTTPS
+            if (!$request->secure()) {
+                return redirect()->secure($request->getRequestUri());
+            }
         }
 
         return $next($request);
