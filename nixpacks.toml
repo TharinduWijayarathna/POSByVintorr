@@ -2,12 +2,14 @@
 nixPkgs = ["nodejs_20", "python311Packages.supervisor", "php82Extensions.redis", "nginx", "php82", "curl"]
 
 cmds = [
-    "cd /app",
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.6.5"
+    "cd /app"
 ]
 
 [phases.install]
 cmds = [
+    "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\"",
+    "php composer-setup.php --install-dir=/usr/local/bin --filename=composer",
+    "php -r \"unlink('composer-setup.php');\"",
     "composer install --no-dev --optimize-autoloader --no-interaction",
     "npm ci --only=production --no-audit"
 ]
