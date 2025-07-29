@@ -47,7 +47,8 @@
             </th>
             <th class="logo-area" width="{{ $image_col_percentage }}%" align="right" style="vertical-align: top;">
                 @if ($config->invoice_logo_url)
-                    <img src="{{ $config->invoice_logo_url }}" alt="POSByVintorr" class="brand-logo me-2"
+                    <img src="{{ base64_encode(file_get_contents($config->invoice_logo_url)) }}" alt="POSByVintorr"
+                        class="brand-logo me-2"
                         style="width: 100%;">
                 @else
                     <img src="logo/logo.webp" alt="POSByVintorr" class="brand-logo me-2" style="width: 100%;">
