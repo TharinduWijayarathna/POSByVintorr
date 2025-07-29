@@ -8,20 +8,20 @@
         </script>
 
     @php
-    // Example aspect ratio (width/height)
-    $aspect_ratio = $config->invoice_logo_ratio ?? 1;
+        // Example aspect ratio (width/height)
+        $aspect_ratio = $config->invoice_logo_ratio ?? 1;
 
-    $image_col_percentage = 20;
+        $image_col_percentage = 20;
 
-    if ($aspect_ratio >= 4) {
-    $image_col_percentage = 35;
-    } elseif ($aspect_ratio >= 3) {
-    $image_col_percentage = 30;
-    } elseif ($aspect_ratio >= 2) {
-    $image_col_percentage = 25;
-    }
+        if ($aspect_ratio >= 4) {
+            $image_col_percentage = 35;
+        } elseif ($aspect_ratio >= 3) {
+            $image_col_percentage = 30;
+        } elseif ($aspect_ratio >= 2) {
+            $image_col_percentage = 25;
+        }
 
-    $text_col_percentage = 100 - $image_col_percentage;
+        $text_col_percentage = 100 - $image_col_percentage;
     @endphp
 
 
@@ -31,32 +31,27 @@
                 <div class="company_data">
                     <div class="text-head text-end" style="margin-bottom: 0px;padding-bottom:0px;">
                         @isset($config->name)
-                        <b>{{ $config->name }}</b>
+                            <b>{{ $config->name }}</b>
                         @endisset
                     </div>
                     @isset($config->address)
-                    <div style="margin-bottom: 3px;margin-top: 3px;">{{ $config->address }}</div>
+                        <div style="margin-bottom: 3px;margin-top: 3px;">{{ $config->address }}</div>
                     @endisset
                     @isset($config->email)
-                    <div style="margin-bottom: 3px;margin-top: 3px;">{{ $config->email }}</div>
+                        <div style="margin-bottom: 3px;margin-top: 3px;">{{ $config->email }}</div>
                     @endisset
                     @isset($config->mobile)
-                    <div style="margin-bottom: 3px;margin-top: 3px;">{{ $config->mobile }}</div>
+                        <div style="margin-bottom: 3px;margin-top: 3px;">{{ $config->mobile }}</div>
                     @endisset
                 </div>
             </th>
             <th class="logo-area" width="{{ $image_col_percentage }}%" align="right" style="vertical-align: top;">
-                {{-- @if ($config->invoice_logo_url) --}}
-               {{--   <img src="{{ $config->invoice_logo_url }}" alt="POSByVintorr" class="brand-logo me-2" style="width: 100%;"> --}}
-                {{-- <img src="data:image/png;base64,{{ base64_encode(file_get_contents($config->invoice_logo_url)) }}"
-                  class="brand-logo me-2" style="width: 100%">
+                @if ($config->invoice_logo_url)
+                    <img src="{{ $config->invoice_logo_url }}" alt="POSByVintorr" class="brand-logo me-2"
+                        style="width: 100%;">
                 @else
-                <img src="logo/logo.webp" alt="POSByVintorr" class="brand-logo me-2" style="width: 100%;">
-                @endif --}}
-                {{-- company logo --}}
-                {{-- <img src="logo/logo.png" alt="POSByVintorr" class="brand-logo me-2" style="width: 100%;"> --}}
-                <img src="logo/gangewatta.png" class="brand-logo me-2" style="width: 100%;" />
-
+                    <img src="logo/logo.webp" alt="POSByVintorr" class="brand-logo me-2" style="width: 100%;">
+                @endif
             </th>
         </tr>
     </thead>
