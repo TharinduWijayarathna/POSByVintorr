@@ -65,6 +65,9 @@ class PosReceiptController extends ParentController
         if ($request->currency > 0) {
             $query->where('currency_id', $request->currency);
         }
+        if (isset($request->payment_method) && $request->payment_method !== '') {
+            $query->where('payment_type', $request->payment_method);
+        }
         $payload = QueryBuilder::for($query)
             ->allowedSorts(['code'])
             ->allowedFilters(

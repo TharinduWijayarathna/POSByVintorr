@@ -59,6 +59,15 @@
                                             :clear-on-select="false" :searchable="true" placeholder="Select Currency"
                                             label="code" track-by="id" max-height="200" />
                                     </div>
+                                    <div class="mb-2 col-xl-2 col-xxl-1 mb-xl-0 pe-xxl-0">
+                                        <select class="mb-2 form-select form-select-sm ps-2 pe-0"
+                                            v-model="paymentMethod" data-control="select2"
+                                            data-placeholder="Select Payment Method" @change="getSearch">
+                                            <option value="" selected>Payment Method</option>
+                                            <option value="0">Cash</option>
+                                            <option value="1">Card</option>
+                                        </select>
+                                    </div>
                                     <div class="col-xl-2 col-xxl-1 align-self-end">
                                         <button @click="clearFilters" class="p-5 mb-2 square-clear-button"
                                             data-toggle="tooltip" data-placement="bottom" title="Clear filters">
@@ -146,6 +155,7 @@
                                                     <th>CREATED BY</th>
                                                     <th>DATE</th>
                                                     <th class="text-center">CURRENCY</th>
+                                                    <th class="text-center">PAYMENT</th>
                                                     <th class="text-end">SUB TOTAL</th>
                                                     <th class="text-end">DISCOUNT</th>
                                                     <th class="text-end pe-3">TOTAL</th>
@@ -194,6 +204,20 @@
                                                     <td class="py-2 text-center cursor-pointer"
                                                         @click.prevent="editInvoice(bill.id)">{{ bill.currency_name }}
                                                     </td>
+                                                    <td class="py-2 text-center cursor-pointer"
+                                                        @click.prevent="editInvoice(bill.id)">
+                                                        <span v-if="bill.payment_type === 0"
+                                                            class="badge badge-light-primary">
+                                                            <i class="bi bi-cash-coin me-1"></i>CASH
+                                                        </span>
+                                                        <span v-else-if="bill.payment_type === 1"
+                                                            class="badge badge-light-info">
+                                                            <i class="bi bi-credit-card me-1"></i>CARD
+                                                        </span>
+                                                        <span v-else class="badge badge-light-secondary">
+                                                            N/A
+                                                        </span>
+                                                    </td>
                                                     <td class="py-2 cursor-pointer text-end"
                                                         @click.prevent="editInvoice(bill.id)">{{
                                                             bill.formatted_sub_total }}
@@ -230,18 +254,20 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
+
 
                                                     <td class="py-2 pt-4 text-gray-600 text-end fw-bold">TOTAL</td>
                                                     <td class="py-2 pt-4 text-gray-600 text-end fw-bold">{{
                                                         totalOfSubTotal
-                                                        }}</td>
+                                                    }}</td>
                                                     <td class="py-2 pt-4 text-gray-600 text-end fw-bold">{{
                                                         totalOfDiscount
-                                                        }}</td>
+                                                    }}</td>
                                                     <td class="py-2 pt-4 text-gray-600 text-end pe-2 fw-bold">{{
                                                         totalOfTotal
-                                                        }}</td>
-                                                        <td></td>
+                                                    }}</td>
+                                                    <td></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -249,109 +275,147 @@
 
                                     <!-- Mobile view -->
                                     <div class="table-responsive d-block d-md-none">
-    <div v-for="bill in bills" :key="bill.id" style="margin-bottom: 20px;">
-        <!-- Start a new table for each bill -->
-        <table class="table table-bordered table-striped fs-6">
-            <tbody>
-                <!-- Status -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Status</td>
-                    <td class="text-end">
-                        <div v-if="bill.status == 1" class="badge badge-success done-status">DONE</div>
-                        <div v-if="bill.status == 0" class="badge badge-light-info">PENDING</div>
-                        <div v-if="bill.status == 2" class="badge badge-light-danger">HOLD</div>
-                        <div v-if="bill.status == 4" class="badge badge-light-info">RETURN</div>
-                    </td>
-                </tr>
+                                        <div v-for="bill in bills" :key="bill.id" style="margin-bottom: 20px;">
+                                            <!-- Start a new table for each bill -->
+                                            <table class="table table-bordered table-striped fs-6">
+                                                <tbody>
+                                                    <!-- Status -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Status</td>
+                                                        <td class="text-end">
+                                                            <div v-if="bill.status == 1"
+                                                                class="badge badge-success done-status">DONE</div>
+                                                            <div v-if="bill.status == 0" class="badge badge-light-info">
+                                                                PENDING</div>
+                                                            <div v-if="bill.status == 2"
+                                                                class="badge badge-light-danger">HOLD</div>
+                                                            <div v-if="bill.status == 4" class="badge badge-light-info">
+                                                                RETURN</div>
+                                                        </td>
+                                                    </tr>
 
-                <!-- Bill No. -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Bill No.</td>
-                    <td class="text-end">{{ bill.code }}</td>
-                </tr>
+                                                    <!-- Bill No. -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Bill No.</td>
+                                                        <td class="text-end">{{ bill.code }}</td>
+                                                    </tr>
 
-                <!-- Customer -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Customer</td>
-                    <td class="text-end">
-                        <span v-if="bill.customer_id == 0 || bill.customer_id == null">Walking Customer</span>
-                        <span v-else>{{ truncateText(bill.customer_name) }}</span>
-                    </td>
-                </tr>
+                                                    <!-- Customer -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Customer</td>
+                                                        <td class="text-end">
+                                                            <span
+                                                                v-if="bill.customer_id == 0 || bill.customer_id == null">Walking
+                                                                Customer</span>
+                                                            <span v-else>{{ truncateText(bill.customer_name) }}</span>
+                                                        </td>
+                                                    </tr>
 
-                <!-- Created By -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Created By</td>
-                    <td class="text-end">{{ bill.cashier_name ? truncateText(bill.cashier_name) : '' }}</td>
-                </tr>
+                                                    <!-- Created By -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Created By</td>
+                                                        <td class="text-end">{{ bill.cashier_name ?
+                                                            truncateText(bill.cashier_name) : '' }}</td>
+                                                    </tr>
 
-                <!-- Date -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Date</td>
-                    <td class="text-end">{{ formatDate(bill.date) }}</td>
-                </tr>
+                                                    <!-- Date -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Date</td>
+                                                        <td class="text-end">{{ formatDate(bill.date) }}</td>
+                                                    </tr>
 
-                <!-- Currency -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Currency</td>
-                    <td class="text-end">{{ bill.currency_name }}</td>
-                </tr>
+                                                    <!-- Currency -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Currency</td>
+                                                        <td class="text-end">{{ bill.currency_name }}</td>
+                                                    </tr>
 
-                <!-- Sub Total -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Sub Total</td>
-                    <td class="text-end">{{ bill.formatted_sub_total }}</td>
-                </tr>
+                                                    <!-- Payment Method -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Payment</td>
+                                                        <td class="text-end">
+                                                            <span v-if="bill.payment_type === 0"
+                                                                class="badge badge-light-primary">
+                                                                <i class="bi bi-cash-coin me-1"></i>CASH
+                                                            </span>
+                                                            <span v-else-if="bill.payment_type === 1"
+                                                                class="badge badge-light-info">
+                                                                <i class="bi bi-credit-card me-1"></i>CARD
+                                                            </span>
+                                                            <span v-else class="badge badge-light-secondary">
+                                                                N/A
+                                                            </span>
+                                                        </td>
+                                                    </tr>
 
-                <!-- Discount -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Discount</td>
-                    <td class="text-end">{{ bill.formatted_discount }}</td>
-                </tr>
+                                                    <!-- Sub Total -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Sub Total</td>
+                                                        <td class="text-end">{{ bill.formatted_sub_total }}</td>
+                                                    </tr>
 
-                <!-- Total -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Total</td>
-                    <td class="text-end">{{ bill.formatted_total }}</td>
-                </tr>
+                                                    <!-- Discount -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Discount</td>
+                                                        <td class="text-end">{{ bill.formatted_discount }}</td>
+                                                    </tr>
 
-                <!-- Actions -->
-                <tr>
-                    <td class="text-gray-400 text-uppercase">Actions</td>
-                    <td class="text-end">
-                        <div class="d-flex justify-content-end">
-                            <!-- Print Button -->
-                            <a v-if="bill.status == 1" href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Print bill" @click.prevent="historyPrint(bill.id)">
-                                <i class="p-2 bi bi-printer fs-5 text-dark"></i>
-                            </a>
-                            <a v-else-if="bill.status == 4" href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Print return" @click.prevent="returnPrint(bill.id)">
-                                <i class="p-2 bi bi-printer fs-5 text-dark"></i>
-                            </a>
-                            <a v-else href="javascript:void(0)" @click.prevent="errorPrint" data-toggle="tooltip" data-placement="bottom" title="Print Unavailable">
-                                <i class="p-2 bi bi-printer fs-5 text-dark"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                                                    <!-- Total -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Total</td>
+                                                        <td class="text-end">{{ bill.formatted_total }}</td>
+                                                    </tr>
 
-    <!-- Total Row if Currency Filter is Applied -->
-    <div v-if="search_select_currency != null && search_select_currency.id != 0" class="mb-5 total-row">
-        <table class="table table-bordered table-striped fs-6">
-            <tbody>
-                <tr>
-                    <td class="pt-4 text-gray-600 text-end fw-bold" colspan="6">TOTAL</td>
-                    <td class="pt-4 text-gray-600 text-end fw-bold">{{ totalOfSubTotal }}</td>
-                    <td class="pt-4 text-gray-600 text-end fw-bold">{{ totalOfDiscount }}</td>
-                    <td class="pt-4 text-gray-600 text-end fw-bold">{{ totalOfTotal }}</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+                                                    <!-- Actions -->
+                                                    <tr>
+                                                        <td class="text-gray-400 text-uppercase">Actions</td>
+                                                        <td class="text-end">
+                                                            <div class="d-flex justify-content-end">
+                                                                <!-- Print Button -->
+                                                                <a v-if="bill.status == 1" href="javascript:void(0)"
+                                                                    data-toggle="tooltip" data-placement="bottom"
+                                                                    title="Print bill"
+                                                                    @click.prevent="historyPrint(bill.id)">
+                                                                    <i class="p-2 bi bi-printer fs-5 text-dark"></i>
+                                                                </a>
+                                                                <a v-else-if="bill.status == 4"
+                                                                    href="javascript:void(0)" data-toggle="tooltip"
+                                                                    data-placement="bottom" title="Print return"
+                                                                    @click.prevent="returnPrint(bill.id)">
+                                                                    <i class="p-2 bi bi-printer fs-5 text-dark"></i>
+                                                                </a>
+                                                                <a v-else href="javascript:void(0)"
+                                                                    @click.prevent="errorPrint" data-toggle="tooltip"
+                                                                    data-placement="bottom" title="Print Unavailable">
+                                                                    <i class="p-2 bi bi-printer fs-5 text-dark"></i>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Total Row if Currency Filter is Applied -->
+                                        <div v-if="search_select_currency != null && search_select_currency.id != 0"
+                                            class="mb-5 total-row">
+                                            <table class="table table-bordered table-striped fs-6">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="pt-4 text-gray-600 text-end fw-bold" colspan="6">
+                                                            TOTAL</td>
+                                                        <td class="pt-4 text-gray-600 text-end fw-bold">{{
+                                                            totalOfSubTotal }}</td>
+                                                        <td class="pt-4 text-gray-600 text-end fw-bold">{{
+                                                            totalOfDiscount }}</td>
+                                                        <td class="pt-4 text-gray-600 text-end fw-bold">{{ totalOfTotal
+                                                            }}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
 
                                 </div>
 
@@ -504,6 +568,17 @@
                                             placeholder="Select Currency" label="code" track-by="id" max-height="200" />
                                     </div>
                                 </div>
+                                <div class="mt-2 col-12 mt-md-1">
+                                    <div class="items-center text-muted">
+                                        <select id="modalPaymentMethod" class="form-select form-select-sm ps-2 pe-0"
+                                            v-model="paymentMethod" data-control="select2"
+                                            data-placeholder="Select Payment Method" @change="getSearch">
+                                            <option value="" selected>Payment Method</option>
+                                            <option value="0">Cash</option>
+                                            <option value="1">Card</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-6">
                                     <div class="py-4 mt-2">
                                         <button @click="billsFilterModalClear" class="btn btn-info ms-4 fw-bold">
@@ -570,6 +645,7 @@ const placeholderText = 'DD/MM/YYYY';
 const currencies = ref([]);
 const search_select_currency = ref({});
 const previousCurrency = ref({});
+const paymentMethod = ref('');
 
 const formatDate = (value) => {
     return moment(String(value)).format('DD/MM/YYYY');
@@ -645,6 +721,7 @@ const billsFilterModalClear = async () => {
     select_search_cashier.value = null;
     orderStatus.value = 0;
     sorting_value.value = 0;
+    paymentMethod.value = '';
     page.value = 1;
     getCurrency();
     getBusinessDetails();
@@ -668,6 +745,7 @@ const reload = async () => {
                 search_order_status: search_order.value.orderStatus,
                 sorting_value: sorting_value.value,
                 currency: search_select_currency.value?.id,
+                payment_method: paymentMethod.value,
             },
         })
     ).data;
@@ -791,6 +869,7 @@ function clearFilters() {
     select_search_cashier.value = null;
     orderStatus.value = 0;
     sorting_value.value = 0;
+    paymentMethod.value = '';
     page.value = 1;
     getCurrency();
     getBusinessDetails();
