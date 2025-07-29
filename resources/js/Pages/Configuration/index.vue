@@ -6,7 +6,7 @@
                     <div class="mt-5 col-lg-12 mt-lg-0">
                         <div class="pb-0 mt-0 d-flex justify-content-start align-items-center col-form-label pb-sm-3">
                             <h1 style="margin-right: auto; font-size: 28px; color: #071437">
-                                Settings;
+                                Settings
                             </h1>
                         </div>
 
