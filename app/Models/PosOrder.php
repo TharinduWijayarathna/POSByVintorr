@@ -42,6 +42,11 @@ class PosOrder extends Model
         'INVOICE' => 1,
     ];
 
+    const PAYMENT_TYPE = [
+        'CASH' => 0,
+        'CARD' => 1,
+    ];
+
     protected $fillable = [
         'created_by',
         'customer_type',
@@ -86,6 +91,7 @@ class PosOrder extends Model
         'formatted_credit',
         'formatted_due',
         'currency_name',
+        'payment_method_name',
     ];
 
     public function customer()
@@ -503,6 +509,16 @@ class PosOrder extends Model
     public function getCurrencyNameAttribute()
     {
         return $this->currency->code ?? null;
+    }
+
+    public function getPaymentMethodNameAttribute()
+    {
+        if ($this->payment_type === self::PAYMENT_TYPE['CASH']) {
+            return 'Cash';
+        } elseif ($this->payment_type === self::PAYMENT_TYPE['CARD']) {
+            return 'Card';
+        }
+        return 'Not specified';
     }
 
     /**

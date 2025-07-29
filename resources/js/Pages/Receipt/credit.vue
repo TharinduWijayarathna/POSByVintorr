@@ -7,22 +7,19 @@
                         <div class="pb-0 mt-0 d-flex justify-content-start align-items-center col-form-label pb-sm-3">
                             <h1 class="main-header-text">
                                 Credit&nbsp;Bills&nbsp;
-                            </h1><a class="info-link" href="https://youtu.be/7cgFbRJ-DbM?si=931aJ64BVWRepNAY"
-                                target="_blank"><i class="bi bi-question-circle fs-2 question-icon"></i></a>
+                            </h1>
                         </div>
                         <div class="shadow card pb-15 pb-md-0">
                             <div class="p-3 text-sm card-body p-md-9">
                                 <!-- Filters -->
                                 <div class="mb-3 row align-items-center d-none d-lg-flex">
                                     <div class="mb-2 col-xl-4 col-xxl-2 mb-xl-0 pe-xxl-0">
-                                        <div for="purchase_uom" class="pt-0 pb-1 text-gray-600 col-form-label">CODE
-                                        </div>
+
                                         <input v-model="search" type="text" class="mb-2 form-control form-control-sm"
                                             placeholder="Code" @keyup="debouncedGetSearch" />
                                     </div>
                                     <div class="mb-2 col-xl-4 col-xxl-2 mb-xl-0 pe-xxl-0">
-                                        <div for="purchase_uom" class="pt-0 pb-1 text-gray-600 col-form-label">CUSTOMER
-                                        </div>
+
                                         <Multiselect v-model="select_search_customer" :options="truncatedCustomers"
                                             class="mb-2 z__index" :showLabels="false" :close-on-select="true"
                                             :clear-on-select="false" @search-change="getCustomer" :searchable="true"
@@ -30,16 +27,13 @@
                                             max-height="200" />
                                     </div>
                                     <div class="mb-2 col-xl-4 col-xxl-2 mb-xl-0 pe-xxl-0">
-                                        <div for="purchase_uom" class="pt-0 pb-1 text-gray-600 col-form-label">CREATED
-                                            BY</div>
+
                                         <Multiselect v-model="select_search_cashier" :options="cashiers"
                                             class="mb-2 z__index" :showLabels="false" :close-on-select="true"
                                             :clear-on-select="false" @search-change="getCashier" :searchable="true"
                                             placeholder="Created By" label="name" track-by="id" max-height="200" />
                                     </div>
                                     <div class="mb-2 col-xl-2 col-xxl-1 mb-xl-0 pe-xxl-0">
-                                        <div for="purchase_uom" class="pt-0 pb-1 text-gray-600 col-form-label">FROM DATE
-                                        </div>
                                         <Datepicker v-if="to_date && !from_date || to_date && from_date"
                                             v-model="from_date" class="mb-2 form-control form-control-sm"
                                             :placeholder="placeholderText" :upperLimit="to_date" />
@@ -48,15 +42,10 @@
                                             :placeholder="placeholderText" />
                                     </div>
                                     <div class="mb-2 col-xl-2 col-xxl-1 mb-xl-0 pe-xxl-0">
-                                        <div for="purchase_uom" class="pt-0 pb-1 text-gray-600 col-form-label">TO DATE
-                                        </div>
-
                                         <Datepicker v-model="to_date" class="mb-2 form-control form-control-sm"
                                             :placeholder="placeholderText" :lowerLimit="from_date" />
                                     </div>
                                     <div class="mb-2 col-xl-2 col-xxl-1 mb-xl-0 pe-xxl-0">
-                                        <div for="purchase_uom" class="pt-0 pb-1 text-gray-600 col-form-label">CURRENCY
-                                        </div>
                                         <Multiselect v-model="search_select_currency" :options="currencies"
                                             class="mb-2 z__index" :showLabels="false" :close-on-select="true"
                                             :clear-on-select="false" :searchable="true" placeholder="Select"

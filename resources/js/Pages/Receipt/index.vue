@@ -4,11 +4,10 @@
             <div class="p-0 flex-grow-1 page-top">
                 <div class="row content-margin2">
                     <div class="mt-5 col-lg-12 mt-lg-0">
-                        <div class="mb-2 col-12 col-md-6 d-flex justify-content-start align-items-center">
+                        <div class="pb-0 mt-0 d-flex justify-content-start align-items-center col-form-label pb-sm-3">
                             <h1 class="main-header-text">
                                 Bills
                             </h1>
-
                         </div>
 
                         <div class="shadow card pb-15 pb-md-0">
@@ -836,7 +835,7 @@ const totalOfTotal = computed(() => {
         return subTotal + amount;
     }, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 });
-    
+
 const truncateText = (text) => {
     if (text && typeof text === 'string') {
         return text.length > 30 ? text.substring(0, 30) + '...' : text;

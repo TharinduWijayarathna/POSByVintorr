@@ -995,6 +995,36 @@ orderProduct, key
                 </div>
             </div>
 
+            <!-- Payment Method Modal -->
+            <div class="modal fade" id="paymentMethodModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Select Payment Method</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-light-primary w-100 py-4 fs-3 fw-bold"
+                                        @click.prevent="selectPaymentMethod('cash')">
+                                        <i class="bi bi-cash-coin me-2"></i>
+                                        CASH
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-light-info w-100 py-4 fs-3 fw-bold"
+                                        @click.prevent="selectPaymentMethod('card')">
+                                        <i class="bi bi-credit-card me-2"></i>
+                                        CARD
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Credit Confirmation Modal -->
             <div class="modal fade" id="creditConfirmModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1317,6 +1347,7 @@ const validationErrors = ref({});
 const validationMessage = ref(null);
 
 const loadFinished = ref(false);
+const selectedPaymentMethod = ref('');
 
 const resetValidationErrors = () => {
     validationErrors.value = {};
@@ -2050,7 +2081,17 @@ const removeDiscount = async () => {
     }
 };
 
-const paymentDone = async () => {
+const showPaymentMethodModal = () => {
+    $("#paymentMethodModal").modal("show");
+};
+
+const selectPaymentMethod = (method) => {
+    selectedPaymentMethod.value = method;
+    $("#paymentMethodModal").modal("hide");
+    processPayment();
+};
+
+const processPayment = async () => {
     nextTick(() => {
         loading_bar.value.start();
     });
@@ -2081,6 +2122,7 @@ const paymentDone = async () => {
                 order_total: total.value,
                 paid_amount: paidAmount.value,
                 balance: changeAmount.value,
+                payment_method: selectedPaymentMethod.value,
             };
 
             await axios
@@ -2110,6 +2152,10 @@ const paymentDone = async () => {
     }
 };
 
+const paymentDone = async () => {
+    showPaymentMethodModal();
+};
+
 const confirmCredit = async () => {
     nextTick(() => {
         loading_bar.value.start();
@@ -2121,6 +2167,7 @@ const confirmCredit = async () => {
             order_total: total.value,
             paid_amount: paidAmount.value,
             balance: changeAmount.value,
+            payment_method: selectedPaymentMethod.value,
         };
 
         await axios.post(route("order.done"), data);

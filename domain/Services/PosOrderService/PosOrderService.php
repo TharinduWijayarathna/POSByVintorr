@@ -549,6 +549,16 @@ class PosOrderService
 
         $order->status = 1;
         $order->currency_id = $currency_id;
+
+        // Set payment type based on payment method
+        if (isset($request['payment_method'])) {
+            if ($request['payment_method'] === 'cash') {
+                $order->payment_type = PosOrder::PAYMENT_TYPE['CASH'];
+            } elseif ($request['payment_method'] === 'card') {
+                $order->payment_type = PosOrder::PAYMENT_TYPE['CARD'];
+            }
+        }
+
         if (isset($request['date'])) {
             $date = date('Y-m-d', strtotime($request['date']));
             $order->date = $date;
