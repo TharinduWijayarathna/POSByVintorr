@@ -84,7 +84,7 @@ const submit = () => {
                                     <div class="flex block items-center mt-7">
                                         <PrimaryButton class="text-center primary-button"
                                             onmouseover="this.style.backgroundColor='#000000'; this.style.cursor='pointer';"
-                                            onmouseout="this.style.backgroundColor='#287fff';"
+                                            onmouseout="this.style.backgroundColor='#091f3e';"
                                             :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                             Login
                                         </PrimaryButton>
@@ -199,7 +199,7 @@ const submit = () => {
 }
 
 .primary-button {
-    background-color: #287fff;
+    background-color: #091f3e;
     padding: 20px;
     width: 80%;
     margin: 0 auto;
@@ -218,8 +218,8 @@ const submit = () => {
 }
 
 .contact-btn-whatsapp {
-    background-color: #287fff;
-    border-color: #287fff;
+    background-color: #091f3e;
+    border-color: #091f3e;
     color: white;
 }
 
@@ -235,7 +235,7 @@ const submit = () => {
 }
 
 .contact-btn-email:hover {
-    background-color: #287fff;
+    background-color: #091f3e;
     color: rgb(255, 255, 255);
 }
 

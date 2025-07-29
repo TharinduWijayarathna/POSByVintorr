@@ -551,8 +551,7 @@
                                 <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 349px">
                                     <div class="py-3 d-flex align-items-center justify-content-center">
                                         <div class="mt-8 text-center col-12">
-                                            <img src="../../../src/images/EmptyState/dashboard-expenses.webp"
-                                                height="200" />
+                                            <i class="text-gray-400 bi bi-wallet2 fs-1"></i>
                                         </div>
                                     </div>
                                     <div class="py-3 d-flex align-items-center justify-content-center">
@@ -601,8 +600,7 @@
                                 <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 365px">
                                     <div class="py-3 d-flex align-items-center">
                                         <div class="text-center col-12 mt-15">
-                                            <img src="../../../src/images/EmptyState/top-selling-products.webp"
-                                                height="200" />
+                                            <i class="text-gray-400 bi bi-graph-up fs-1"></i>
                                         </div>
                                     </div>
                                     <div class="py-3 text-center d-flex align-items-center">
@@ -647,8 +645,7 @@
                                 <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 365px">
                                     <div class="py-3 d-flex align-items-center">
                                         <div class="text-center col-12 mt-15">
-                                            <img src="../../../src/images/EmptyState/rol-reached-products.webp"
-                                                height="200" />
+                                            <i class="text-gray-400 bi bi-exclamation-triangle fs-1"></i>
                                         </div>
                                     </div>
                                     <div class="py-3 text-center d-flex align-items-center">
@@ -699,8 +696,7 @@
                                 <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 365px">
                                     <div class="py-3 d-flex align-items-center">
                                         <div class="text-center col-12 mt-15">
-                                            <img src="../../../src/images/EmptyState/top-selling-products.webp"
-                                                height="200" />
+                                            <i class="text-gray-400 bi bi-graph-up fs-1"></i>
                                         </div>
                                     </div>
                                     <div class="py-3 text-center d-flex align-items-center">
@@ -745,8 +741,7 @@
                                 <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 365px">
                                     <div class="py-3 d-flex align-items-center">
                                         <div class="text-center col-12 mt-15">
-                                            <img src="../../../src/images/EmptyState/rol-reached-products.webp"
-                                                height="200" />
+                                            <i class="text-gray-400 bi bi-exclamation-triangle fs-1"></i>
                                         </div>
                                     </div>
                                     <div class="py-3 text-center d-flex align-items-center">

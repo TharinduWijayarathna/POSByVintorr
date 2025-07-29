@@ -1,7 +1,7 @@
 <template>
     <div class="row" v-if="bills.length == 0">
         <div class="text-center col-12 mt-15">
-            <img src="@/../src/images/EmptyState/bills.webp" height="200" />
+            <i class="text-gray-400 bi bi-file-earmark-post fs-1"></i>
         </div>
         <div class="mt-8 text-center col-12">
             <h1 class="text-gray-700 heading fw-bold fs-2hx">No any bills</h1>

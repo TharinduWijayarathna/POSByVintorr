@@ -1,5 +1,5 @@
 <template>
-    <div id="kt_header" style="" class="header align-items-stretch">
+    <div id="kt_header" style="" class="header align-items-stretch navbar-custom-bg">
 
         <!--begin::Container-->
         <div class=" container-fluid d-flex align-items-stretch justify-content-between">
@@ -8,39 +8,39 @@
             <!--begin::Aside mobile toggle-->
             <div class="d-flex align-items-center d-lg-none ms-n1 me-2" title="Show aside menu">
                 <div class="btn btn-icon btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
-                    id="kt_aside_mobile_toggle">
+                    id="kt_aside_mobile_toggle" style="border: 1px solid #fff;">
                     <i class="bi bi-list fs-3x" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"
-                        aria-controls="offcanvasWithBothOptions"></i>
+                        aria-controls="offcanvasWithBothOptions" style="color: #fff;"></i>
                 </div>
             </div>
 
             <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" data-bs-backdrop="static" tabindex="-1"
-                id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+                id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel" style="background-color: #091f3e;">
                 <div class="offcanvas-header">
                     <img alt="Logo" src="../../../src/logo/logo.webp" class="ml-1 h-35px" />
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" style="filter: invert(1);"></button>
                 </div>
                 <div class="offcanvas-body">
                     <!-- Dashboard -->
                     <Link :href="route('dashboard')">
-                    <div class="p-3 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/dashboard') }">
+                    <div class="p-3 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/dashboard') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-columns-gap fs-3x"></i>
+                                <i class="mr-3 bi bi-columns-gap fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Dashboard</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Dashboard</span>
                         </span>
                     </div>
                     </Link>
 
                     <!-- Cart -->
                     <Link v-if="props.auth.user.user_role_id != 3" :href="route('cart','fullscreen')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/order') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/order') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-cart fs-3x"></i>
+                                <i class="mr-3 bi bi-cart fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Cart</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Cart</span>
                         </span>
                     </div>
                     </Link>
@@ -48,12 +48,12 @@
 
                     <!-- Hold -->
                     <Link :href="route('cart.hold.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/saved-order') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/saved-order') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-cart-plus fs-3x"></i>
+                                <i class="mr-3 bi bi-cart-plus fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Hold</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Hold</span>
                         </span>
                     </div>
                     </Link>
@@ -61,12 +61,12 @@
 
                     <!-- Return -->
                     <Link v-if="props.auth.user.user_role_id != 3" :href="route('return.view')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/returns') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/returns') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-arrow-repeat fs-3x"></i>
+                                <i class="mr-3 bi bi-arrow-repeat fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Returns</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Returns</span>
                         </span>
                     </div>
                     </Link>
@@ -74,12 +74,12 @@
 
                     <!-- Bills -->
                     <Link :href="route('receipt.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/bills/view') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/bills/view') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-receipt fs-3x"></i>
+                                <i class="mr-3 bi bi-receipt fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Bills</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Bills</span>
                         </span>
                     </div>
                     </Link>
@@ -87,13 +87,13 @@
 
                     <!-- Credit Bills -->
                     <Link :href="route('receipt.credit')">
-                    <div class="p-3 mt-2 mb-2 col-12"
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom"
                         :class="{ 'active-color': $page.url.startsWith('/bills/credit') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-hourglass fs-3x"></i>
+                                <i class="mr-3 bi bi-hourglass fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Credit Bills</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Credit Bills</span>
                         </span>
                     </div>
                     </Link>
@@ -101,12 +101,12 @@
 
                     <!-- Invoices -->
                     <Link :href="route('invoice.all.view')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/invoice') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/invoice') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-file-earmark-ruled fs-3x"></i>
+                                <i class="mr-3 bi bi-file-earmark-ruled fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Invoices</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Invoices</span>
                         </span>
                     </div>
                     </Link>
@@ -114,12 +114,12 @@
                     <!-- Quotations -->
                     <Link v-if="props.auth.user.user_role_id != 2 && props.auth.user.user_role_id != 3"
                         :href="route('quotation.all.view')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/quotation') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/quotation') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-chat-left-quote fs-3x"></i>
+                                <i class="mr-3 bi bi-chat-left-quote fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Quotations</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Quotations</span>
                         </span>
                     </div>
                     </Link>
@@ -127,25 +127,25 @@
                     <!-- Purchase Orders -->
                     <Link v-if="props.auth.user.user_role_id != 2 && props.auth.user.user_role_id != 3"
                         :href="route('purchaseOrder.all.view')">
-                    <div class="p-3 mt-2 mb-2 col-12"
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom"
                         :class="{ 'active-color': $page.url.startsWith('/purchase-order') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-file-earmark-arrow-up fs-3x"></i>
+                                <i class="mr-3 bi bi-file-earmark-arrow-up fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Purchase Orders</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Purchase Orders</span>
                         </span>
                     </div>
                     </Link>
 
                     <!-- Products -->
                     <Link v-if="props.auth.user.user_role_id != 3" :href="route('products.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/products') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/products') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-box2 fs-3x"></i>
+                                <i class="mr-3 bi bi-box2 fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Products</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Products</span>
                         </span>
                     </div>
                     </Link>
@@ -153,12 +153,12 @@
 
                     <!-- Customers -->
                     <Link v-if="props.auth.user.user_role_id != 3" :href="route('customer.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/customer') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/customer') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-people fs-3x"></i>
+                                <i class="mr-3 bi bi-people fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Customers</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Customers</span>
                         </span>
                     </div>
                     </Link>
@@ -166,12 +166,12 @@
 
                     <!-- Suppliers -->
                     <Link v-if="props.auth.user.user_role_id != 3" :href="route('supplier.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/supplier') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/supplier') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-briefcase fs-3x"></i>
+                                <i class="mr-3 bi bi-briefcase fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Suppliers</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Suppliers</span>
                         </span>
                     </div>
                     </Link>
@@ -179,12 +179,12 @@
 
                     <!-- Expenses -->
                     <Link v-if="props.auth.user.user_role_id != 2" :href="route('expenses.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/expenses') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/expenses') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-cash-stack fs-3x"></i>
+                                <i class="mr-3 bi bi-cash-stack fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Expenses</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Expenses</span>
                         </span>
                     </div>
                     </Link>
@@ -193,12 +193,12 @@
                     <!-- Employees -->
                     <Link v-if="props.auth.user.user_role_id != 2 && props.auth.user.user_role_id != 3"
                         :href="route('employee.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/employee') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/employee') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-person-page_props fs-3x"></i>
+                                <i class="mr-3 bi bi-person-page_props fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Employees</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Employees</span>
                         </span>
                     </div>
                     </Link>
@@ -206,24 +206,24 @@
 
                     <!-- Payrolls -->
                     <Link v-if="props.auth.user.user_role_id != 2" :href="route('payrolls.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/payrolls') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/payrolls') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-wallet2 fs-3x"></i>
+                                <i class="mr-3 bi bi-wallet2 fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Payrolls</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Payrolls</span>
                         </span>
                     </div>
                     </Link>
 
                     <!-- Transactions -->
                     <Link v-if="props.auth.user.user_role_id != 2" :href="route('transaction.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/transaction') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/transaction') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-arrow-down-up fs-3x"></i>
+                                <i class="mr-3 bi bi-arrow-down-up fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Transactions</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Transactions</span>
                         </span>
                     </div>
                     </Link>
@@ -231,12 +231,12 @@
 
                     <!-- Users -->
                     <Link v-if="props.auth.user.user_role_id == 1" :href="route('user.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/user') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/user') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-person fs-3x"></i>
+                                <i class="mr-3 bi bi-person fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Users</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Users</span>
                         </span>
                     </div>
                     </Link>
@@ -245,12 +245,12 @@
                     <!-- Reports -->
                     <Link v-if="props.auth.user.user_role_id != 2 && props.auth.user.user_role_id != 3"
                         :href="route('report.index')">
-                    <div class="p-3 mt-2 mb-2 col-12" :class="{ 'active-color': $page.url.startsWith('/report') }">
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom" :class="{ 'active-color': $page.url.startsWith('/report') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-graph-up-arrow fs-3x"></i>
+                                <i class="mr-3 bi bi-graph-up-arrow fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Reports</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Reports</span>
                         </span>
                     </div>
                     </Link>
@@ -258,13 +258,13 @@
 
                     <!-- Settings -->
                     <Link v-if="props.auth.user.user_role_id == 1" :href="route('configuration.index')">
-                    <div class="p-3 mt-2 mb-2 col-12"
+                    <div class="p-3 mt-2 mb-2 col-12 nav-link-custom"
                         :class="{ 'active-color': $page.url.startsWith('/configuration') }">
                         <span class="menu-link d-flex align-items-center">
                             <span>
-                                <i class="mr-3 text-gray-600 bi bi-gear fs-3x"></i>
+                                <i class="mr-3 bi bi-gear fs-3x" style="color: #fff;"></i>
                             </span>
-                            <span class="text-gray-600 menu-title-copy fs-2x">Settings</span>
+                            <span class="menu-title-copy fs-2x" style="color: #fff;">Settings</span>
                         </span>
                     </div>
                     </Link>
@@ -306,12 +306,12 @@
                         <!-- User name and icon now wrapped in a div with border and padding -->
                         <div class="px-3 btn btn-icon btn-active-light-primary w-100 h-20px h-md-30px d-flex align-items-center"
                             data-bs-toggle="dropdown" data-kt-menu-placement="bottom-end"
-                            style="border: 1px solid gray; border-radius: 5px; padding: 5px 15px;">
+                            style="border: 1px solid #fff; border-radius: 5px; padding: 5px 15px; background: transparent;">
                             <!-- User Icon -->
-                            <i class="mr-2 bi bi-person fs-4 d-none d-sm-inline" style="color: gray"></i>
-                            <i class="mr-2 bi bi-person fs-5 d-inline d-sm-none" style="color: gray;"></i>
+                            <i class="mr-2 bi bi-person fs-4 d-none d-sm-inline" style="color: #fff"></i>
+                            <i class="mr-2 bi bi-person fs-5 d-inline d-sm-none" style="color: #fff;"></i>
                             <!-- User Name -->
-                            <span class="ml-2 text-gray-700 ms-1">{{ props.auth.user.name }}</span>
+                            <span class="ml-2 ms-1" style="color: #fff;">{{ props.auth.user.name }}</span>
                         </div>
 
                         <div class="py-2 dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6 w-200px"
@@ -505,6 +505,29 @@ const errorMessage = (message) => {
 </script>
 
 <style lang="scss" scoped>
+.navbar-custom-bg {
+    background-color: #091f3e !important;
+}
+
+.nav-link-custom {
+    border: 1px solid #fff;
+    border-radius: 5px;
+    color: #fff !important;
+    background: transparent !important;
+    transition: background 0.2s, color 0.2s;
+}
+.nav-link-custom .menu-title-copy,
+.nav-link-custom .bi {
+    color: #fff !important;
+}
+.nav-link-custom.active-color {
+    background-color: #193a6a !important;
+    color: #fff !important;
+}
+.active-color {
+    background-color: #193a6a !important;
+    color: #fff !important;
+}
 .calculator {
     background-color: #f0f0f0;
     padding: 20px;
@@ -512,7 +535,7 @@ const errorMessage = (message) => {
 }
 
 .cal_input {
-    border: 2px solid #287fff;
+    border: 2px solid #091f3e;
     border-radius: 5px;
     height: 60px;
     text-align: right;
@@ -522,7 +545,7 @@ const errorMessage = (message) => {
 }
 
 .cal_input:hover {
-    border: 2px solid #287fff;
+    border: 2px solid #091f3e;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -567,14 +590,10 @@ const errorMessage = (message) => {
     /* Slight pressed effect */
 }
 
-
-
-
-
 div.equal {
-    background-color: #287fff;
+    background-color: #091f3e;
     /* Vibrant green for the equal button */
-    border: 2px solid #287fff;
+    border: 2px solid #091f3e;
     /* Matching border color */
     border-radius: 10px;
     /* Smoother rounded corners */
@@ -614,7 +633,7 @@ div.equal:active {
 
 
 .border-top {
-    border-top: 1px solid #373636;
+    border-top: 1px solid #fff !important;
 }
 
 .main-account-alert {
@@ -625,9 +644,5 @@ div.equal:active {
     .nav-items {
         margin-right: 25px;
     }
-}
-
-.active-color {
-    background-color: #F5F7FF;
 }
 </style>

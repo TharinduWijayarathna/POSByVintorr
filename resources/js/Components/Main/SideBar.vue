@@ -5,7 +5,7 @@
         data-kt-drawer-toggle="#kt_aside_mobile_toggle">
         <div class="mt-2 mb-2 aside-logo flex-column-auto" id="kt_aside_logo">
             <a :href="route('dashboard')">
-                <img alt="Logo" src="../../../src/logo/logo.webp" class="h-60px logo" />
+                <img alt="Logo" src="../../../src/logo/logo.webp" class="h-80px logo" />
             </a>
         </div>
 
@@ -313,5 +313,15 @@ onMounted(() => {
 
 .no-drop {
     cursor: no-drop;
+}
+
+/* Remove all uppercase text and ensure normal case */
+.menu-title-copy {
+    text-transform: none !important;
+}
+
+/* Ensure all text in sidebar is normal case */
+#kt_aside * {
+    text-transform: none !important;
 }
 </style>

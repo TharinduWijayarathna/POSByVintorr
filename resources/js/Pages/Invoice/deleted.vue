@@ -197,7 +197,7 @@
                                 <div class="row"
                                     v-if="bills.length < 1 && orderStatus == 0 && search == '' && select_search_customer == null && select_search_cashier == null && from_date == null && to_date == null && search_select_currency == null">
                                     <div class="text-center col-12 mt-15">
-                                        <img src="../../../src/images/EmptyState/deleted-list.webp" height="200" />
+                                        <i class="text-gray-400 bi bi-trash fs-1"></i>
                                     </div>
                                     <div class="mt-8 text-center col-12">
                                         <h1 class="text-gray-700 heading fw-bold fs-2hx">No any deleted Invoices</h1>
@@ -209,8 +209,7 @@
                                 <div class="row"
                                     v-if="bills.length == 0 && (orderStatus != 0 || search != '' || select_search_customer != null || select_search_cashier != null || from_date != null || to_date != null || search_select_currency != null)">
                                     <div class="text-center col-12 mt-15">
-                                        <img src="../../../src/images/EmptyState/empty-search-results.webp"
-                                            height="200" />
+                                        <i class="text-gray-400 bi bi-search fs-1"></i>
                                     </div>
                                     <div class="mt-8 text-center col-12 mb-15">
                                         <h1 class="text-gray-700 heading fw-bold fs-2hx">No result found</h1>

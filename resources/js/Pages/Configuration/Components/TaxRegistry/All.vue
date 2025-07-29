@@ -46,7 +46,7 @@
                 <!-- Empty State -->
                 <div class="row" v-if="emptyImageVal == 1 && search_tax == ''">
                     <div class="text-center col-12 mt-15">
-                        <img src="../../../../../src/images/EmptyState/transactions.webp" height="200" />
+                        <i class="text-gray-400 bi bi-currency-exchange fs-1"></i>
                     </div>
                     <div class="mt-8 text-center col-12">
                         <h1 class="text-gray-700 heading fw-bold fs-2hx">No any taxes</h1>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="row" v-if="emptyImageVal == 1 && (search_tax != '')">
                     <div class="text-center col-12 mt-15">
-                        <img src="../../../../../src/images/EmptyState/empty-search-results.webp" height="200" />
+                        <i class="text-gray-400 bi bi-search fs-1"></i>
                     </div>
                     <div class="mt-8 text-center col-12 mb-15">
                         <h1 class="text-gray-700 heading fw-bold fs-2hx">No result found</h1>

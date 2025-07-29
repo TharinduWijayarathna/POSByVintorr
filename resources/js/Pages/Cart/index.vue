@@ -60,7 +60,7 @@
                                 loadFinished
                             ">
                                 <div class="text-center col-12 mt-15">
-                                    <img src="@/../src/images/EmptyState/cart_product.webp" height="200" />
+                                    <i class="text-gray-400 bi bi-cart-x fs-1"></i>
                                 </div>
                                 <div class="mt-8 text-center col-12">
                                     <h1 class="text-gray-700 heading fw-bold fs-2hx">
@@ -74,7 +74,7 @@
                                 selectedId == null
                             ">
                                 <div class="text-center col-12 mt-15">
-                                    <img src="@/../src/images/EmptyState/empty-search-results.webp" height="200" />
+                                    <i class="text-gray-400 bi bi-search fs-1"></i>
                                 </div>
                                 <div class="mt-8 text-center col-12 mb-15">
                                     <h1 class="text-gray-700 heading fw-bold fs-2hx">
@@ -84,7 +84,7 @@
                             </div>
                             <div class="mt-20 row" v-if="products.length == 0 && selectedId != null">
                                 <div class="text-center col-12 mt-15">
-                                    <img src="@/../src/images/EmptyState/cart_product.webp" height="200" />
+                                    <i class="text-gray-400 bi bi-cart-x fs-1"></i>
                                 </div>
                                 <div class="mt-8 text-center col-12">
                                     <h1 class="text-gray-700 heading fw-bold fs-2hx">
@@ -1100,7 +1100,7 @@ orderProduct, key
                                 loadFinished
                             ">
                                 <div class="text-center col-12 mt-15">
-                                    <img src="@/../src/images/EmptyState/cart_product.webp" height="200" />
+                                    <i class="text-gray-400 bi bi-cart-x fs-1"></i>
                                 </div>
                                 <div class="mt-8 text-center col-12">
                                     <h1 class="text-gray-700 heading fw-bold fs-2hx">
@@ -1114,7 +1114,7 @@ orderProduct, key
                                 selectedId == null
                             ">
                                 <div class="text-center col-12 mt-15">
-                                    <img src="@/../src/images/EmptyState/empty-search-results.webp" height="200" />
+                                    <i class="text-gray-400 bi bi-search fs-1"></i>
                                 </div>
                                 <div class="mt-8 text-center col-12 mb-15">
                                     <h1 class="text-gray-700 heading fw-bold fs-2hx">
@@ -1126,7 +1126,7 @@ orderProduct, key
                                 products.length == 0 && selectedId != null
                             ">
                                 <div class="text-center col-12 mt-15">
-                                    <img src="@/../src/images/EmptyState/cart_product.webp" height="200" />
+                                    <i class="text-gray-400 bi bi-cart-x fs-1"></i>
                                 </div>
                                 <div class="mt-8 text-center col-12">
                                     <h1 class="text-gray-700 heading fw-bold fs-2hx">

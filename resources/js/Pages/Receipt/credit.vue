@@ -113,7 +113,7 @@
                                 <div class="row"
                                     v-if="emptyImageVal == 1 && orderType == 0 && search == null && select_search_customer == null && select_search_cashier == null && from_date == null && to_date == null">
                                     <div class="text-center col-12 mt-15">
-                                        <img src="../../../src/images/EmptyState/credit-bills.webp" height="200" />
+                                        <i class="text-gray-400 bi bi-credit-card fs-1"></i>
                                     </div>
                                     <div class="mt-8 text-center col-12">
                                         <h1 class="text-gray-700 heading fw-bold fs-2hx">No any credit bills</h1>
@@ -125,8 +125,7 @@
                                 <div class="row"
                                     v-if="emptyImageVal == 1 && (orderType != 0 || search != null || select_search_customer != null || select_search_cashier != null || from_date != null || to_date != null)">
                                     <div class="text-center col-12 mt-15">
-                                        <img src="../../../src/images/EmptyState/empty-search-results.webp"
-                                            height="200" />
+                                        <i class="text-gray-400 bi bi-search fs-1"></i>
                                     </div>
                                     <div class="mt-8 text-center col-12 mb-15">
                                         <h1 class="text-gray-700 heading fw-bold fs-2hx">No result found</h1>

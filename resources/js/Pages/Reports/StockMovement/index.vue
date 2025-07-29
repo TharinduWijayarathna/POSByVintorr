@@ -109,7 +109,7 @@
 
                                 <div class="row" v-if="!select_product">
                                     <div class="text-center col-12 mt-15">
-                                        <img src="@/../src/images/EmptyState/stock-movement-report.webp" height="200" />
+                                        <i class="text-gray-400 bi bi-arrow-left-right fs-1"></i>
                                     </div>
                                     <div class="mt-8 text-center col-12">
                                         <h1 class="text-gray-700 heading fw-bold fs-2hx">Select a Product</h1>
@@ -121,7 +121,7 @@
 
                                 <div class="row" v-if="select_product && StockLogs?.length == 0">
                                     <div class="text-center col-12 mt-15">
-                                        <img src="@/../src/images/EmptyState/empty-search-results.webp" height="200" />
+                                        <i class="text-gray-400 bi bi-search fs-1"></i>
                                     </div>
                                     <div class="mt-8 text-center col-12 mb-15">
                                         <h1 class="text-gray-700 heading fw-bold fs-2hx">No result found</h1>

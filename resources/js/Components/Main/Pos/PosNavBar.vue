@@ -329,7 +329,7 @@
                                 <!-- My Profile with icon -->
                                 <Link :href="route('profile')" method="get" as="button"
                                     class="mt-2 profile-dropdown-item profile-button rounded-2 btn-active-light-primary">
-                                <i class="bi bi-person-circle fs-5 me-2" style="color: #287fff;"></i> My Profile
+                                <i class="bi bi-person-circle fs-5 me-2" style="color: #091f3e;"></i> My Profile
                                 </Link>
 
                                 <!-- Log Out with icon -->
@@ -517,7 +517,7 @@ const errorMessage = (message) => {
 }
 
 .cal_input {
-    border: 2px solid #287fff;
+    border: 2px solid #091f3e;
     border-radius: 5px;
     height: 60px;
     text-align: right;
@@ -527,7 +527,7 @@ const errorMessage = (message) => {
 }
 
 .cal_input:hover {
-    border: 2px solid #287fff;
+    border: 2px solid #091f3e;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -577,9 +577,9 @@ const errorMessage = (message) => {
 
 
 div.equal {
-    background-color: #287fff;
+    background-color: #091f3e;
     /* Vibrant green for the equal button */
-    border: 2px solid #287fff;
+    border: 2px solid #091f3e;
     /* Matching border color */
     border-radius: 10px;
     /* Smoother rounded corners */

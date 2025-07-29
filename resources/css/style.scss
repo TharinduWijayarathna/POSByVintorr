@@ -1,7 +1,7 @@
 $info-color: #2882d1;
 $danger-color: #e91717;
 $warning-color: #ee9018;
-$success-color: #287fff;
+$success-color: #091f3e;
 $menu-title-color: #000000;
 $icon-color: #000000;
 $icon-sidebar-color: #ffffff;
@@ -379,14 +379,14 @@ tr {
 .export-btn {
     position: relative;
     transition: background-color 0.3s;
-    background-color: rgb(210, 245, 210);
+    background-color: #a5e3ee;
     min-width: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
 
     .export-icon {
-        color: green;
+        color: #091f3e;
         transition: color 0.3s;
         font-size: 2rem;
         display: flex;
@@ -396,7 +396,7 @@ tr {
     }
 
     &:hover {
-        background-color: rgba(1, 163, 1, 0.774);
+        background-color: #0ac1e1;
 
         .export-icon {
             color: white;
@@ -888,9 +888,9 @@ tr {
 
 /* Style pagination numbers */
 .pagination .page-link {
-    color: #287fff; /* Set the text color of numbers to green */
+    color: #091f3e; /* Set the text color of numbers to green */
     font-weight: bold; /* Make text bold */
-    border: 1px solid #287fff; /* Add border with green color */
+    border: 1px solid #091f3e; /* Add border with green color */
     background-color: transparent; /* Make background transparent */
     transition: background-color 0.3s ease;
 }
@@ -904,18 +904,18 @@ tr {
 /* Active state for page numbers */
 .pagination .page-item.active .page-link {
     color: white; /* Active page text color */
-    background-color: #287fff; /* Active page background color */
-    border-color: #287fff;
+    background-color: #091f3e; /* Active page background color */
+    border-color: #091f3e;
 }
 
 /* Hover effect for page numbers */
 .pagination .page-item:hover .page-link {
     background-color: #cfffec;
-    color: #287fff; /* Light green background on hover */
+    color: #091f3e; /* Light green background on hover */
 }
 
 .green-border {
-    border: 2px solid #287fff !important; /* Initial green border */
+    border: 2px solid #091f3e !important; /* Initial green border */
 }
 
 .green-border:focus {
