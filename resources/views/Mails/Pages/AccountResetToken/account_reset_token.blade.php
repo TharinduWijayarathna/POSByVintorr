@@ -7,11 +7,11 @@
             <br>
             <p style="line-height: 10px !important; color:black !important;">
             <h4>Reset Your Account</h4>
-            <p>You have requested to reset your SparkPos account.</p>
+            <p>You have requested to reset your POSByVintorr account.</p>
             <p>Your reset token is: <strong style="color: red;">"{{$sendData['resetToken']}}"</strong></p>
             <p>Please use this token to reset your account. If you didn't request this, you can ignore this email.</p>
             <p>If you have any questions or need assistance, please contact our support team.</p>
-            <p>Thank you for using SparkPos!</p>
+            <p>Thank you for using POSByVintorr!</p>
             </p>
         </div>
         <br>

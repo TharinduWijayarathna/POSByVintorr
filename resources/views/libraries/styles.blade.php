@@ -14,7 +14,7 @@
 
 
 <style>
-    .bg-linear-gradient-primary-SparkPos {
+    .bg-linear-gradient-primary-POSByVintorr {
 
         background: -webkit-gradient(linear,
                 left bottom,

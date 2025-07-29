@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Auth;
  * php version 8
  *
  * @category Model
- * @author   EmergentSpark <contact@emergentspark.com>
- * @license  https://emergentspark.com Config
- * @link     https://emergentspark.com
+ * @author   Vintorr <contact@Vintorr.com>
+ * @license  https://Vintorr.com Config
+ * @link     https://Vintorr.com
  * */
 
 class Invoice extends Model

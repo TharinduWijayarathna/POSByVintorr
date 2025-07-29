@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Auth;
  *
  * @category Service
  *
- * @author   EmergentSpark <contact@emergentspark.com>
- * @license  https://emergentspark.com Config
+ * @author   Vintorr <contact@Vintorr.com>
+ * @license  https://Vintorr.com Config
  *
- * @link     https://emergentspark.com
+ * @link     https://Vintorr.com
  * */
 class PosCashierDailyRecordService
 {

@@ -14,8 +14,8 @@
                     <div class="col-12 col-md-6 col-lg-3">
                         <div class="mt-3 card card-flush mb-xl-5 h-150px">
                             <div class="dashboard-bot">
-                                <img src="../../../src/images/Dashboard/dashboard-balance-card.png" class="bot-image"
-                                    height="120" />
+                                <!-- <img src="../../../src/images/Dashboard/dashboard-balance-card.png" class="bot-image"
+                                    height="120" /> -->
                             </div>
                             <div class="mx-6 mt-6 d-flex justify-content-between">
                                 <div class="card-title d-flex flex-column">
@@ -548,7 +548,7 @@
                                 <apexchart v-if="allZero == false" type="donut" height="346"
                                     :options="chartOptionsExpenses" :series="seriesExpenses">
                                 </apexchart>
-                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 349px">
+                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 180px">
                                     <div class="py-3 d-flex align-items-center justify-content-center">
                                         <div class="mt-8 text-center col-12">
                                             <i class="text-gray-400 bi bi-wallet2 fs-1"></i>
@@ -597,7 +597,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 365px">
+                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 200px">
                                     <div class="py-3 d-flex align-items-center">
                                         <div class="text-center col-12 mt-15">
                                             <i class="text-gray-400 bi bi-graph-up fs-1"></i>
@@ -642,7 +642,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 365px">
+                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 200px">
                                     <div class="py-3 d-flex align-items-center">
                                         <div class="text-center col-12 mt-15">
                                             <i class="text-gray-400 bi bi-exclamation-triangle fs-1"></i>
@@ -693,7 +693,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 365px">
+                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 200px">
                                     <div class="py-3 d-flex align-items-center">
                                         <div class="text-center col-12 mt-15">
                                             <i class="text-gray-400 bi bi-graph-up fs-1"></i>
@@ -738,7 +738,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 365px">
+                                <div v-else class="hover-scroll-overlay-y pe-6 me-n6" style="height: 200px">
                                     <div class="py-3 d-flex align-items-center">
                                         <div class="text-center col-12 mt-15">
                                             <i class="text-gray-400 bi bi-exclamation-triangle fs-1"></i>
@@ -980,7 +980,7 @@
 
                 <div class="row full-height">
                     <div class="col-12">
-                        <h1 class="text-center fs-3x fw-bolder">Welcome to SparkPos</h1>
+                        <h1 class="text-center fs-3x fw-bolder">Welcome to POSByVintorr</h1>
                     </div>
                     <div class="text-center col-12">
                         <span class="text-gray-600 fs-2">You can use this account to audit {{ businessDetails.name
@@ -993,7 +993,7 @@
                         <img src="../../../src/images/Audit/audit-dashboard.png" height="400" />
                     </div>
                     <div class="mt-8 text-center col-12">
-                        <a href="https://SparkPos.lk" class="fs-3" target="_blank">Learn more about SparkPos</a>
+                        <a href="https://POSByVintorr.lk" class="fs-3" target="_blank">Learn more about POSByVintorr</a>
                     </div>
                 </div>
 

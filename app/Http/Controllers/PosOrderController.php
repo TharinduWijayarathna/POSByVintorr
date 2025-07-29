@@ -18,10 +18,10 @@ use Inertia\Inertia;
  *
  * @category Controller
  *
- * @author   EmergentSpark <contact@emergentspark.com>
- * @license  https://emergentspark.com Config
+ * @author   Vintorr <contact@Vintorr.com>
+ * @license  https://Vintorr.com Config
  *
- * @link     https://emergentspark.com
+ * @link     https://Vintorr.com
  * */
 class PosOrderController extends ParentController
 {

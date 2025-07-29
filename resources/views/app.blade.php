@@ -7,7 +7,7 @@
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/logo/logo_favicon.webp" />
 
-    <title inertia>SparkPOS</title>
+    <title inertia>POSByVintorr</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

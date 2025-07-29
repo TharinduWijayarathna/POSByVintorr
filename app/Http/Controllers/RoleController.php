@@ -17,7 +17,7 @@ class RoleController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if ($user->email == 'emergentspark@gmail.com') {
+        if ($user->email == 'Vintorr@gmail.com') {
             return Inertia::render('Configurations/Roles/index');
 
             return response()->json(['status' => 'success']);
@@ -38,7 +38,7 @@ class RoleController extends Controller
     public function edit(int $id)
     {
         $user = Auth::user();
-        if ($user->email == 'emergentspark@gmail.com') {
+        if ($user->email == 'Vintorr@gmail.com') {
             $response['roleId'] = $id;
 
             return Inertia::render('Configurations/Roles/edit', $response);
@@ -58,7 +58,7 @@ class RoleController extends Controller
     public function get(int $role_id)
     {
         $user = Auth::user();
-        if ($user->email == 'emergentspark@gmail.com') {
+        if ($user->email == 'Vintorr@gmail.com') {
             return $role = Role::find($role_id);
         } else {
             $response['alert-danger'] = 'You do not have permission to view role permissions.';

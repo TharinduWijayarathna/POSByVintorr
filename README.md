@@ -1,7 +1,7 @@
 
-# SparkPOS
+# POSByVintorr
 
-SparkPOS is a powerful and user-friendly POS and invoicing system built with Laravel Inertia and Vue.js. This system is designed to simplify point-of-sale operations and invoicing for businesses.
+POSByVintorr is a powerful and user-friendly POS and invoicing system built with Laravel Inertia and Vue.js. This system is designed to simplify point-of-sale operations and invoicing for businesses.
 
 ## Features
 
@@ -22,8 +22,8 @@ SparkPOS is a powerful and user-friendly POS and invoicing system built with Lar
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/Emergent-Spark/SparkPOS.git
-   cd sparkpos
+   git clone https://github.com/Emergent-Spark/POSByVintorr.git
+   cd POSByVintorr
    ```
 
 2. **Install Dependencies**
@@ -67,7 +67,7 @@ SparkPOS is a powerful and user-friendly POS and invoicing system built with Lar
 
 ## Scheduled Tasks
 
-SparkPOS includes several scheduled tasks crucial for its operation. Ensure you set up the Laravel Scheduler to run these tasks:
+POSByVintorr includes several scheduled tasks crucial for its operation. Ensure you set up the Laravel Scheduler to run these tasks:
 
 ```bash
 php artisan schedule:work

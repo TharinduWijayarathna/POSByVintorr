@@ -3,7 +3,7 @@
         <tr class="row-bg">
             <td>
                 <span class="note" style=" margin-top: 25%; ">Generated at
-                    {{ Carbon\Carbon::now()->format('d/m/Y h:i A') }} | by <b>SparkPOS</b>
+                    {{ Carbon\Carbon::now()->format('d/m/Y h:i A') }} | by <b>POSByVintorr</b>
                 </span>
             </td>
             <td align="right">

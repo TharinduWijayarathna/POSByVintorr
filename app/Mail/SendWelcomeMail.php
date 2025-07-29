@@ -28,7 +28,7 @@ class SendWelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to SparkPos.lk',
+            subject: 'Welcome to POSByVintorr.lk',
         );
     }
 

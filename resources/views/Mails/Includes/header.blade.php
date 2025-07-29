@@ -8,7 +8,7 @@
                         <img src="{{ $image }}" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto"/>
                     </div>
                 @else
-                    <img src="{{ asset('assets/images/logos/logo.jpg') }}" alt="SparkPos" class="brand-logo me-2"
+                    <img src="{{ asset('assets/images/logos/logo.jpg') }}" alt="POSByVintorr" class="brand-logo me-2"
                         style="width: 100%; ">
                 @endif
             </th>

@@ -45,8 +45,8 @@ class UserSeeder extends Seeder
 
         $hiddenUsers = [
             [
-                'name' => 'SparkPOS Admin',
-                'email' => 'admin@SparkPos.lk',
+                'name' => 'POSByVintorr Admin',
+                'email' => 'admin@POSByVintorr.lk',
                 'password' => '123456789',
                 'user_role' => User::USER_ROLE_ID['ADMIN'],
                 'user_role_id' => User::USER_ROLE_ID['ADMIN'],

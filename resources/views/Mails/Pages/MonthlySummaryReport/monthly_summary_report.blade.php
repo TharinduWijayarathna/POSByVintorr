@@ -84,7 +84,7 @@
 
     <p style="padding-bottom:20px" >Thank you,
         <br>
-        SparkPos Team
+        POSByVintorr Team
     </p>
 </div>
 {{-- <div style="font-size:11px;text-align: center;">*This is a computer-generated report. No signature required*</div>

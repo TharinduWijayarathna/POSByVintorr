@@ -235,7 +235,7 @@
             <tr>
                 <th colspan="9" align="left">
                     Created at {{ Carbon\Carbon::now()->setTimezone('Asia/Colombo')->format('d/m/Y h:i A') }} Prepared By
-                    SparkPos
+                    POSByVintorr
                 </th>
             </tr>
         </tbody>

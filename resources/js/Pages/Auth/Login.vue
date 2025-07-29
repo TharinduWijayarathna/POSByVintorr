@@ -46,7 +46,7 @@ const submit = () => {
 
                             <div class="">
                                 <div class="text-center mt-2">
-                                    <img src="../../../src/logo/logo.webp" alt="Logo B" class="sparkpos-image">
+                                    <img src="../../../src/logo/logo.webp" alt="Logo B" class="POSByVintorr-image">
                                 </div>
                                 <div class="mt-6">
                                     <p class="text-center text-gray-600 fs-3"> Access your POS account to begin your
@@ -128,7 +128,7 @@ const submit = () => {
 
                             <!-- Short Information -->
                             <div class="col-12 text-center mb-4">
-                                <span class="fs-5 text-gray-700">SparkPOS is built by EmergentSpark. If you need
+                                <span class="fs-5 text-gray-700">POSByVintorr is built by Vintorr. If you need
                                     assistance, we’re here to help!</span>
                             </div>
 
@@ -142,14 +142,14 @@ const submit = () => {
 
                             <div class="col-12 text-center">
                                 <button type="button" class="btn contact-btn-email"
-                                    onclick="window.location.href='mailto:support@emergentspark.com?subject=Support Request from SparkPOS User'">
+                                    onclick="window.location.href='mailto:support@Vintorr.com?subject=Support Request from POSByVintorr User'">
                                     Contact via Email
                                 </button>
                             </div>
 
                             <!-- Closing Sentence -->
                             <div class="col-12 text-center mt-4">
-                                <span class="fs-5 text-gray-700">Our team at EmergentSpark is always ready to assist
+                                <span class="fs-5 text-gray-700">Our team at Vintorr is always ready to assist
                                     you!</span>
                             </div>
                         </div>
@@ -193,7 +193,7 @@ const submit = () => {
     margin-left: 50px;
 }
 
-.sparkpos-image {
+.POSByVintorr-image {
     max-width: 65%;
     height: auto;
 }

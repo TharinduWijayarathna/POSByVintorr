@@ -6,21 +6,21 @@
     <h3 class="contact-scroll" id="contact">Links</h3>
 
     <!-- Start -->
-    <section class="pt-5 pb-5 pb-sm-0 d-flex align-items-center bg-linear-gradient-primary-SparkPos">
+    <section class="pt-5 pb-5 pb-sm-0 d-flex align-items-center bg-linear-gradient-primary-POSByVintorr">
         <div class="container">
             <div class="row mt-5 align-items-center">
                 <div class="col-md-6">
                     <div class="title-heading me-lg-4 wow animate__animated animate__fadeInUp" data-wow-delay=".1s">
                         <h1 class="heading fw-bold mb-3">Point of <span class="text-primary">sale,</span> <br> point
                             of <span class="text-primary">success!</span></h1>
-                        <p class="para-desc text-success">Welcome to SparkPos - Your Path to Retail Success! </p>
+                        <p class="para-desc text-success">Welcome to POSByVintorr - Your Path to Retail Success! </p>
                         <p class="para-desc text-dark">Our Point of
                             Sale
                             solution is designed to empower small-scale retail shops, making it easy and affordable to
                             manage your business effectively. Picture your success with our POS system!</p>
 
 
-                        <a href="https://demo.SparkPos.lk" class="btn btn-primary"> Experience our demo! </a>
+                        <a href="https://demo.POSByVintorr.lk" class="btn btn-primary"> Experience our demo! </a>
                         <p class="mt-4 text-muted mb-0">Looking for help? <a href="#contact" class="text-primary">Get in
                                 touch
                                 with us.</a></p>
@@ -77,7 +77,7 @@
                                     <h5>Manage Your Business</h5>
 
                                     <div class="progress-box mt-2">
-                                        <h6 class="title fw-normal text-muted">with SparkPos!</h6>
+                                        <h6 class="title fw-normal text-muted">with POSByVintorr!</h6>
                                         <div class="progress">
                                             <div class="progress-bar position-relative bg-primary" style="width:100%;">
                                                 <div class="progress-value d-block text-muted h6 mt-1"
@@ -96,7 +96,7 @@
                                     <h6>Manage Your Business</h6>
 
                                     <div class="progress-box mt-2">
-                                        <h6 class="title fw-normal text-muted">with SparkPos!</h6>
+                                        <h6 class="title fw-normal text-muted">with POSByVintorr!</h6>
                                         <div class="progress">
                                             <div class="progress-bar position-relative bg-primary" style="width:100%;">
                                                 <div class="progress-value d-block text-muted h6 mt-1"
@@ -638,7 +638,7 @@
                     data-wow-delay=".1s">
                     <h4 class="title mb-4">Frequently Asked Questions</h4>
                     <p class="text-muted para-desc mb-0 mx-auto"> Got questions about <span
-                            class="text-primary fw-bold">SparkPos? </span>Here are some common queries our customers often
+                            class="text-primary fw-bold">POSByVintorr? </span>Here are some common queries our customers often
                         have. If you don't find your answer here, don't hesitate to contact us!</p>
                 </div>
             </div>
@@ -662,7 +662,7 @@
                         <div class="row ps-2 py-1 pt-lg-2 pb-lg-2 faq-topic" data-bs-toggle="collapse"
                             data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                             <div class="col-10 col-md-11">
-                                <span class="question-text">Is SparkPos suitable for my specific retail
+                                <span class="question-text">Is POSByVintorr suitable for my specific retail
                                     business?</span>
                             </div>
                             <div class="col-2 col-md-1 d-flex align-items-center justify-content-end justify-content-lg-center">
@@ -672,7 +672,7 @@
                         <div id="collapseOne" class="accordion-collapse border-0 collapse show"
                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body text-muted">
-                                Absolutely! SparkPos is designed for various small-scale retail shops, including boutiques,
+                                Absolutely! POSByVintorr is designed for various small-scale retail shops, including boutiques,
                                 cafes, bakeries, and more. Its flexibility and customizable features make it adaptable to
                                 your unique business needs.
                             </div>
@@ -684,7 +684,7 @@
                         <div class="row ps-2 py-1 pt-lg-2 pb-lg-2 faq-topic" data-bs-toggle="collapse"
                             data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                             <div class="col-10 col-md-11">
-                                <span class="question-text">How easy is it to train my staff to use SparkPos?</span>
+                                <span class="question-text">How easy is it to train my staff to use POSByVintorr?</span>
                             </div>
                             <div class="col-2 col-md-1 d-flex align-items-center justify-content-end justify-content-lg-center">
                                 <i class="fas fa-chevron-down me-2" id="faq_2" style="font-size: 20px;"></i>
@@ -693,7 +693,7 @@
                         <div id="collapseTwo" class="accordion-collapse border-0 collapse" aria-labelledby="headingTwo"
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body text-muted">
-                                SparkPos is known for its user-friendly interface. Your staff can quickly learn to use the
+                                POSByVintorr is known for its user-friendly interface. Your staff can quickly learn to use the
                                 system with minimal training. We also provide training resources and support to ensure a
                                 smooth transition.
                             </div>
@@ -705,7 +705,7 @@
                         <div class="row ps-2 py-1 pt-lg-2 pb-lg-2 faq-topic" data-bs-toggle="collapse"
                             data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                             <div class="col-10 col-md-11">
-                                <span class="question-text">Can I try SparkPos before committing to a subscription?</span>
+                                <span class="question-text">Can I try POSByVintorr before committing to a subscription?</span>
                             </div>
                             <div class="col-2 col-md-1 d-flex align-items-center justify-content-end justify-content-lg-center">
                                 <i class="fas fa-chevron-down me-2" id="faq_3" style="font-size: 20px;"></i>
@@ -714,7 +714,7 @@
                         <div id="collapseThree" class="accordion-collapse border-0 collapse"
                             aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                             <div class="accordion-body text-muted">
-                                Of course! We offer a free trial so you can experience SparkPos firsthand. You can test its
+                                Of course! We offer a free trial so you can experience POSByVintorr firsthand. You can test its
                                 features and see how it fits your business requirements before making any commitment.
                             </div>
                         </div>
@@ -734,7 +734,7 @@
                         <div id="collapseFour" class="accordion-collapse border-0 collapse "
                             aria-labelledby="headingFour" data-bs-parent="#accordionExample">
                             <div class="accordion-body text-muted">
-                                Yes, you can! SparkPos offers the flexibility to personalize your invoices with your unique
+                                Yes, you can! POSByVintorr offers the flexibility to personalize your invoices with your unique
                                 branding elements, such as your logo and business information. You can create professional,
                                 customized invoices that reflect your brand's identity.
                             </div>
@@ -747,7 +747,7 @@
                             data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
                             <div class="col-10 col-md-11">
                                 <span class="question-text">What if I need assistance or encounter issues while using
-                                    SparkPos?</span>
+                                    POSByVintorr?</span>
                             </div>
                             <div class="col-2 col-md-1 d-flex align-items-center justify-content-end justify-content-lg-center">
                                 <i class="fas fa-chevron-down me-2" id="faq_5" style="font-size: 20px;"></i>
@@ -779,7 +779,7 @@
                     data-wow-delay=".1s">
                     <h4 class="title mb-4">Connect With Us</h4>
                     <p class="text-muted para-desc mb-0 mx-auto"> Ready to take your retail business to the next level with
-                        <span class="text-primary fw-bold">SparkPos? </span>Contact us to learn more, request a demo, or get
+                        <span class="text-primary fw-bold">POSByVintorr? </span>Contact us to learn more, request a demo, or get
                         started. We're here to support your journey to success.
                     </p>
                 </div>
@@ -810,7 +810,7 @@
                     <div class="content mt-4">
                         <h5 class="fw-bold">Email</h5>
                         <p class="text-muted">Connect with our team via email for prompt and thorough support.</p>
-                        <a href="mailto:sparkpos@emergentspark.com" class="text-primary">sparkpos@emergentspark.com</a>
+                        <a href="mailto:POSByVintorr@Vintorr.com" class="text-primary">POSByVintorr@Vintorr.com</a>
                     </div>
                 </div>
             </div>
@@ -830,13 +830,13 @@
                                     href="https://www.facebook.com/profile.php?id=61552381082922" target="_blank"
                                     class="rounded"><i class="uil uil-facebook-f align-middle" title="facebook"></i></a>
                             </li>
-                            <li class="list-inline-item mb-0"><a href="https://www.linkedin.com/company/SparkPos.lk"
+                            <li class="list-inline-item mb-0"><a href="https://www.linkedin.com/company/POSByVintorr.lk"
                                     target="_blank" class="rounded"><i class="uil uil-linkedin align-middle"
                                         title="linkedin"></i></a></li>
                             <li class="list-inline-item mb-0"><a href="https://wa.me/+94772299862" target="_blank"
                                     class="rounded"><i class="uil uil-whatsapp align-middle" title="whatsapp"></i></a>
                             </li>
-                            <li class="list-inline-item mb-0"><a href="https://www.youtube.com/@emergentsparkSoftware" target="_blank" class="rounded"><i
+                            <li class="list-inline-item mb-0"><a href="https://www.youtube.com/@VintorrSoftware" target="_blank" class="rounded"><i
                                         class="uil uil-youtube align-middle" title="youtube"></i></a></li>
                         </ul>
                     </div>

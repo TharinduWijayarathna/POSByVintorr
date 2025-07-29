@@ -9,7 +9,7 @@
                                <a href="#" class="logo-footer">
                                    <img src="assets/images/logos/logo.webp" height="30" alt="">
                                </a>
-                               <p class="mt-4" id="social-media-custom-link">Take the next step with SparkPos, your gateway to affordable retail
+                               <p class="mt-4" id="social-media-custom-link">Take the next step with POSByVintorr, your gateway to affordable retail
                                    success, equipped to streamline operations, elevate customer experiences, and drive
                                    your business forward effortlessly.</p>
                                <!--end icon-->
@@ -39,7 +39,7 @@
                                 <p>Phone<br>
                                 <a href="tel:+94772299862" class="read-more-custom">077 229 9862</a></p>
                                 <p>Email<br>
-                                <a href="mailto:sparkpos@emergentspark.com" class="read-more-custom">sparkpos@emergentspark.com</a></p>
+                                <a href="mailto:POSByVintorr@Vintorr.com" class="read-more-custom">POSByVintorr@Vintorr.com</a></p>
 
                                </ul>
                            </div><!--end col-->
@@ -85,7 +85,7 @@
                            <p class="mb-0">©
                                <script>
                                    document.write(new Date().getFullYear())
-                               </script> SparkPos. All Rights Resesved.
+                               </script> POSByVintorr. All Rights Resesved.
                            </p>
                        </div>
                    </div><!--end col-->

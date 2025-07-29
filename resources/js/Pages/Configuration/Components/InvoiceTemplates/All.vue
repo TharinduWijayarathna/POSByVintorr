@@ -189,10 +189,10 @@
                                         <img v-if="
                                             edit_business.invoice_logo_url
                                         " :src="edit_business.invoice_logo_url
-                                            " alt="SparkPos" class="brand-logo me-2" style="width: 100%" />
+                                            " alt="POSByVintorr" class="brand-logo me-2" style="width: 100%" />
                                         <img v-if="
                                             !edit_business.invoice_logo_url
-                                        " src="logo/logo.webp" alt="SparkPos" class="brand-logo me-2"
+                                        " src="logo/logo.webp" alt="POSByVintorr" class="brand-logo me-2"
                                             style="width: 100%" />
                                     </th>
                                 </tr>
@@ -668,7 +668,7 @@
                                 <tr class="row-bg">
                                     <td>
                                         <span class="note" style="margin-top: 25%">Created at 01/07/2024 | by
-                                            <b>SparkPOS</b>
+                                            <b>POSByVintorr</b>
                                         </span>
                                     </td>
                                     <td align="right">

@@ -5,7 +5,7 @@
         data-kt-drawer-toggle="#kt_aside_mobile_toggle">
         <div class="mt-2 mb-2 aside-logo flex-column-auto" id="kt_aside_logo">
             <a :href="route('dashboard')">
-                <img alt="Logo" src="../../../src/logo/logo.webp" class="h-80px logo" />
+                <img alt="Logo" src="../../../src/logo/logo.webp" class="h-90px logo" />
             </a>
         </div>
 

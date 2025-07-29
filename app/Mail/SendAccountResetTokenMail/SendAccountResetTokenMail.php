@@ -31,8 +31,8 @@ class SendAccountResetTokenMail extends Mailable
         return new Envelope(
             subject: 'Account Reset Token',
             from: new Address(
-                address: 'sparkpos@emergentspark.com',
-                name: 'SparkPOS',
+                address: 'POSByVintorr@Vintorr.com',
+                name: 'POSByVintorr',
             ),
         );
     }

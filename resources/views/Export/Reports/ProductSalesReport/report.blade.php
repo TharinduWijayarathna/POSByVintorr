@@ -118,7 +118,7 @@
             <tr>
                 <th width="70%" class="customer_data" colspan="4" >
                     Created at {{ Carbon\Carbon::now()->setTimezone('Asia/Colombo')->format('d/m/Y h:i A') }} Prepared By
-                    SparkPos
+                    POSByVintorr
                 </th>
             </tr>
         </tbody>

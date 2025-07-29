@@ -55,7 +55,7 @@ class PermissionController extends ParentController
     public function updatePermissions(Request $request, $role_id)
     {
         $user = Auth::user();
-        if ($user->email == 'emergentspark@gmail.com') {
+        if ($user->email == 'Vintorr@gmail.com') {
             $role = Role::find($role_id);
             $role->syncPermissions($request->permissions);
 

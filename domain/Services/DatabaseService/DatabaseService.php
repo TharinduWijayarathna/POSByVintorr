@@ -12,10 +12,10 @@ use Illuminate\Support\Str;
  *
  * @category Service
  *
- * @author   EmergentSpark <contact@emergentspark.com>
- * @license  https://emergentspark.com Config
+ * @author   Vintorr <contact@Vintorr.com>
+ * @license  https://Vintorr.com Config
  *
- * @link     https://emergentspark.com
+ * @link     https://Vintorr.com
  * */
 class DatabaseService
 {
@@ -29,7 +29,7 @@ class DatabaseService
         $dbName = env('DB_DATABASE');
 
         // Define the backup path
-        $backupPath = storage_path('app/SparkPos');
+        $backupPath = storage_path('app/POSByVintorr');
 
         $firstWord = Str::before($dbName, '_');
 
@@ -60,7 +60,7 @@ class DatabaseService
 
         if ($result === 0) {
 
-            $directory = 'SparkPos';
+            $directory = 'POSByVintorr';
             $files = Storage::files($directory);
 
             if (! empty($files)) {

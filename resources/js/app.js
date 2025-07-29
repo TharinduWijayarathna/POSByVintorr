@@ -14,7 +14,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import laravelPermissionToVuejs from "laravel-permission-to-vuejs";
 import VueApexCharts from "vue3-apexcharts";
 
-const appName = "SparkPOS";
+const appName = "POSByVintorr";
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

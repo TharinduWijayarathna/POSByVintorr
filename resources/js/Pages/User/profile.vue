@@ -104,7 +104,7 @@
                                         <h1 class="text-gray-700 heading fw-bold fs-2hx">No any users</h1>
                                     </div>
                                     <div class="mt-2 text-center col-12 mb-15">
-                                        <p class="text-gray-700 fs-3">Your SparkPos users will appear here</p>
+                                        <p class="text-gray-700 fs-3">Your POSByVintorr users will appear here</p>
                                     </div>
                                 </div>
                                 <div class="row" v-if="emptyImageVal == 1 && (userStatus != 0 || search != null)">

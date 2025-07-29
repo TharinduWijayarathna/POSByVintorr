@@ -1,37 +1,37 @@
 <template>
 
-    <Head :title="title ? title : 'SparkPOS'">
+    <Head :title="title ? title : 'POSByVintorr'">
         <link rel="icon" type="image/png" href="/logo/logo_favicon.webp">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-        <!-- <title>SparkPOS</title> -->
+        <!-- <title>POSByVintorr</title> -->
 
         <meta name="keywords"
-            content="POS System, SparkPOS, Retail Management, Sales Software, Inventory Management, Business Solutions">
+            content="POS System, POSByVintorr, Retail Management, Sales Software, Inventory Management, Business Solutions">
         <meta name="description"
-            content="SparkPOS POS System offers comprehensive solutions for efficient retail management. Manage your sales, inventory, and customer relationships with ease.">
+            content="POSByVintorr POS System offers comprehensive solutions for efficient retail management. Manage your sales, inventory, and customer relationships with ease.">
 
         <meta name="og:image" property="og:image" content="{{ asset('logo/logo_favicon.webp') }}">
         <meta name="og:image:secure_url" property="og:image:secure_url" content="{{ asset('logo/logo_favicon.webp') }}">
         <meta name="og:image:width" property="og:image:width" content="500">
         <meta name="og:image:height" property="og:image:height" content="200">
-        <meta name="og:image:alt" property="og:image:alt" content="SparkPOS POS System | Efficient Retail Management">
-        <meta name="og:site_name" property="og:site_name" content="SparkPOS POS System">
+        <meta name="og:image:alt" property="og:image:alt" content="POSByVintorr POS System | Efficient Retail Management">
+        <meta name="og:site_name" property="og:site_name" content="POSByVintorr POS System">
         <meta name="og:type" property="og:type" content="website">
-        <meta name="og:title" property="og:title" content="SparkPOS POS System | Efficient Retail Management">
+        <meta name="og:title" property="og:title" content="POSByVintorr POS System | Efficient Retail Management">
         <meta name="og:url" property="og:url" content="{{ Request::url() }}">
         <meta name="og:description" property="og:description"
-            content="SparkPOS POS System offers comprehensive solutions for efficient retail management. Manage your sales, inventory, and customer relationships with ease.">
+            content="POSByVintorr POS System offers comprehensive solutions for efficient retail management. Manage your sales, inventory, and customer relationships with ease.">
 
         <meta name="twitter:image:src" content="{{ asset('logo/logo_favicon.webp') }}">
         <meta name="twitter:site" content="@YourTwitterHandle">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="SparkPOS POS System | Efficient Retail Management">
+        <meta name="twitter:title" content="POSByVintorr POS System | Efficient Retail Management">
         <meta name="twitter:description"
-            content="SparkPOS POS System offers comprehensive solutions for efficient retail management. Manage your sales, inventory, and customer relationships with ease.">
+            content="POSByVintorr POS System offers comprehensive solutions for efficient retail management. Manage your sales, inventory, and customer relationships with ease.">
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 

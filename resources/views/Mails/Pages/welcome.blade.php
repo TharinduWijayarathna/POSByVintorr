@@ -2,7 +2,7 @@
 @section('content')
     <div class="report-content">
         <h4>Welcome {{ $sendData['email'] }},</h4>
-        <p>Thank you for signing up for SparkPos.</p>
+        <p>Thank you for signing up for POSByVintorr.</p>
         <p>Please use these credentials for login your system</p>
         <a href="https://url/login">
             <button type="button" class="btn btn-info"
@@ -15,7 +15,7 @@
         <br>
         <p>Thank you for using our application!</p>
         <p>If you didn't request this please ignore this email.</p>
-        <p>The SparkPos Team</p>
+        <p>The POSByVintorr Team</p>
     </div>
 @endsection
 <style>
