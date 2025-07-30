@@ -282,15 +282,15 @@
 
                                     <div class="row" :class="[showInvoices == 1 ? 'd-block' : 'd-none']"
                                         id="invoice-data">
-                                        <InvoiceData />
+                                        <InvoiceData :customerId="page_props.customer_id" />
                                     </div>
                                     <div class="row" :class="[showBills == 1 ? 'd-block' : 'd-none']"
                                         id="pos-bill-data">
-                                        <BillData />
+                                        <BillData :customerId="page_props.customer_id" />
                                     </div>
                                     <div class="row" :class="[showQuotations == 1 ? 'd-block' : 'd-none']"
                                         id="quotation-data">
-                                        <QuotationData />
+                                        <QuotationData :customerId="page_props.customer_id" />
                                     </div>
 
                                 </div>

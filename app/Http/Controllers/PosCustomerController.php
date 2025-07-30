@@ -141,7 +141,8 @@ class PosCustomerController extends ParentController
     public function allQuotations(int $customer_id)
     {
         if (Auth::user()->user_role_id != User::USER_ROLE_ID['AUDIT']) {
-            $query = Quotation::query()->where('status', 1)->where('customer_id', $customer_id)->orderBy('updated_at', 'desc');
+            $query = Quotation::query()->where('status', 0)->where('customer_id', $customer_id)->orderBy('updated_at', 'desc');
+
             $payload = QueryBuilder::for($query)
                 ->allowedSorts(['code'])
                 ->allowedFilters(
