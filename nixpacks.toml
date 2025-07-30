@@ -44,6 +44,9 @@ php /app/artisan migrate --force
 php /app/artisan config:clear
 php /app/artisan config:cache
 
+# Storage Link
+php /app/artisan storage:link
+
 # Start supervisor
 supervisord -c /etc/supervisord.conf -n
 '''
